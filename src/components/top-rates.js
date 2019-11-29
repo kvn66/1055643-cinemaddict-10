@@ -1,3 +1,5 @@
+const TOP_RATED_FILMS_COUNT = 2;
+
 const createTopRatedsTemplate = () => {
   return (
     `<section class="films-list--extra">
@@ -8,8 +10,8 @@ const createTopRatedsTemplate = () => {
   );
 };
 
-const getTopRates = (films) => {
-  return films.slice().sort((a, b) => b.rating - a.rating).slice(0, 2);
+const getTopRated = (films) => {
+  return films.slice().sort((a, b) => b.rating - a.rating).slice(0, TOP_RATED_FILMS_COUNT);
 };
 
-export {createTopRatedsTemplate, getTopRates};
+export {createTopRatedsTemplate, getTopRated};

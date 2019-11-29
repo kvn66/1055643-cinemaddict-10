@@ -1,6 +1,4 @@
-const FILMS_COUNT = 15;
-const TOP_RATED_FILMS_COUNT = 2;
-const MOST_COMMENTED_FILMS_COUNT = 2;
+const FILMS_COUNT = 17;
 
 import {createFilmCardTemplate} from './components/film-card.js';
 import {createFilmDetailsTemplate} from './components/film-details.js';
@@ -10,7 +8,7 @@ import {createMostCommentedTemplate, getMostCommented} from './components/most-c
 import {createProfileRating} from './components/profile-rating.js';
 import {createSiteMenuTemplate} from './components/site-menu.js';
 import {createSiteSortTemplate} from './components/site-sort.js';
-import {createTopRatedsTemplate, getTopRates} from './components/top-rates.js';
+import {createTopRatedsTemplate, getTopRated} from './components/top-rates.js';
 import {generateFilms} from './mock/film.js';
 
 const films = generateFilms(FILMS_COUNT);
@@ -50,7 +48,7 @@ const filmsListExtraElements = filmsElement.querySelectorAll(`.films-list--extra
 
 const topRatedFilmsListContainerElement = filmsListExtraElements[0].querySelector(`.films-list__container`);
 
-const topRated = getTopRates(films);
+const topRated = getTopRated(films);
 
 topRated.forEach((film) => render(topRatedFilmsListContainerElement, createFilmCardTemplate(film)));
 

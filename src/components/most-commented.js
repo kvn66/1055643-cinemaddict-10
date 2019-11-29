@@ -1,3 +1,5 @@
+const MOST_COMMENTED_FILMS_COUNT = 2;
+
 const createMostCommentedTemplate = () => {
   return (
     `<section class="films-list--extra">
@@ -9,7 +11,7 @@ const createMostCommentedTemplate = () => {
 };
 
 const getMostCommented = (films) => {
-  return films.slice().sort((a, b) => b.commentsCount - a.commentsCount).slice(0, 2);
+  return films.slice().sort((a, b) => b.commentsCount - a.commentsCount).slice(0, MOST_COMMENTED_FILMS_COUNT);
 };
 
 export {createMostCommentedTemplate, getMostCommented};
