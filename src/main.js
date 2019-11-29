@@ -1,4 +1,4 @@
-const FILMS_COUNT = 5;
+const FILMS_COUNT = 15;
 const TOP_RATED_FILMS_COUNT = 2;
 const MOST_COMMENTED_FILMS_COUNT = 2;
 
@@ -6,11 +6,14 @@ import {createFilmCardTemplate} from './components/film-card.js';
 import {createFilmDetailsTemplate} from './components/film-details.js';
 import {createFilmsTemplate} from './components/films.js';
 import {createFilmsListTemplate} from './components/films-list.js';
-import {createMostCommentedTemplate} from './components/most-commented.js';
+import {createMostCommentedTemplate, getMostCommented} from './components/most-commented.js';
 import {createProfileRating} from './components/profile-rating.js';
 import {createSiteMenuTemplate} from './components/site-menu.js';
 import {createSiteSortTemplate} from './components/site-sort.js';
-import {createTopRatedsTemplate} from './components/top-rates.js';
+import {createTopRatedsTemplate, getTopRates} from './components/top-rates.js';
+import {generateFilms} from './mock/film.js';
+
+const films = generateFilms(FILMS_COUNT);
 
 const createShowMoreTemplate = () => {
   return (
@@ -39,10 +42,7 @@ render(filmsElement, createMostCommentedTemplate());
 const filmsListElement = filmsElement.querySelector(`.films-list`);
 const filmsListContainerElement = filmsListElement.querySelector(`.films-list__container`);
 
-new Array(FILMS_COUNT)
-  .fill(``)
-  .forEach(() => render(filmsListContainerElement, createFilmCardTemplate())
-  );
+films.forEach((film) => render(filmsListContainerElement, createFilmCardTemplate(film)));
 
 render(filmsListElement, createShowMoreTemplate());
 
@@ -50,18 +50,16 @@ const filmsListExtraElements = filmsElement.querySelectorAll(`.films-list--extra
 
 const topRatedFilmsListContainerElement = filmsListExtraElements[0].querySelector(`.films-list__container`);
 
-new Array(TOP_RATED_FILMS_COUNT)
-  .fill(``)
-  .forEach(() => render(topRatedFilmsListContainerElement, createFilmCardTemplate())
-  );
+const topRated = getTopRates(films);
+
+topRated.forEach((film) => render(topRatedFilmsListContainerElement, createFilmCardTemplate(film)));
 
 const mostCommentedFilmsListContainerElement = filmsListExtraElements[1].querySelector(`.films-list__container`);
 
-new Array(MOST_COMMENTED_FILMS_COUNT)
-  .fill(``)
-  .forEach(() => render(mostCommentedFilmsListContainerElement, createFilmCardTemplate())
-  );
+const mostCommented = getMostCommented(films);
+
+mostCommented.forEach((film) => render(mostCommentedFilmsListContainerElement, createFilmCardTemplate(film)));
 
 const bodyElement = document.querySelector(`.footer`);
 
-render(bodyElement, createFilmDetailsTemplate(), `afterend`);
+//render(bodyElement, createFilmDetailsTemplate(), `afterend`);
