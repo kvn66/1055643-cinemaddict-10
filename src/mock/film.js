@@ -1,3 +1,5 @@
+import {getRandomIntegerNumber, getRandomArrayItem} from './util.js';
+
 const TitleItems = [
   `The Dance of Life`,
   `Sagebrush Trail`,
@@ -41,37 +43,97 @@ const DescriptionItems = [
   `In rutrum ac purus sit amet tempus.`
 ];
 
-const getRandomIntegerNumber = (min, max) => {
-  return min + Math.floor((max - min) * Math.random());
-};
+const DirectorItems = [
+  `Christopher Nolan`,
+  `Steven Spielberg`,
+  `Quentin Tarantino`,
+  `Martin Scorsese`,
+  `David Fincher`,
+  `Stanley Kubrick`,
+  `Ridley Scott`,
+  `Francis Ford Coppola`,
+  `Clint Eastwood`
+];
 
-const getRandomArrayItem = (array) => {
-  const randomIndex = getRandomIntegerNumber(0, array.length - 1);
+const WriterItems = [
+  `Billy Wilder`,
+  `Robert Towne`,
+  `Quentin Tarantino`,
+  `Francis Ford Coppola`,
+  `William Goldman`,
+  `Charlie Kaufman`,
+  `Woody Allen`,
+  `Nora Ephron`,
+  `Ernest Lehman`
+];
 
-  return array[randomIndex];
-};
+const ActorItems = [
+  `Morgan Freeman`,
+  `Leonardo DiCaprio`,
+  `Brad Pitt`,
+  `Michael Caine`,
+  `Robert De Niro`,
+  `Matt Damon`,
+  `Tom Hanks`,
+  `Christian Bale`,
+  `Gary Oldman`,
+  `Al Pacino`,
+  `Edward Norton`
+];
 
-const getRating = () => {
+const CountryItems = [
+  `USA`,
+  `Bulgaria`,
+  `China`,
+  `France`,
+  `Germany`,
+  `Japan`
+];
+
+const generateRating = () => {
   return getRandomIntegerNumber(10, 99) / 10.0;
 };
 
-const getDuration = () => {
+const generateDuration = () => {
   const fullMinutes = getRandomIntegerNumber(10, 180);
   const hours = Math.floor(fullMinutes / 60);
   const minutes = fullMinutes % 60;
   return `${hours ? hours + `h` : ``} ${minutes}m`;
 };
 
+const generateRandomArray = (count, array) => {
+  const set = new Set();
+  while (set.size < count) {
+    set.add(getRandomArrayItem(array));
+  }
+  return Array.from(set);
+};
+
+const generateRandomStringFromArray = (count, array, space) => {
+  let out = ``;
+  generateRandomArray(getRandomIntegerNumber(1, count), array).forEach((item, index) => {
+    out = index === 0 ? out + item : out + space + item;
+  });
+  return out;
+};
+
 const generateFilm = () => {
+  const filmTitle = getRandomArrayItem(TitleItems);
   return {
-    title: getRandomArrayItem(TitleItems),
-    rating: getRating(),
-    year: getRandomIntegerNumber(1930, 1950),
-    duration: getDuration(),
-    genre: getRandomArrayItem(GenreItems),
+    title: filmTitle,
+    titleOriginal: filmTitle,
+    rating: generateRating(),
+    releaseDate: new Date(getRandomIntegerNumber(1930, 1950), getRandomIntegerNumber(0, 11), getRandomIntegerNumber(1, 28)),
+    duration: generateDuration(),
+    genres: generateRandomArray(getRandomIntegerNumber(1, 3), GenreItems),
     poster: getRandomArrayItem(PosterItems),
-    description: getRandomArrayItem(DescriptionItems),
-    commentsCount: getRandomIntegerNumber(0, 999)
+    description: generateRandomStringFromArray(5, DescriptionItems, ` `),
+    commentsCount: getRandomIntegerNumber(0, 999),
+    director: getRandomArrayItem(DirectorItems),
+    writers: generateRandomStringFromArray(3, WriterItems, `, `),
+    actors: generateRandomStringFromArray(5, ActorItems, `, `),
+    country: getRandomArrayItem(CountryItems),
+    age: getRandomIntegerNumber(0, 18)
   };
 };
 
