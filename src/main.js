@@ -7,20 +7,17 @@ import {createProfileRatingTemplate} from './components/profile-rating.js';
 import {createSiteMenuTemplate} from './components/site-menu.js';
 import {createSiteSortTemplate} from './components/site-sort.js';
 import {createTopRatedsTemplate, getTopRated} from './components/top-rates.js';
-import {generateFilms} from './mock/film.js';
+import {createShowMoreTemplate} from './components/show-more.js';
+import {generateFilms} from './mock/films.js';
 import {getRandomIntegerNumber} from './mock/util.js';
 
 
 const FILMS_COUNT = 17;
+const SHOWING_FILMS_COUNT_ON_START = 5;
+const SHOWING_FILMS_COUNT_BY_BUTTON = 5;
 
 const profileRating = getRandomIntegerNumber(0, 30);
 const films = generateFilms(FILMS_COUNT);
-
-const createShowMoreTemplate = () => {
-  return (
-    `<button class="films-list__show-more">Show more</button>`
-  );
-};
 
 const render = (container, template, place = `beforeend`) => {
   container.insertAdjacentHTML(place, template);
@@ -43,11 +40,25 @@ render(filmsElement, createMostCommentedTemplate());
 const filmsListElement = filmsElement.querySelector(`.films-list`);
 const filmsListContainerElement = filmsListElement.querySelector(`.films-list__container`);
 
-films.forEach((film) => {
+let showingFilmsCount = SHOWING_FILMS_COUNT_ON_START;
+films.slice(0, showingFilmsCount).forEach((film) => {
   render(filmsListContainerElement, createFilmCardTemplate(film));
 });
 
 render(filmsListElement, createShowMoreTemplate());
+
+const showMoreButton = filmsListElement.querySelector(`.films-list__show-more`);
+showMoreButton.addEventListener(`click`, () => {
+  const prevFilmsCount = showingFilmsCount;
+  showingFilmsCount = showingFilmsCount + SHOWING_FILMS_COUNT_BY_BUTTON;
+
+  films.slice(prevFilmsCount, showingFilmsCount)
+    .forEach((film) => render(filmsListContainerElement, createFilmCardTemplate(film)));
+
+  if (showingFilmsCount >= films.length) {
+    showMoreButton.remove();
+  }
+});
 
 const filmsListExtraElements = filmsElement.querySelectorAll(`.films-list--extra`);
 
@@ -74,4 +85,4 @@ const footerText = footer.querySelector(`p`);
 
 footerText.textContent = `${films.length.toString()} movies inside`;
 
-//render(footer, createFilmDetailsTemplate(films[0]), `afterend`);
+render(footer, createFilmDetailsTemplate(films[0]), `afterend`);
