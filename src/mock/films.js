@@ -1,4 +1,5 @@
-import {getRandomIntegerNumber, getRandomArrayItem} from './util.js';
+import {getRandomIntegerNumber, getRandomArrayItem} from './utils.js';
+import {generateComments} from './comments.js';
 
 const TitleItems = [
   `The Dance of Life`,
@@ -117,6 +118,10 @@ const generateRandomStringFromArray = (count, array, space) => {
   return out;
 };
 
+const generateRandomCheck = () => {
+  return Math.random() > 0.5;
+};
+
 const generateFilm = () => {
   const filmTitle = getRandomArrayItem(TitleItems);
   return {
@@ -128,12 +133,15 @@ const generateFilm = () => {
     genres: generateRandomArray(getRandomIntegerNumber(1, 3), GenreItems),
     poster: getRandomArrayItem(PosterItems),
     description: generateRandomStringFromArray(5, DescriptionItems, ` `),
-    commentsCount: getRandomIntegerNumber(0, 999),
+    comments: generateComments(),
     director: getRandomArrayItem(DirectorItems),
     writers: generateRandomStringFromArray(3, WriterItems, `, `),
     actors: generateRandomStringFromArray(5, ActorItems, `, `),
     country: getRandomArrayItem(CountryItems),
-    age: getRandomIntegerNumber(0, 18)
+    age: getRandomIntegerNumber(0, 18),
+    isAddedToWatchlist: generateRandomCheck(),
+    isAlreadyWatched: generateRandomCheck(),
+    isAddedToFavorites: generateRandomCheck()
   };
 };
 

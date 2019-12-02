@@ -9,14 +9,12 @@ import {createSiteSortTemplate} from './components/site-sort.js';
 import {createTopRatedsTemplate, getTopRated} from './components/top-rates.js';
 import {createShowMoreTemplate} from './components/show-more.js';
 import {generateFilms} from './mock/films.js';
-import {getRandomIntegerNumber} from './mock/util.js';
 
 
 const FILMS_COUNT = 17;
 const SHOWING_FILMS_COUNT_ON_START = 5;
 const SHOWING_FILMS_COUNT_BY_BUTTON = 5;
 
-const profileRating = getRandomIntegerNumber(0, 30);
 const films = generateFilms(FILMS_COUNT);
 
 const render = (container, template, place = `beforeend`) => {
@@ -26,8 +24,8 @@ const render = (container, template, place = `beforeend`) => {
 const siteHeaderElement = document.querySelector(`.header`);
 const siteMainElement = document.querySelector(`.main`);
 
-render(siteHeaderElement, createProfileRatingTemplate(profileRating));
-render(siteMainElement, createSiteMenuTemplate());
+render(siteHeaderElement, createProfileRatingTemplate(films));
+render(siteMainElement, createSiteMenuTemplate(films));
 render(siteMainElement, createSiteSortTemplate());
 render(siteMainElement, createFilmsTemplate());
 
@@ -74,7 +72,7 @@ if (topRated[0].rating > 0) {
 const mostCommentedFilmsListContainerElement = filmsListExtraElements[1].querySelector(`.films-list__container`);
 
 const mostCommented = getMostCommented(films);
-if (mostCommented[0].commentsCount > 0) {
+if (mostCommented[0].comments.length > 0) {
   mostCommented.forEach((film) => {
     render(mostCommentedFilmsListContainerElement, createFilmCardTemplate(film));
   });

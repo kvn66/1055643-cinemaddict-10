@@ -11,7 +11,7 @@ const createMostCommentedTemplate = () => {
 };
 
 const getMostCommented = (films) => {
-  return films.slice().sort((a, b) => b.commentsCount - a.commentsCount).slice(0, MOST_COMMENTED_FILMS_COUNT);
+  return films.slice().sort((a, b) => b.comments.length - a.comments.length).slice(0, MOST_COMMENTED_FILMS_COUNT);
 };
 
 export {createMostCommentedTemplate, getMostCommented};

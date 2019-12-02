@@ -1,4 +1,7 @@
-export const createProfileRatingTemplate = (rating) => {
+import {getCheckedParametersCount} from '../utils.js';
+
+export const createProfileRatingTemplate = (films) => {
+  const rating = getCheckedParametersCount(films, `isAlreadyWatched`);
   let ratingStr = ``;
   if (rating > 20) {
     ratingStr = `Movie Buff`;

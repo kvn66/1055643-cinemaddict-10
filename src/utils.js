@@ -24,4 +24,14 @@ const getCommentDateTime = (date) => {
   return date.getFullYear() + `/` + month + `/` + day + ` ` + date.getHours() + `:` + date.getMinutes();
 };
 
-export {getFullDate, getCommentDateTime};
+const getCheckedParametersCount = (films, parametr) => {
+  let count = 0;
+  films.forEach((item) => {
+    if (item[parametr]) {
+      count++;
+    }
+  });
+  return count;
+};
+
+export {getFullDate, getCommentDateTime, getCheckedParametersCount};
