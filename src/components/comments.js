@@ -1,7 +1,6 @@
 import {getCommentDateTime} from '../utils.js';
 
 const createCommentTemplate = (comment) => {
-  debugger;
   let emoji = ``;
   switch (comment.emoji) {
     case `sleeping`:
