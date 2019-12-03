@@ -1,6 +1,6 @@
-import {getCheckedParametersCount} from '../utils.js';
+import {createElement, getCheckedParametersCount} from '../utils.js';
 
-export const createSiteMenuTemplate = (films) => {
+const createSiteMenuTemplate = (films) => {
   return (
     `<nav class="main-navigation">
       <a href="#all" class="main-navigation__item main-navigation__item--active">All movies</a>
@@ -11,3 +11,27 @@ export const createSiteMenuTemplate = (films) => {
     </nav>`
   );
 };
+
+export default class SiteMenu {
+  constructor(films) {
+    this._films = films;
+
+    this._element = null;
+  }
+
+  getTemplate() {
+    return createSiteMenuTemplate(this._films);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}

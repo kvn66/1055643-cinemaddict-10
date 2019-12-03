@@ -1,4 +1,4 @@
-import {getCommentDateTime} from '../utils.js';
+import {getCommentDateTime, createElement} from '../utils.js';
 
 const createCommentTemplate = (comment) => {
   let emoji = ``;
@@ -30,10 +30,34 @@ const createCommentTemplate = (comment) => {
   );
 };
 
-export const createCommentsTemplate = (film) => {
-  let outStr = ``;
-  film.comments.forEach((item) => {
-    outStr = outStr + createCommentTemplate(item);
-  });
-  return outStr;
-};
+export default class Comments {
+  constructor(film) {
+    this._film = film;
+
+    this._element = null;
+  }
+
+  createCommentsTemplate() {
+    let outStr = ``;
+    this._film.comments.forEach((item) => {
+      outStr = outStr + createCommentTemplate(item);
+    });
+    return outStr;
+  }
+
+  getTemplate() {
+    return this.createCommentsTemplate(this._film);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}

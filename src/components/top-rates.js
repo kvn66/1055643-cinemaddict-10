@@ -1,3 +1,5 @@
+import {createElement} from '../utils.js';
+
 const TOP_RATED_FILMS_COUNT = 2;
 
 const createTopRatedsTemplate = () => {
@@ -10,8 +12,30 @@ const createTopRatedsTemplate = () => {
   );
 };
 
-const getTopRated = (films) => {
-  return films.slice().sort((a, b) => b.rating - a.rating).slice(0, TOP_RATED_FILMS_COUNT);
-};
+export default class TopRates {
+  constructor(films) {
+    this._films = films;
 
-export {createTopRatedsTemplate, getTopRated};
+    this._element = null;
+  }
+
+  getTopRated() {
+    return this._films.slice().sort((a, b) => b.rating - a.rating).slice(0, TOP_RATED_FILMS_COUNT);
+  }
+
+  getTemplate() {
+    return createTopRatedsTemplate();
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}

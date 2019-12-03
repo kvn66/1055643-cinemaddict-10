@@ -1,3 +1,8 @@
+const RenderPosition = {
+  AFTEREND: `afterend`,
+  BEFOREEND: `beforeend`
+};
+
 const MonthItems = [
   `January`,
   `February`,
@@ -34,4 +39,22 @@ const getCheckedParametersCount = (films, parametr) => {
   return count;
 };
 
-export {getFullDate, getCommentDateTime, getCheckedParametersCount};
+const createElement = (template) => {
+  const newElement = document.createElement(`div`);
+  newElement.innerHTML = template;
+
+  return newElement.firstChild;
+};
+
+const render = (container, element, place = RenderPosition.BEFOREEND) => {
+  switch (place) {
+    case RenderPosition.AFTEREND:
+      container.after(element);
+      break;
+    case RenderPosition.BEFOREEND:
+      container.append(element);
+      break;
+  }
+};
+
+export {getFullDate, getCommentDateTime, getCheckedParametersCount, RenderPosition, createElement, render};

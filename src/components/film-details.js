@@ -1,11 +1,11 @@
-import {getFullDate} from '../utils.js';
-import {createCommentsTemplate} from './comments.js';
+import {createElement, getFullDate} from '../utils.js';
+import Comments from './comments.js';
 
 const setChecked = (isChecked) => {
   return isChecked ? `checked` : ``;
 };
 
-export const createFilmDetailsTemplate = (film) => {
+const createFilmDetailsTemplate = (film) => {
   const genreTitle = film.genres.length > 1 ? `Genres` : `Genre`;
   let genres = ``;
   film.genres.forEach((item) => {
@@ -91,7 +91,7 @@ export const createFilmDetailsTemplate = (film) => {
           <section class="film-details__comments-wrap">
             <h3 class="film-details__comments-title">Comments <span class="film-details__comments-count">${film.comments.length}</span></h3>
     
-            <ul class="film-details__comments-list">${createCommentsTemplate(film)}</ul>
+            <ul class="film-details__comments-list">${new Comments(film).getTemplate()}</ul>
     
             <div class="film-details__new-comment">
               <div for="add-emoji" class="film-details__add-emoji-label"></div>
@@ -128,3 +128,27 @@ export const createFilmDetailsTemplate = (film) => {
     </section>`
   );
 };
+
+export default class FilmDetails {
+  constructor(film) {
+    this._film = film;
+
+    this._element = null;
+  }
+
+  getTemplate() {
+    return createFilmDetailsTemplate(this._film);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}
