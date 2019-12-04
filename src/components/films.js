@@ -1,18 +1,8 @@
 import {createElement} from '../utils.js';
 
-const createFilmsTemplate = () => {
-  return (
-    `<section class="films"></section>`
-  );
-};
-
 export default class Films {
   constructor() {
     this._element = null;
-  }
-
-  getTemplate() {
-    return createFilmsTemplate();
   }
 
   getElement() {
@@ -25,5 +15,11 @@ export default class Films {
 
   removeElement() {
     this._element = null;
+  }
+
+  getTemplate() {
+    return (
+      `<section class="films"></section>`
+    );
   }
 }

@@ -1,6 +1,5 @@
-import {render, RenderPosition} from './utils.js';
-import FilmCard from './components/film-card.js';
-import FilmDetails from './components/film-details.js';
+import {render} from './utils.js';
+import {createFilmElement} from './components/film.js';
 import Films from './components/films.js';
 import FilmsList from './components/films-list.js';
 import MostCommented from './components/most-commented.js';
@@ -9,6 +8,7 @@ import SiteMenu from './components/site-menu.js';
 import SiteSort from './components/site-sort.js';
 import TopRates from './components/top-rates.js';
 import ShowMore from './components/show-more.js';
+import FooterStatistic from './components/footer-statistic.js';
 import {generateFilms} from './mock/films.js';
 
 
@@ -40,7 +40,7 @@ const filmsListContainerElement = filmsListElement.querySelector(`.films-list__c
 
 let showingFilmsCount = SHOWING_FILMS_COUNT_ON_START;
 films.slice(0, showingFilmsCount).forEach((film) => {
-  render(filmsListContainerElement, new FilmCard(film).getElement());
+  render(filmsListContainerElement, createFilmElement(film));
 });
 
 render(filmsListElement, new ShowMore().getElement());
@@ -51,7 +51,7 @@ showMoreButton.addEventListener(`click`, () => {
   showingFilmsCount = showingFilmsCount + SHOWING_FILMS_COUNT_BY_BUTTON;
 
   films.slice(prevFilmsCount, showingFilmsCount)
-    .forEach((film) => render(filmsListContainerElement, new FilmCard(film).getElement()));
+    .forEach((film) => render(filmsListContainerElement, createFilmElement(film)));
 
   if (showingFilmsCount >= films.length) {
     showMoreButton.remove();
@@ -65,7 +65,7 @@ const topRatedFilmsListContainerElement = filmsListExtraElements[0].querySelecto
 const topRated = topRatesComponent.getTopRated();
 if (topRated[0].rating > 0) {
   topRated.forEach((film) => {
-    render(topRatedFilmsListContainerElement, new FilmCard(film).getElement());
+    render(topRatedFilmsListContainerElement, createFilmElement(film));
   });
 }
 
@@ -74,13 +74,10 @@ const mostCommentedFilmsListContainerElement = filmsListExtraElements[1].querySe
 const mostCommented = mostCommentedComponent.getMostCommented();
 if (mostCommented[0].comments.length > 0) {
   mostCommented.forEach((film) => {
-    render(mostCommentedFilmsListContainerElement, new FilmCard(film).getElement());
+    render(mostCommentedFilmsListContainerElement, createFilmElement(film));
   });
 }
 
 const footer = document.querySelector(`.footer`);
-const footerText = footer.querySelector(`p`);
-
-footerText.textContent = `${films.length.toString()} movies inside`;
-
-render(footer, new FilmDetails(films[0]).getElement(), RenderPosition.AFTEREND);
+const footerStatistics = footer.querySelector(`.footer__statistics`);
+footer.replaceChild(new FooterStatistic(films).getElement(), footerStatistics);

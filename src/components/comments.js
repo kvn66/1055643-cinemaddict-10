@@ -1,52 +1,10 @@
-import {getCommentDateTime, createElement} from '../utils.js';
-
-const createCommentTemplate = (comment) => {
-  let emoji = ``;
-  switch (comment.emoji) {
-    case `sleeping`:
-      emoji = `smile.png`;
-      break;
-    case `neutral-face`:
-      emoji = `sleeping.png`;
-      break;
-    case `grinning`:
-      emoji = Math.random() > 0.5 ? `puke.png` : `angry.png`;
-      break;
-  }
-  return (
-    `<li class="film-details__comment">
-      <span class="film-details__comment-emoji">
-        <img src="./images/emoji/${emoji}" width="55" height="55" alt="emoji">
-      </span>
-      <div>
-        <p class="film-details__comment-text">${comment.text}</p>
-        <p class="film-details__comment-info">
-          <span class="film-details__comment-author">${comment.author}</span>
-          <span class="film-details__comment-day">${getCommentDateTime(comment.date)}</span>
-          <button class="film-details__comment-delete">Delete</button>
-        </p>
-      </div>
-    </li>`
-  );
-};
+import {createElement} from '../utils.js';
+import Comment from './comment.js';
 
 export default class Comments {
   constructor(film) {
     this._film = film;
-
     this._element = null;
-  }
-
-  createCommentsTemplate() {
-    let outStr = ``;
-    this._film.comments.forEach((item) => {
-      outStr = outStr + createCommentTemplate(item);
-    });
-    return outStr;
-  }
-
-  getTemplate() {
-    return this.createCommentsTemplate(this._film);
   }
 
   getElement() {
@@ -59,5 +17,13 @@ export default class Comments {
 
   removeElement() {
     this._element = null;
+  }
+
+  getTemplate() {
+    let outStr = ``;
+    this._film.comments.forEach((item) => {
+      outStr = outStr + new Comment(item).getTemplate();
+    });
+    return outStr;
   }
 }

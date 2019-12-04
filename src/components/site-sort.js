@@ -1,22 +1,8 @@
 import {createElement} from '../utils.js';
 
-const createSiteSortTemplate = () => {
-  return (
-    `<ul class="sort">
-      <li><a href="#" class="sort__button sort__button--active">Sort by default</a></li>
-      <li><a href="#" class="sort__button">Sort by date</a></li>
-      <li><a href="#" class="sort__button">Sort by rating</a></li>
-    </ul>`
-  );
-};
-
 export default class SiteSort {
   constructor() {
     this._element = null;
-  }
-
-  getTemplate() {
-    return createSiteSortTemplate();
   }
 
   getElement() {
@@ -29,5 +15,15 @@ export default class SiteSort {
 
   removeElement() {
     this._element = null;
+  }
+
+  getTemplate() {
+    return (
+      `<ul class="sort">
+      <li><a href="#" class="sort__button sort__button--active">Sort by default</a></li>
+      <li><a href="#" class="sort__button">Sort by date</a></li>
+      <li><a href="#" class="sort__button">Sort by rating</a></li>
+    </ul>`
+    );
   }
 }
