@@ -19,12 +19,9 @@ export default class TopRates {
       this._element = createElement(this.getTemplate());
       const topRatedFilmsListContainerElement = this._element.querySelector(`.films-list__container`);
 
-      const topRated = this.getTopRated();
-      if (topRated[0].rating > 0) {
-        topRated.forEach((film) => {
-          render(topRatedFilmsListContainerElement, createFilmElement(film));
-        });
-      }
+      this.getTopRated().forEach((film) => {
+        render(topRatedFilmsListContainerElement, createFilmElement(film));
+      });
     }
 
     return this._element;

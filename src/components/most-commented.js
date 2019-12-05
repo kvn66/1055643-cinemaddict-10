@@ -20,12 +20,9 @@ export default class MostCommented {
       this._element = createElement(this.getTemplate());
       const mostCommentedFilmsListContainerElement = this._element.querySelector(`.films-list__container`);
 
-      const mostCommented = this.getMostCommented();
-      if (mostCommented[0].comments.length > 0) {
-        mostCommented.forEach((film) => {
-          render(mostCommentedFilmsListContainerElement, createFilmElement(film));
-        });
-      }
+      this.getMostCommented().forEach((film) => {
+        render(mostCommentedFilmsListContainerElement, createFilmElement(film));
+      });
     }
 
     return this._element;
