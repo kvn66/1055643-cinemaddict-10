@@ -1,19 +1,39 @@
-import {getFullDate} from '../utils.js';
-import {createCommentsTemplate} from './comments.js';
+import {createElement, getFullDate} from '../utils.js';
+import Comments from './comments.js';
 
-const setChecked = (isChecked) => {
-  return isChecked ? `checked` : ``;
-};
+const GENRES_NAME_SWITCH_LIMIT = 1;
 
-export const createFilmDetailsTemplate = (film) => {
-  const genreTitle = film.genres.length > 1 ? `Genres` : `Genre`;
-  let genres = ``;
-  film.genres.forEach((item) => {
-    genres = genres + `<span class="film-details__genre">` + item + `</span>`;
-  });
-  const releaseDate = getFullDate(film.releaseDate);
-  return (
-    `<section class="film-details">
+export default class FilmDetails {
+  constructor(film) {
+    this._film = film;
+    this._element = null;
+    this._genreTitle = this._film.genres.length > GENRES_NAME_SWITCH_LIMIT ? `Genres` : `Genre`;
+    this._genres = ``;
+    this._film.genres.forEach((item) => {
+      this._genres = this._genres + `<span class="film-details__genre">` + item + `</span>`;
+    });
+    this._releaseDate = getFullDate(this._film.releaseDate);
+    this._comments = new Comments(this._film);
+  }
+
+  setChecked(isChecked) {
+    return isChecked ? `checked` : ``;
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+
+  getTemplate() {
+    return (
+      `<section class="film-details">
       <form class="film-details__inner" action="" method="get">
         <div class="form-details__top-container">
           <div class="film-details__close">
@@ -21,77 +41,77 @@ export const createFilmDetailsTemplate = (film) => {
           </div>
           <div class="film-details__info-wrap">
             <div class="film-details__poster">
-              <img class="film-details__poster-img" src="./images/posters/${film.poster}" alt="">
+              <img class="film-details__poster-img" src="./images/posters/${this._film.poster}" alt="">
     
-              <p class="film-details__age">${film.age.toString()}+</p>
+              <p class="film-details__age">${this._film.age.toString()}+</p>
             </div>
     
             <div class="film-details__info">
               <div class="film-details__info-head">
                 <div class="film-details__title-wrap">
-                  <h3 class="film-details__title">${film.title}</h3>
-                  <p class="film-details__title-original">Original: ${film.titleOriginal}</p>
+                  <h3 class="film-details__title">${this._film.title}</h3>
+                  <p class="film-details__title-original">Original: ${this._film.titleOriginal}</p>
                 </div>
     
                 <div class="film-details__rating">
-                  <p class="film-details__total-rating">${film.rating.toString()}</p>
+                  <p class="film-details__total-rating">${this._film.rating.toString()}</p>
                 </div>
               </div>
     
               <table class="film-details__table">
                 <tr class="film-details__row">
                   <td class="film-details__term">Director</td>
-                  <td class="film-details__cell">${film.director}</td>
+                  <td class="film-details__cell">${this._film.director}</td>
                 </tr>
                 <tr class="film-details__row">
                   <td class="film-details__term">Writers</td>
-                  <td class="film-details__cell">${film.writers}</td>
+                  <td class="film-details__cell">${this._film.writers}</td>
                 </tr>
                 <tr class="film-details__row">
                   <td class="film-details__term">Actors</td>
-                  <td class="film-details__cell">${film.actors}</td>
+                  <td class="film-details__cell">${this._film.actors}</td>
                 </tr>
                 <tr class="film-details__row">
                   <td class="film-details__term">Release Date</td>
-                  <td class="film-details__cell">${releaseDate}</td>
+                  <td class="film-details__cell">${this._releaseDate}</td>
                 </tr>
                 <tr class="film-details__row">
                   <td class="film-details__term">Runtime</td>
-                  <td class="film-details__cell">${film.duration}</td>
+                  <td class="film-details__cell">${this._film.duration}</td>
                 </tr>
                 <tr class="film-details__row">
                   <td class="film-details__term">Country</td>
-                  <td class="film-details__cell">${film.country}</td>
+                  <td class="film-details__cell">${this._film.country}</td>
                 </tr>
                 <tr class="film-details__row">
-                  <td class="film-details__term">${genreTitle}</td>
-                  <td class="film-details__cell">${genres}</td>
+                  <td class="film-details__term">${this._genreTitle}</td>
+                  <td class="film-details__cell">${this._genres}</td>
                 </tr>
               </table>
     
               <p class="film-details__film-description">
-                ${film.description}
+                ${this._film.description}
               </p>
             </div>
           </div>
     
           <section class="film-details__controls">
-            <input type="checkbox" class="film-details__control-input visually-hidden" id="watchlist" name="watchlist" ${setChecked(film.isAddedToWatchlist)}>
+            <input type="checkbox" class="film-details__control-input visually-hidden" id="watchlist" name="watchlist" ${this.setChecked(this._film.isAddedToWatchlist)}>
             <label for="watchlist" class="film-details__control-label film-details__control-label--watchlist">Add to watchlist</label>
     
-            <input type="checkbox" class="film-details__control-input visually-hidden" id="watched" name="watched" ${setChecked(film.isAlreadyWatched)}>
+            <input type="checkbox" class="film-details__control-input visually-hidden" id="watched" name="watched" ${this.setChecked(this._film.isAlreadyWatched)}>
             <label for="watched" class="film-details__control-label film-details__control-label--watched">Already watched</label>
     
-            <input type="checkbox" class="film-details__control-input visually-hidden" id="favorite" name="favorite" ${setChecked(film.isAddedToFavorites)}>
+            <input type="checkbox" class="film-details__control-input visually-hidden" id="favorite" name="favorite" ${this.setChecked(this._film.isAddedToFavorites)}>
             <label for="favorite" class="film-details__control-label film-details__control-label--favorite">Add to favorites</label>
           </section>
         </div>
     
         <div class="form-details__bottom-container">
           <section class="film-details__comments-wrap">
-            <h3 class="film-details__comments-title">Comments <span class="film-details__comments-count">${film.comments.length}</span></h3>
+            <h3 class="film-details__comments-title">Comments <span class="film-details__comments-count">${this._film.comments.length}</span></h3>
     
-            <ul class="film-details__comments-list">${createCommentsTemplate(film)}</ul>
+            <ul class="film-details__comments-list">${this._comments.getTemplate()}</ul>
     
             <div class="film-details__new-comment">
               <div for="add-emoji" class="film-details__add-emoji-label"></div>
@@ -126,5 +146,6 @@ export const createFilmDetailsTemplate = (film) => {
         </div>
       </form>
     </section>`
-  );
-};
+    );
+  }
+}
