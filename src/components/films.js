@@ -13,6 +13,7 @@ export default class Films {
   getElement() {
     if (!this._element) {
       this._element = createElement(this.getTemplate());
+
       render(this._element, new FilmsList(this._films).getElement());
 
       const topRatesComponent = new TopRates(this._films);
@@ -22,8 +23,7 @@ export default class Films {
         if ((topRatesComponent.getTopRated())[0].rating > 0) {
           render(this._element, topRatesComponent.getElement());
         }
-        const mostCommented = mostCommentedComponent.getMostCommented();
-        if (mostCommented[0].comments.length > 0) {
+        if ((mostCommentedComponent.getMostCommented())[0].comments.length > 0) {
           render(this._element, mostCommentedComponent.getElement());
         }
       }
