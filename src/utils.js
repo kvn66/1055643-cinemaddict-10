@@ -1,3 +1,5 @@
+const ADD_NULL_LIMIT = 10;
+
 const RenderPosition = {
   AFTEREND: `afterend`,
   BEFOREEND: `beforeend`
@@ -19,12 +21,12 @@ const MonthItems = [
 ];
 
 const getFullDate = (date) => {
-  const day = date.getDate() < 10 ? `0` + date.getDate() : date.getDate().toString();
+  const day = date.getDate() < ADD_NULL_LIMIT ? `0` + date.getDate() : date.getDate().toString();
   return day + ` ` + MonthItems[date.getMonth()] + ` ` + date.getFullYear();
 };
 
 const getCommentDateTime = (date) => {
-  const day = date.getDate() < 10 ? `0` + date.getDate() : date.getDate().toString();
+  const day = date.getDate() < ADD_NULL_LIMIT ? `0` + date.getDate() : date.getDate().toString();
   const month = date.getMonth() + 1;
   return date.getFullYear() + `/` + month + `/` + day + ` ` + date.getHours() + `:` + date.getMinutes();
 };
