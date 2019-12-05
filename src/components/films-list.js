@@ -33,7 +33,9 @@ export default class FilmsList {
   getElement() {
     if (!this._element) {
       this._element = createElement(this.getTemplate());
+
       const title = this._element.querySelector(`.films-list__title`);
+
       if (this._films.length) {
         title.classList.add(`visually-hidden`);
 
@@ -46,6 +48,7 @@ export default class FilmsList {
         render(filmsListContainerElement, new ShowMore().getElement(), RenderPosition.AFTEREND);
 
         upgradeElement(this._element, this._films);
+
       } else {
         title.textContent = `There are no movies in our database`;
         title.classList.remove(`visually-hidden`);
