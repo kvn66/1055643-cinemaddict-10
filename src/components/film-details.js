@@ -9,10 +9,9 @@ export default class FilmDetails {
     this._film = film;
     this._element = null;
     this._genreTitle = this._film.genres.length > GENRES_NAME_SWITCH_LIMIT ? `Genres` : `Genre`;
-    this._genres = ``;
-    this._film.genres.forEach((item) => {
-      this._genres = this._genres + `<span class="film-details__genre">` + item + `</span>`;
-    });
+    this._genres = this._film.genres.map((item) => {
+      return (`<span class="film-details__genre">` + item + `</span>`);
+    }).join(``);
     this._releaseDate = getFullDate(this._film.releaseDate);
   }
 
