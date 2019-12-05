@@ -10,20 +10,22 @@ export const createFilmElement = (film) => {
   const detailsElement = filmDetails.getElement();
   const closeButton = detailsElement.querySelector(`.film-details__close-btn`);
 
+  const closeDetail = () => {
+    document.querySelector(`.film-details`).remove();
+    closeButton.removeEventListener(`click`, onCloseClick);
+    document.removeEventListener(`keydown`, onEscKeyDown);
+  };
+
   const onEscKeyDown = (evt) => {
     const isEscKey = evt.key === `Escape` || evt.key === `Esc`;
 
     if (isEscKey) {
-      document.querySelector(`.film-details`).remove();
-      closeButton.removeEventListener(`click`, onCloseClick);
-      document.removeEventListener(`keydown`, onEscKeyDown);
+      closeDetail();
     }
   };
 
   const onCloseClick = () => {
-    document.querySelector(`.film-details`).remove();
-    closeButton.removeEventListener(`click`, onCloseClick);
-    document.removeEventListener(`keydown`, onEscKeyDown);
+    closeDetail();
   };
 
   const onClick = () => {
