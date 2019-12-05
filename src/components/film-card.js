@@ -33,7 +33,7 @@ export default class FilmCard {
       </p>
       <img src="./images/posters/${this._film.poster}" alt="" class="film-card__poster">
       <p class="film-card__description">${this._description}</p>
-      <a class="film-card__comments">${this._film.comments.length} comments</a>
+      <a class="film-card__comments">${this._film.comments.length.toString()} comments</a>
       <form class="film-card__controls">
         <button class="film-card__controls-item button film-card__controls-item--add-to-watchlist">Add to watchlist</button>
         <button class="film-card__controls-item button film-card__controls-item--mark-as-watched">Mark as watched</button>

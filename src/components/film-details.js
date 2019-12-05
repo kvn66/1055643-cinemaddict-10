@@ -1,5 +1,6 @@
 import {createElement, getFullDate} from '../utils.js';
-import Comments from './comments.js';
+import Comment from "./comment";
+import {render} from "../utils";
 
 const GENRES_NAME_SWITCH_LIMIT = 1;
 
@@ -8,12 +9,10 @@ export default class FilmDetails {
     this._film = film;
     this._element = null;
     this._genreTitle = this._film.genres.length > GENRES_NAME_SWITCH_LIMIT ? `Genres` : `Genre`;
-    this._genres = ``;
-    this._film.genres.forEach((item) => {
-      this._genres = this._genres + `<span class="film-details__genre">` + item + `</span>`;
-    });
+    this._genres = this._film.genres.map((item) => {
+      return (`<span class="film-details__genre">` + item + `</span>`);
+    }).join(``);
     this._releaseDate = getFullDate(this._film.releaseDate);
-    this._comments = new Comments(this._film);
   }
 
   setChecked(isChecked) {
@@ -23,6 +22,11 @@ export default class FilmDetails {
   getElement() {
     if (!this._element) {
       this._element = createElement(this.getTemplate());
+      const comments = this._element.querySelector(`.film-details__comments-list`);
+      this._film.comments.forEach((item) => {
+        render(comments, new Comment(item).getElement());
+      });
+
     }
     return this._element;
   }
@@ -111,7 +115,7 @@ export default class FilmDetails {
           <section class="film-details__comments-wrap">
             <h3 class="film-details__comments-title">Comments <span class="film-details__comments-count">${this._film.comments.length}</span></h3>
     
-            <ul class="film-details__comments-list">${this._comments.getTemplate()}</ul>
+            <ul class="film-details__comments-list"></ul>
     
             <div class="film-details__new-comment">
               <div for="add-emoji" class="film-details__add-emoji-label"></div>

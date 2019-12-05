@@ -111,11 +111,9 @@ const generateRandomArray = (count, array) => {
 };
 
 const generateRandomStringFromArray = (count, array, space) => {
-  let out = ``;
-  generateRandomArray(getRandomIntegerNumber(1, count), array).forEach((item, index) => {
-    out = index === 0 ? out + item : out + space + item;
-  });
-  return out;
+  return generateRandomArray(getRandomIntegerNumber(1, count), array).map((item) => {
+    return item;
+  }).join(space);
 };
 
 const generateRandomCheck = () => {
