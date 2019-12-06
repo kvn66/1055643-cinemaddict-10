@@ -5,7 +5,7 @@ const NOVICE_RATING_LIMIT = 0;
 const FAN_RATING_LIMIT = 10;
 const MOVIE_BUFF_RATING_LIMIT = 20;
 
-export default class ProfileRating extends AbstractComponent {
+export default class ProfileRatingComponent extends AbstractComponent {
   constructor(films) {
     super();
     this._films = films;

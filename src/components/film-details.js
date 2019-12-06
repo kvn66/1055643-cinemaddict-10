@@ -1,10 +1,10 @@
-import Comments from './comments.js';
+import CommentsComponent from './comments.js';
 import AbstractComponent from './abstract-component.js';
 
 const GENRES_NAME_SWITCH_LIMIT = 1;
 const ADD_NULL_LIMIT = 10;
 
-export default class FilmDetails extends AbstractComponent {
+export default class FilmDetailsComponent extends AbstractComponent {
   constructor(film) {
     super();
     this._film = film;
@@ -14,7 +14,7 @@ export default class FilmDetails extends AbstractComponent {
       return (`<span class="film-details__genre">` + item + `</span>`);
     }).join(``);
     this._releaseDate = this.getFullDate(this._film.releaseDate);
-    this._comments = new Comments(this._film);
+    this._comments = new CommentsComponent(this._film);
     this._MonthItems = [
       `January`,
       `February`,

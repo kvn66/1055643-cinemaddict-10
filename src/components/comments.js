@@ -1,7 +1,7 @@
 import AbstractComponent from './abstract-component.js';
-import Comment from './comment.js';
+import CommentComponent from './comment.js';
 
-export default class Comments extends AbstractComponent {
+export default class CommentsComponent extends AbstractComponent {
   constructor(film) {
     super();
     this._film = film;
@@ -10,7 +10,7 @@ export default class Comments extends AbstractComponent {
   getTemplate() {
     let outStr = ``;
     this._film.comments.forEach((item) => {
-      outStr = outStr + new Comment(item).getTemplate();
+      outStr = outStr + new CommentComponent(item).getTemplate();
     });
     return outStr;
   }

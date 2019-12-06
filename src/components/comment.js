@@ -1,6 +1,6 @@
 import AbstractComponent from './abstract-component.js';
 
-export default class Comment extends AbstractComponent {
+export default class CommentComponent extends AbstractComponent {
   constructor(comment) {
     super();
     this._comment = comment;

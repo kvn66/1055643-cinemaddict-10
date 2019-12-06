@@ -2,7 +2,7 @@ import AbstractComponent from './abstract-component.js';
 
 const MOST_COMMENTED_FILMS_COUNT = 2;
 
-export default class MostCommented extends AbstractComponent {
+export default class MostCommentedComponent extends AbstractComponent {
   constructor(films) {
     super();
     this._films = films;

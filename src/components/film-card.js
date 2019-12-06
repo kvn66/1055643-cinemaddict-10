@@ -3,7 +3,7 @@ import AbstractComponent from './abstract-component.js';
 
 const MAX_DESCRIPTION_LENGTH = 140;
 
-export default class FilmCard extends AbstractComponent {
+export default class FilmCardComponent extends AbstractComponent {
   constructor(film) {
     super();
     this._film = film;

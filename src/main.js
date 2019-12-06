@@ -1,14 +1,14 @@
 import {render} from './utils.js';
 import {createFilmElement} from './components/film.js';
-import Films from './components/films.js';
-import FilmsList from './components/films-list.js';
-import MostCommented from './components/most-commented.js';
-import ProfileRating from './components/profile-rating.js';
-import SiteMenu from './components/site-menu.js';
-import SiteSort from './components/site-sort.js';
-import TopRates from './components/top-rates.js';
-import ShowMore from './components/show-more.js';
-import FooterStatistic from './components/footer-statistic.js';
+import FilmsComponent from './components/films.js';
+import FilmsListComponent from './components/films-list.js';
+import MostCommentedComponent from './components/most-commented.js';
+import ProfileRatingComponent from './components/profile-rating.js';
+import SiteMenuComponent from './components/site-menu.js';
+import SiteSortComponent from './components/site-sort.js';
+import TopRatesComponent from './components/top-rates.js';
+import ShowMoreComponent from './components/show-more.js';
+import FooterStatisticComponent from './components/footer-statistic.js';
 import {generateFilms} from './mock/films.js';
 
 
@@ -21,18 +21,18 @@ const films = generateFilms(FILMS_COUNT);
 const siteHeaderElement = document.querySelector(`.header`);
 const siteMainElement = document.querySelector(`.main`);
 
-render(siteHeaderElement, new ProfileRating(films).getElement());
-render(siteMainElement, new SiteMenu(films).getElement());
-render(siteMainElement, new SiteSort().getElement());
-render(siteMainElement, new Films().getElement());
+render(siteHeaderElement, new ProfileRatingComponent(films).getElement());
+render(siteMainElement, new SiteMenuComponent(films).getElement());
+render(siteMainElement, new SiteSortComponent().getElement());
+render(siteMainElement, new FilmsComponent().getElement());
 
 const filmsElement = siteMainElement.querySelector(`.films`);
-render(filmsElement, new FilmsList().getElement());
+render(filmsElement, new FilmsListComponent().getElement());
 
-const topRatesComponent = new TopRates(films);
+const topRatesComponent = new TopRatesComponent(films);
 render(filmsElement, topRatesComponent.getElement());
 
-const mostCommentedComponent = new MostCommented(films);
+const mostCommentedComponent = new MostCommentedComponent(films);
 render(filmsElement, mostCommentedComponent.getElement());
 
 const filmsListElement = filmsElement.querySelector(`.films-list`);
@@ -43,7 +43,7 @@ films.slice(0, showingFilmsCount).forEach((film) => {
   render(filmsListContainerElement, createFilmElement(film));
 });
 
-render(filmsListElement, new ShowMore().getElement());
+render(filmsListElement, new ShowMoreComponent().getElement());
 
 const showMoreButton = filmsListElement.querySelector(`.films-list__show-more`);
 showMoreButton.addEventListener(`click`, () => {
@@ -80,4 +80,4 @@ if (mostCommented[0].comments.length > 0) {
 
 const footer = document.querySelector(`.footer`);
 const footerStatistics = footer.querySelector(`.footer__statistics`);
-footer.replaceChild(new FooterStatistic(films).getElement(), footerStatistics);
+footer.replaceChild(new FooterStatisticComponent(films).getElement(), footerStatistics);

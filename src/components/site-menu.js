@@ -1,7 +1,7 @@
 import {getCheckedParametersCount} from '../utils.js';
 import AbstractComponent from './abstract-component.js';
 
-export default class SiteMenu extends AbstractComponent {
+export default class SiteMenuComponent extends AbstractComponent {
   constructor(films) {
     super();
     this._films = films;

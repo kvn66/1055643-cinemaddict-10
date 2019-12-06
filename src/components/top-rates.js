@@ -2,7 +2,7 @@ import AbstractComponent from './abstract-component.js';
 
 const TOP_RATED_FILMS_COUNT = 2;
 
-export default class TopRates extends AbstractComponent {
+export default class TopRatesComponent extends AbstractComponent {
   constructor(films) {
     super();
     this._films = films;

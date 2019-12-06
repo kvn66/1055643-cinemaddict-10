@@ -1,6 +1,6 @@
 import AbstractComponent from './abstract-component.js';
 
-export default class FilmsList extends AbstractComponent {
+export default class FilmsListComponent extends AbstractComponent {
   getTemplate() {
     return (
       `<section class="films-list">

@@ -1,6 +1,6 @@
 import AbstractComponent from './abstract-component.js';
 
-export default class SiteSort extends AbstractComponent {
+export default class SiteSortComponent extends AbstractComponent {
   getTemplate() {
     return (
       `<ul class="sort">
