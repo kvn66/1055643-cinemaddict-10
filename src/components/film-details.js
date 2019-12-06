@@ -2,6 +2,7 @@ import Comments from './comments.js';
 import AbstractComponent from './abstract-component.js';
 
 const GENRES_NAME_SWITCH_LIMIT = 1;
+const ADD_NULL_LIMIT = 10;
 
 export default class FilmDetails extends AbstractComponent {
   constructor(film) {
@@ -35,7 +36,7 @@ export default class FilmDetails extends AbstractComponent {
   }
 
   getFullDate(date) {
-    const day = date.getDate() < 10 ? `0` + date.getDate() : date.getDate().toString();
+    const day = date.getDate() < ADD_NULL_LIMIT ? `0` + date.getDate() : date.getDate().toString();
     return (day + ` ` + this._MonthItems[date.getMonth()] + ` ` + date.getFullYear());
   }
 
