@@ -1,24 +1,13 @@
-import {createElement} from '../utils.js';
+import AbstractComponent from './abstract-component.js';
+
 
 const MAX_DESCRIPTION_LENGTH = 140;
 
-export default class FilmCard {
+export default class FilmCard extends AbstractComponent {
   constructor(film) {
+    super();
     this._film = film;
-    this._element = null;
     this._description = this._film.description.length > MAX_DESCRIPTION_LENGTH ? this._film.description.slice(0, MAX_DESCRIPTION_LENGTH - 1) + `...` : this._film.description;
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 
   getTemplate() {

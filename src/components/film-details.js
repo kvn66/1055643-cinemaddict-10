@@ -1,34 +1,42 @@
-import {createElement, getFullDate} from '../utils.js';
 import Comments from './comments.js';
+import AbstractComponent from './abstract-component.js';
 
 const GENRES_NAME_SWITCH_LIMIT = 1;
 
-export default class FilmDetails {
+export default class FilmDetails extends AbstractComponent {
   constructor(film) {
+    super();
     this._film = film;
     this._element = null;
     this._genreTitle = this._film.genres.length > GENRES_NAME_SWITCH_LIMIT ? `Genres` : `Genre`;
-    this._genres = ``;
-    this._film.genres.forEach((item) => {
-      this._genres = this._genres + `<span class="film-details__genre">` + item + `</span>`;
-    });
-    this._releaseDate = getFullDate(this._film.releaseDate);
+    this._genres = this._film.genres.map((item) => {
+      return (`<span class="film-details__genre">` + item + `</span>`);
+    }).join(``);
+    this._releaseDate = this.getFullDate(this._film.releaseDate);
     this._comments = new Comments(this._film);
+    this._MonthItems = [
+      `January`,
+      `February`,
+      `March`,
+      `April`,
+      `May`,
+      `June`,
+      `July`,
+      `August`,
+      `September`,
+      `October`,
+      `November`,
+      `December`
+    ];
   }
 
   setChecked(isChecked) {
     return isChecked ? `checked` : ``;
   }
 
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
+  getFullDate(date) {
+    const day = date.getDate() < 10 ? `0` + date.getDate() : date.getDate().toString();
+    return (day + ` ` + this._MonthItems[date.getMonth()] + ` ` + date.getFullYear());
   }
 
   getTemplate() {
