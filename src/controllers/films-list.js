@@ -1,4 +1,6 @@
 import {render, RenderPosition} from "../utils";
+import FilmsListContainerController from "./films-list-container.js";
+import ShowMoreComponent from "../components/show-more";
 
 const SHOWING_FILMS_COUNT_ON_START = 5;
 const SHOWING_FILMS_COUNT_BY_BUTTON = 5;
@@ -20,12 +22,12 @@ export default class FilmsListController {
       const filmsListContainerElement = filmsListElement.querySelector(`.films-list__container`);
 
       films.slice(0, this._showingFilmsCount).forEach((film) => {
-        render(filmsListContainerElement, createFilmElement(film));
+        new FilmsListContainerController(filmsListContainerElement).render(film);
       });
 
-      render(filmsListContainerElement, new ShowMore().getElement(), RenderPosition.AFTEREND);
+      render(filmsListContainerElement, new ShowMoreComponent().getElement(), RenderPosition.AFTEREND);
 
-      upgradeElement(filmsListElement, films);
+      //upgradeElement(filmsListElement, films);
 
     } else {
       title.textContent = `There are no movies in our database`;

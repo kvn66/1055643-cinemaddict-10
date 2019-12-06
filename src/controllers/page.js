@@ -12,6 +12,7 @@ export default class PageController {
 
     render(filmsElement, new FilmsListController(new FilmsList()).render(films));
 
+/*
     const topRatesComponent = new TopRates(films);
     const mostCommentedComponent = new MostCommented(films);
 
@@ -23,6 +24,7 @@ export default class PageController {
         render(filmsElement, mostCommentedComponent.getElement());
       }
     }
+*/
     return filmsElement;
   }
 }

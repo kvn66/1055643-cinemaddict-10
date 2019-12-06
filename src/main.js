@@ -8,6 +8,7 @@ import SiteMenuComponent from './components/site-menu.js';
 import SiteSortComponent from './components/site-sort.js';
 import TopRatesComponent from './components/top-rates.js';
 import ShowMoreComponent from './components/show-more.js';
+import PageController from './controllers/page.js';
 import FooterStatisticComponent from './components/footer-statistic.js';
 import {generateFilms} from './mock/films.js';
 
@@ -24,11 +25,17 @@ const siteMainElement = document.querySelector(`.main`);
 render(siteHeaderElement, new ProfileRatingComponent(films).getElement());
 render(siteMainElement, new SiteMenuComponent(films).getElement());
 render(siteMainElement, new SiteSortComponent().getElement());
+const filmsComponent = new FilmsComponent();
+new PageController(filmsComponent).render(films);
+
+/*
 render(siteMainElement, new FilmsComponent().getElement());
 
 const filmsElement = siteMainElement.querySelector(`.films`);
 render(filmsElement, new FilmsListComponent().getElement());
+*/
 
+/*
 const topRatesComponent = new TopRatesComponent(films);
 render(filmsElement, topRatesComponent.getElement());
 
@@ -77,6 +84,7 @@ if (mostCommented[0].comments.length > 0) {
     render(mostCommentedFilmsListContainerElement, createFilmElement(film));
   });
 }
+*/
 
 const footer = document.querySelector(`.footer`);
 const footerStatistics = footer.querySelector(`.footer__statistics`);
