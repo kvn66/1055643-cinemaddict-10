@@ -1,30 +1,23 @@
-import FilmsList from "../components/films-list.js";
+import FilmsComponent from "../components/films.js";
 import FilmsListController from "./films-list.js";
+import TopRatesController from "./top-rates.js";
+import MostCommentedController from "./most-commented.js";
 import {render} from "../utils.js";
 
 export default class PageController {
-  constructor(container) {
-    this._filmsComponent = container;
+  constructor(parentElement) {
+    this._parentElement = parentElement;
   }
 
   render(films) {
-    const filmsElement = this._filmsComponent.getElement();
-
-    render(filmsElement, new FilmsListController(new FilmsList()).render(films));
-
-/*
-    const topRatesComponent = new TopRates(films);
-    const mostCommentedComponent = new MostCommented(films);
+    const filmsElement = new FilmsComponent().getElement();
+    new FilmsListController(filmsElement).render(films);
 
     if (films.length) {
-      if ((topRatesComponent.getTopRated())[0].rating > 0) {
-        render(filmsElement, topRatesComponent.getElement());
-      }
-      if ((mostCommentedComponent.getMostCommented())[0].comments.length > 0) {
-        render(filmsElement, mostCommentedComponent.getElement());
-      }
+      new TopRatesController(filmsElement).render(films);
+      new MostCommentedController(filmsElement).render(films);
     }
-*/
-    return filmsElement;
+
+    render(this._parentElement, filmsElement);
   }
 }

@@ -8,14 +8,20 @@ export default class FilmDetailsComponent extends AbstractComponent {
   constructor(film) {
     super();
     this._film = film;
-    this._element = null;
     this._genreTitle = this._film.genres.length > GENRES_NAME_SWITCH_LIMIT ? `Genres` : `Genre`;
     this._genres = this._film.genres.map((item) => {
       return (`<span class="film-details__genre">` + item + `</span>`);
     }).join(``);
     this._releaseDate = this.getFullDate(this._film.releaseDate);
     this._comments = new CommentsComponent(this._film);
-    this._MonthItems = [
+  }
+
+  setChecked(isChecked) {
+    return isChecked ? `checked` : ``;
+  }
+
+  getFullDate(date) {
+    const MonthItems = [
       `January`,
       `February`,
       `March`,
@@ -29,15 +35,13 @@ export default class FilmDetailsComponent extends AbstractComponent {
       `November`,
       `December`
     ];
-  }
-
-  setChecked(isChecked) {
-    return isChecked ? `checked` : ``;
-  }
-
-  getFullDate(date) {
     const day = date.getDate() < ADD_NULL_LIMIT ? `0` + date.getDate() : date.getDate().toString();
-    return (day + ` ` + this._MonthItems[date.getMonth()] + ` ` + date.getFullYear());
+    return (day + ` ` + MonthItems [date.getMonth()] + ` ` + date.getFullYear());
+  }
+
+  setClickHandler(handler) {
+    const closeButton = this.getElement().querySelector(`.film-details__close-btn`);
+    closeButton.addEventListener(`click`, handler);
   }
 
   getTemplate() {
