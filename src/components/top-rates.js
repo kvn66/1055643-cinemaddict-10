@@ -1,34 +1,15 @@
-import {createElement} from '../utils.js';
-import {render} from "../utils";
-import {createFilmElement} from "./film";
+import AbstractComponent from './abstract-component.js';
 
 const TOP_RATED_FILMS_COUNT = 2;
 
-export default class TopRates {
+export default class TopRatesComponent extends AbstractComponent {
   constructor(films) {
+    super();
     this._films = films;
-    this._element = null;
   }
 
   getTopRated() {
     return this._films.slice().sort((a, b) => b.rating - a.rating).slice(0, TOP_RATED_FILMS_COUNT);
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-      const topRatedFilmsListContainerElement = this._element.querySelector(`.films-list__container`);
-
-      this.getTopRated().forEach((film) => {
-        render(topRatedFilmsListContainerElement, createFilmElement(film));
-      });
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 
   getTemplate() {
