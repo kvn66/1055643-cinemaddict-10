@@ -12,8 +12,13 @@ export default class FilmsListController {
   }
 
   render(films) {
+    const docFilmsListElement = document.querySelector(`.films-list`);
+    if (docFilmsListElement) {
+      docFilmsListElement.remove();
+    }
     let showingFilmsCount = SHOWING_FILMS_COUNT_ON_START;
-    const filmsListElement = new FilmsListComponent().getElement();
+    const filmsListComponent = new FilmsListComponent();
+    const filmsListElement = filmsListComponent.getElement();
     const title = filmsListElement.querySelector(`.films-list__title`);
     const filmsListContainerElement = filmsListElement.querySelector(`.films-list__container`);
     const filmController = new FilmController(filmsListContainerElement);
@@ -46,6 +51,6 @@ export default class FilmsListController {
       title.classList.remove(`visually-hidden`);
     }
 
-    render(this._parentElement, filmsListElement);
+    render(this._parentElement, filmsListElement, RenderPosition.AFTERBEGIN);
   }
 }

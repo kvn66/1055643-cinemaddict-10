@@ -11,7 +11,10 @@ export default class ProfileRatingComponent extends AbstractComponent {
     this._films = films;
     this._rating = getCheckedParametersCount(this._films, `isAlreadyWatched`);
     this._ratingStr = ``;
+    this.createRatingStr();
+  }
 
+  createRatingStr() {
     if (this._rating > MOVIE_BUFF_RATING_LIMIT) {
       this._ratingStr = `Movie Buff`;
     } else if (this._rating > FAN_RATING_LIMIT) {
