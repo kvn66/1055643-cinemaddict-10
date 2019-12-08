@@ -10,16 +10,20 @@ export default class PageController {
   constructor(parentElement) {
     this._parentElement = parentElement;
 
-    this._filmsElement = new FilmsComponent().getElement();
+    this._siteMenuComponent = null;
+    this._siteSortComponent = new SiteSortComponent();
+    this._filmsComponent = new FilmsComponent();
+    this._filmsElement = this._filmsComponent.getElement();
     this._filmsListController = new FilmsListController(this._filmsElement);
+    this._topRatesController = new TopRatesController(this._filmsElement);
+    this._mostCommentedController = new MostCommentedController(this._filmsElement);
   }
 
   siteSortRender(films, sortedFilms) {
-    const siteSortComponent = new SiteSortComponent();
-    const siteSortElement = siteSortComponent.getElement();
+    const siteSortElement = this._siteSortComponent.getElement();
     render(this._parentElement, siteSortElement);
 
-    siteSortComponent.setSortTypeChangeHandler((sortType) => {
+    this._siteSortComponent.setSortTypeChangeHandler((sortType) => {
       switch (sortType) {
         case SortType.RATING:
           sortedFilms = films.slice().sort((a, b) => b.rating - a.rating);
@@ -36,7 +40,10 @@ export default class PageController {
   }
 
   render(films) {
-    render(this._parentElement, new SiteMenuComponent(films).getElement());
+    if (!this._siteMenuComponent) {
+      this._siteMenuComponent = new SiteMenuComponent(films);
+    }
+    render(this._parentElement, this._siteMenuComponent.getElement());
 
     let sortedFilms = films.slice();
 
@@ -45,8 +52,8 @@ export default class PageController {
     this._filmsListController.render(sortedFilms);
 
     if (films.length) {
-      new TopRatesController(this._filmsElement).render(films);
-      new MostCommentedController(this._filmsElement).render(films);
+      this._topRatesController.render(films);
+      this._mostCommentedController.render(films);
     }
 
     render(this._parentElement, this._filmsElement);

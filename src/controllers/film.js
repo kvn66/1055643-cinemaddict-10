@@ -1,6 +1,7 @@
 import {render, RenderPosition} from "../utils";
 import FilmCardComponent from "../components/film-card.js";
 import FilmDetailsComponent from "../components/film-details.js";
+import CommentsController from "./comments.js";
 
 export default class FilmController {
   constructor(parentElement) {
@@ -13,6 +14,9 @@ export default class FilmController {
     const footer = document.querySelector(`.footer`);
     const cardElement = filmCard.getElement();
     const detailsElement = filmDetails.getElement();
+    const commentsController = new CommentsController(detailsElement);
+
+    commentsController.render(film);
 
     const closeDetails = () => {
       filmDetails.remove();

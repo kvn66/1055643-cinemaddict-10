@@ -24,10 +24,11 @@ export default class SiteSortComponent extends AbstractComponent {
       this._currenSortType = sortType;
       const listItems = this._element.querySelectorAll(`.sort__button`);
       listItems.forEach((item) => {
-        item.classList.remove(`sort__button--active`);
         let attr = item.getAttribute(`data-sort-type`);
         if (attr.includes(this._currenSortType)) {
           item.classList.add(`sort__button--active`);
+        } else {
+          item.classList.remove(`sort__button--active`);
         }
       });
 
