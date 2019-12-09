@@ -19,7 +19,7 @@ export default class FilmController {
     commentsController.render(film);
 
     const closeDetails = () => {
-      filmDetails.remove();
+      filmDetails.remove(onCloseClick);
       document.removeEventListener(`keydown`, onEscKeyDown);
     };
 

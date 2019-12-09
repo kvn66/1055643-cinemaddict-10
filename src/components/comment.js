@@ -1,4 +1,5 @@
 import AbstractComponent from './abstract-component';
+import {formatDateTime} from '../utils';
 
 export default class CommentComponent extends AbstractComponent {
   constructor(comment) {
@@ -22,12 +23,6 @@ export default class CommentComponent extends AbstractComponent {
     }
   }
 
-  formatDateTime(date) {
-    const day = date.getDate() < 10 ? `0` + date.getDate() : date.getDate().toString();
-    const month = date.getMonth() + 1;
-    return date.getFullYear() + `/` + month + `/` + day + ` ` + date.getHours() + `:` + date.getMinutes();
-  }
-
   getTemplate() {
     return (
       `<li class="film-details__comment">
@@ -38,7 +33,7 @@ export default class CommentComponent extends AbstractComponent {
         <p class="film-details__comment-text">${this._comment.text}</p>
         <p class="film-details__comment-info">
           <span class="film-details__comment-author">${this._comment.author}</span>
-          <span class="film-details__comment-day">${this.formatDateTime(this._comment.date)}</span>
+          <span class="film-details__comment-day">${formatDateTime(this._comment.date)}</span>
           <button class="film-details__comment-delete">Delete</button>
         </p>
       </div>

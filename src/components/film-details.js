@@ -1,8 +1,7 @@
-import CommentsComponent from './comments';
 import AbstractComponent from './abstract-component';
+import {getFullDate} from '../utils';
 
 const GENRES_NAME_SWITCH_LIMIT = 1;
-const ADD_NULL_LIMIT = 10;
 
 export default class FilmDetailsComponent extends AbstractComponent {
   constructor(film) {
@@ -12,36 +11,21 @@ export default class FilmDetailsComponent extends AbstractComponent {
     this._genres = this._film.genres.map((item) => {
       return (`<span class="film-details__genre">` + item + `</span>`);
     }).join(``);
-    this._releaseDate = this.getFullDate(this._film.releaseDate);
-    this._comments = new CommentsComponent(this._film);
+    this._releaseDate = getFullDate(this._film.releaseDate);
+    this._closeButton = this.getElement().querySelector(`.film-details__close-btn`);
   }
 
   setChecked(isChecked) {
     return isChecked ? `checked` : ``;
   }
 
-  getFullDate(date) {
-    const MonthItems = [
-      `January`,
-      `February`,
-      `March`,
-      `April`,
-      `May`,
-      `June`,
-      `July`,
-      `August`,
-      `September`,
-      `October`,
-      `November`,
-      `December`
-    ];
-    const day = date.getDate() < ADD_NULL_LIMIT ? `0` + date.getDate() : date.getDate().toString();
-    return (day + ` ` + MonthItems [date.getMonth()] + ` ` + date.getFullYear());
+  setClickHandler(handler) {
+    this._closeButton.addEventListener(`click`, handler);
   }
 
-  setClickHandler(handler) {
-    const closeButton = this.getElement().querySelector(`.film-details__close-btn`);
-    closeButton.addEventListener(`click`, handler);
+  remove(handler) {
+    this._closeButton.removeEventListener(`click`, handler);
+    this.getElement().remove();
   }
 
   getTemplate() {

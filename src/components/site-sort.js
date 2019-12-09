@@ -8,31 +8,29 @@ export default class SiteSortComponent extends AbstractComponent {
   }
 
   setSortTypeChangeHandler(handler) {
-    this.getElement().addEventListener(`click`, (evt) => {
-      evt.preventDefault();
+    const listItems = this.getElement().querySelectorAll(`.sort__button`);
+    listItems.forEach((item) => {
+      item.addEventListener(`click`, (evt) => {
+        evt.preventDefault();
 
-      if (evt.target.tagName !== `A`) {
-        return;
-      }
+        const sortType = evt.target.dataset.sortType;
 
-      const sortType = evt.target.dataset.sortType;
-
-      if (this._currenSortType === sortType) {
-        return;
-      }
-
-      this._currenSortType = sortType;
-      const listItems = this._element.querySelectorAll(`.sort__button`);
-      listItems.forEach((item) => {
-        let attr = item.getAttribute(`data-sort-type`);
-        if (attr.includes(this._currenSortType)) {
-          item.classList.add(`sort__button--active`);
-        } else {
-          item.classList.remove(`sort__button--active`);
+        if (this._currenSortType === sortType) {
+          return;
         }
-      });
 
-      handler(this._currenSortType);
+        this._currenSortType = sortType;
+        listItems.forEach((elem) => {
+          let attr = elem.getAttribute(`data-sort-type`);
+          if (attr.includes(this._currenSortType)) {
+            elem.classList.add(`sort__button--active`);
+          } else {
+            elem.classList.remove(`sort__button--active`);
+          }
+        });
+
+        handler(this._currenSortType);
+      });
     });
   }
 

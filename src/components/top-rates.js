@@ -1,17 +1,6 @@
 import AbstractComponent from './abstract-component';
 
-const TOP_RATED_FILMS_COUNT = 2;
-
 export default class TopRatesComponent extends AbstractComponent {
-  constructor(films) {
-    super();
-    this._films = films;
-  }
-
-  getTopRated() {
-    return this._films.slice().sort((a, b) => b.rating - a.rating).slice(0, TOP_RATED_FILMS_COUNT);
-  }
-
   getTemplate() {
     return (
       `<section class="films-list--extra">
