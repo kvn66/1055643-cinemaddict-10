@@ -1,7 +1,7 @@
 import {render, RenderPosition} from "../utils";
-import FilmCardComponent from "../components/film-card.js";
-import FilmDetailsComponent from "../components/film-details.js";
-import CommentsController from "./comments.js";
+import FilmCardComponent from "../components/film-card";
+import FilmDetailsComponent from "../components/film-details";
+import CommentsController from "./comments";
 
 export default class FilmController {
   constructor(parentElement) {

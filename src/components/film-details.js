@@ -1,5 +1,5 @@
-import CommentsComponent from './comments.js';
-import AbstractComponent from './abstract-component.js';
+import CommentsComponent from './comments';
+import AbstractComponent from './abstract-component';
 
 const GENRES_NAME_SWITCH_LIMIT = 1;
 const ADD_NULL_LIMIT = 10;

@@ -1,5 +1,5 @@
 import {render} from "../utils";
-import TopRatesComponent from "../components/top-rates.js";
+import TopRatesComponent from "../components/top-rates";
 import FilmController from "./film";
 
 export default class TopRatesController {

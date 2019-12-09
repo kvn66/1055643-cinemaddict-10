@@ -1,5 +1,5 @@
-import AbstractComponent from './abstract-component.js';
-import {SortType} from '../utils.js';
+import AbstractComponent from './abstract-component';
+import {SortType} from '../utils';
 
 export default class SiteSortComponent extends AbstractComponent {
   constructor() {

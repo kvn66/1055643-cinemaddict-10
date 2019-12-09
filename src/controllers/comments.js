@@ -1,5 +1,5 @@
 import {render} from "../utils";
-import CommentsComponent from "../components/comments.js";
+import CommentsComponent from "../components/comments";
 import CommentComponent from "../components/comment";
 
 export default class CommentsController {

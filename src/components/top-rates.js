@@ -1,4 +1,4 @@
-import AbstractComponent from './abstract-component.js';
+import AbstractComponent from './abstract-component';
 
 const TOP_RATED_FILMS_COUNT = 2;
 

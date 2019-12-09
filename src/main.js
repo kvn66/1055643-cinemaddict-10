@@ -1,8 +1,8 @@
-import {render} from './utils.js';
-import ProfileRatingComponent from './components/profile-rating.js';
-import PageController from './controllers/page.js';
-import FooterStatisticComponent from './components/footer-statistic.js';
-import {generateFilms} from './mock/films.js';
+import {render} from './utils';
+import ProfileRatingComponent from './components/profile-rating';
+import PageController from './controllers/page';
+import FooterStatisticComponent from './components/footer-statistic';
+import {generateFilms} from './mock/films';
 
 
 const FILMS_COUNT = 17;

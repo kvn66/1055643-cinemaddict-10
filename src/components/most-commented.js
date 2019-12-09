@@ -1,4 +1,4 @@
-import AbstractComponent from './abstract-component.js';
+import AbstractComponent from './abstract-component';
 
 const MOST_COMMENTED_FILMS_COUNT = 2;
 

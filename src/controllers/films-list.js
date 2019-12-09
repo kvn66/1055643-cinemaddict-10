@@ -1,5 +1,5 @@
 import {render, RenderPosition} from "../utils";
-import FilmController from "./film.js";
+import FilmController from "./film";
 import ShowMoreComponent from "../components/show-more";
 import FilmsListComponent from "../components/films-list";
 
