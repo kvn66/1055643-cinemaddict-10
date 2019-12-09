@@ -5,16 +5,12 @@ import FooterStatisticComponent from './components/footer-statistic';
 import {generateFilms} from './mock/films';
 
 
-const FILMS_COUNT = 17;
+const FILMS_COUNT = 19;
 
 const films = generateFilms(FILMS_COUNT);
 
-const siteHeaderElement = document.querySelector(`.header`);
-const siteMainElement = document.querySelector(`.main`);
+render(document.querySelector(`.header`), new ProfileRatingComponent(films).getElement());
 
-render(siteHeaderElement, new ProfileRatingComponent(films).getElement());
-new PageController(siteMainElement).render(films);
+new PageController(document.querySelector(`.main`)).render(films);
 
-const footer = document.querySelector(`.footer`);
-const footerStatistics = footer.querySelector(`.footer__statistics`);
-footer.replaceChild(new FooterStatisticComponent(films).getElement(), footerStatistics);
+document.querySelector(`.footer__statistics`).replaceWith(new FooterStatisticComponent(films).getElement());
