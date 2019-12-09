@@ -1,38 +1,47 @@
-import {createElement, getFullDate} from '../utils.js';
-import Comment from "./comment";
-import {render} from "../utils";
+import CommentsComponent from './comments.js';
+import AbstractComponent from './abstract-component.js';
 
 const GENRES_NAME_SWITCH_LIMIT = 1;
+const ADD_NULL_LIMIT = 10;
 
-export default class FilmDetails {
+export default class FilmDetailsComponent extends AbstractComponent {
   constructor(film) {
+    super();
     this._film = film;
-    this._element = null;
     this._genreTitle = this._film.genres.length > GENRES_NAME_SWITCH_LIMIT ? `Genres` : `Genre`;
     this._genres = this._film.genres.map((item) => {
       return (`<span class="film-details__genre">` + item + `</span>`);
     }).join(``);
-    this._releaseDate = getFullDate(this._film.releaseDate);
+    this._releaseDate = this.getFullDate(this._film.releaseDate);
+    this._comments = new CommentsComponent(this._film);
   }
 
   setChecked(isChecked) {
     return isChecked ? `checked` : ``;
   }
 
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-      const comments = this._element.querySelector(`.film-details__comments-list`);
-      this._film.comments.forEach((item) => {
-        render(comments, new Comment(item).getElement());
-      });
-
-    }
-    return this._element;
+  getFullDate(date) {
+    const MonthItems = [
+      `January`,
+      `February`,
+      `March`,
+      `April`,
+      `May`,
+      `June`,
+      `July`,
+      `August`,
+      `September`,
+      `October`,
+      `November`,
+      `December`
+    ];
+    const day = date.getDate() < ADD_NULL_LIMIT ? `0` + date.getDate() : date.getDate().toString();
+    return (day + ` ` + MonthItems [date.getMonth()] + ` ` + date.getFullYear());
   }
 
-  removeElement() {
-    this._element = null;
+  setClickHandler(handler) {
+    const closeButton = this.getElement().querySelector(`.film-details__close-btn`);
+    closeButton.addEventListener(`click`, handler);
   }
 
   getTemplate() {

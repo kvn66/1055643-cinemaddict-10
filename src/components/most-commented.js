@@ -1,35 +1,15 @@
-import {createElement} from '../utils.js';
-import {render} from "../utils";
-import {createFilmElement} from "./film";
+import AbstractComponent from './abstract-component.js';
 
 const MOST_COMMENTED_FILMS_COUNT = 2;
 
-export default class MostCommented {
+export default class MostCommentedComponent extends AbstractComponent {
   constructor(films) {
+    super();
     this._films = films;
-
-    this._element = null;
   }
 
   getMostCommented() {
     return this._films.slice().sort((a, b) => b.comments.length - a.comments.length).slice(0, MOST_COMMENTED_FILMS_COUNT);
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-      const mostCommentedFilmsListContainerElement = this._element.querySelector(`.films-list__container`);
-
-      this.getMostCommented().forEach((film) => {
-        render(mostCommentedFilmsListContainerElement, createFilmElement(film));
-      });
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 
   getTemplate() {

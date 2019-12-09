@@ -1,10 +1,10 @@
-import FilmCard from './film-card.js';
-import FilmDetails from './film-details.js';
+import FilmCardComponent from './film-card.js';
+import FilmDetailsComponent from './film-details.js';
 import {render, RenderPosition} from "../utils";
 
 export const createFilmElement = (film) => {
-  const filmCard = new FilmCard(film);
-  const filmDetails = new FilmDetails(film);
+  const filmCard = new FilmCardComponent(film);
+  const filmDetails = new FilmDetailsComponent(film);
   const footer = document.querySelector(`.footer`);
   const cardElement = filmCard.getElement();
   const detailsElement = filmDetails.getElement();

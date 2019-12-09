@@ -1,13 +1,14 @@
-import {createElement, getCheckedParametersCount} from '../utils.js';
+import {getCheckedParametersCount} from '../utils.js';
+import AbstractComponent from './abstract-component.js';
 
 const NOVICE_RATING_LIMIT = 0;
 const FAN_RATING_LIMIT = 10;
 const MOVIE_BUFF_RATING_LIMIT = 20;
 
-export default class ProfileRating {
+export default class ProfileRatingComponent extends AbstractComponent {
   constructor(films) {
+    super();
     this._films = films;
-    this._element = null;
     this._rating = getCheckedParametersCount(this._films, `isAlreadyWatched`);
     this._ratingStr = ``;
 
@@ -18,18 +19,6 @@ export default class ProfileRating {
     } else if (this._rating > NOVICE_RATING_LIMIT) {
       this._ratingStr = `Novice`;
     }
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 
   getTemplate() {
