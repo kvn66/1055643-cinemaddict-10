@@ -9,11 +9,24 @@ const SHOWING_FILMS_COUNT_BY_BUTTON = 5;
 export default class FilmsListController {
   constructor(parentElement) {
     this._parentElement = parentElement;
+    this._filmsListComponent = null;
+  }
+
+  renderElement(container, element, place = RenderPosition.BEFOREEND) {
+    if (!this._filmsListComponent) {
+      render(this._parentElement, element, place);
+    } else {
+      const filmsListElement = this._filmsListComponent.getElement();
+      if (container.contains(filmsListElement)) {
+        filmsListElement.replaceWith(element);
+      }
+    }
   }
 
   render(films) {
     let showingFilmsCount = SHOWING_FILMS_COUNT_ON_START;
-    const filmsListElement = new FilmsListComponent().getElement();
+    const filmsListComponent = new FilmsListComponent();
+    const filmsListElement = filmsListComponent.getElement();
     const title = filmsListElement.querySelector(`.films-list__title`);
     const filmsListContainerElement = filmsListElement.querySelector(`.films-list__container`);
     const filmController = new FilmController(filmsListContainerElement);
@@ -46,6 +59,8 @@ export default class FilmsListController {
       title.classList.remove(`visually-hidden`);
     }
 
-    render(this._parentElement, filmsListElement);
+    this.renderElement(this._parentElement, filmsListElement, RenderPosition.AFTERBEGIN);
+
+    this._filmsListComponent = filmsListComponent;
   }
 }

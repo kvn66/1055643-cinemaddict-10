@@ -1,8 +1,13 @@
-const ADD_NULL_LIMIT = 10;
-
 const RenderPosition = {
+  AFTERBEGIN: `afterbegin`,
   AFTEREND: `afterend`,
   BEFOREEND: `beforeend`
+};
+
+const SortType = {
+  DATE: `date`,
+  RATING: `rating`,
+  DEFAULT: `default`,
 };
 
 const getCheckedParametersCount = (films, parametr) => {
@@ -17,6 +22,9 @@ const getCheckedParametersCount = (films, parametr) => {
 
 const render = (container, element, place = RenderPosition.BEFOREEND) => {
   switch (place) {
+    case RenderPosition.AFTERBEGIN:
+      container.prepend(element);
+      break;
     case RenderPosition.AFTEREND:
       container.after(element);
       break;
@@ -28,4 +36,4 @@ const render = (container, element, place = RenderPosition.BEFOREEND) => {
   }
 };
 
-export {getCheckedParametersCount, RenderPosition, render};
+export {getCheckedParametersCount, RenderPosition, render, SortType};
