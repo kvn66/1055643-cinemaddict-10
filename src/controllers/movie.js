@@ -12,9 +12,7 @@ export default class MovieController {
     let filmCard = new FilmCardComponent(film);
     let filmDetails = new FilmDetailsComponent(film);
     const footer = document.querySelector(`.footer`);
-    const commentsController = new CommentsController(filmDetails.getElement());
-
-    commentsController.render(film);
+    new CommentsController(filmDetails.getElement()).render(film);
 
     const rerenderFilmCard = () => {
       const newFilmCard = new FilmCardComponent(film);
@@ -27,6 +25,8 @@ export default class MovieController {
       const newFilmDetails = new FilmDetailsComponent(film);
       filmDetails.getElement().replaceWith(newFilmDetails.getElement());
       filmDetails = newFilmDetails;
+      setDetailHandlers();
+      new CommentsController(filmDetails.getElement()).render(film);
     };
 
     const closeDetails = () => {
@@ -51,11 +51,13 @@ export default class MovieController {
     const onWatchedClick = () => {
       film.isAlreadyWatched = !film.isAlreadyWatched;
       rerenderFilmCard();
+      rerenderDetails();
     };
 
     const onFavoriteClick = () => {
       film.isAddedToFavorites = !film.isAddedToFavorites;
       rerenderFilmCard();
+      rerenderDetails();
     };
 
     const setDetailHandlers = () => {
