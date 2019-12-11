@@ -1,6 +1,6 @@
 import {render} from "../utils";
 import TopRatesComponent from "../components/top-rates";
-import FilmController from "./film";
+import MovieController from "./movie";
 
 const TOP_RATED_FILMS_COUNT = 2;
 
@@ -16,12 +16,12 @@ export default class TopRatesController {
   render(films) {
     const topRates = new TopRatesComponent();
     const topRatedFilmsListContainerElement = topRates.getElement().querySelector(`.films-list__container`);
-    const filmController = new FilmController(topRatedFilmsListContainerElement);
+    const movieController = new MovieController(topRatedFilmsListContainerElement);
     const topRated = this.getTopRated(films);
 
     if (topRated[0].rating > 0) {
       topRated.forEach((film) => {
-        filmController.render(film);
+        movieController.render(film);
       });
 
       render(this._parentElement, topRates.getElement());

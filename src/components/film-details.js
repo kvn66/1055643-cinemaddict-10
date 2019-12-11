@@ -12,19 +12,29 @@ export default class FilmDetailsComponent extends AbstractComponent {
       return (`<span class="film-details__genre">` + item + `</span>`);
     }).join(``);
     this._releaseDate = getFullDate(this._film.releaseDate);
-    this._closeButton = this.getElement().querySelector(`.film-details__close-btn`);
   }
 
   setChecked(isChecked) {
     return isChecked ? `checked` : ``;
   }
 
-  setClickHandler(handler) {
-    this._closeButton.addEventListener(`click`, handler);
+  setCloseClickHandler(handler) {
+    this.getElement().querySelector(`.film-details__close-btn`).addEventListener(`click`, handler);
   }
 
-  remove(handler) {
-    this._closeButton.removeEventListener(`click`, handler);
+  setWatchlistClickHandler(handler) {
+    this.getElement().querySelector(`.film-details__control-label--watchlist`).addEventListener(`click`, handler);
+  }
+
+  setWatchedClickHandler(handler) {
+    this.getElement().querySelector(`.film-details__control-label--watched`).addEventListener(`click`, handler);
+  }
+
+  setFavoriteClickHandler(handler) {
+    this.getElement().querySelector(`.film-details__control-label--favorite`).addEventListener(`click`, handler);
+  }
+
+  remove() {
     this.getElement().remove();
   }
 

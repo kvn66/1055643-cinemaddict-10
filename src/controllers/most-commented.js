@@ -1,5 +1,5 @@
 import {render} from "../utils";
-import FilmController from "./film";
+import MovieController from "./movie";
 import MostCommentedComponent from "../components/most-commented";
 
 const MOST_COMMENTED_FILMS_COUNT = 2;
@@ -16,12 +16,12 @@ export default class MostCommentedController {
   render(films) {
     const mostCommentedComponent = new MostCommentedComponent();
     const mostCommentedFilmsListContainerElement = mostCommentedComponent.getElement().querySelector(`.films-list__container`);
-    const filmController = new FilmController(mostCommentedFilmsListContainerElement);
+    const movieController = new MovieController(mostCommentedFilmsListContainerElement);
     const mostCommented = this.getMostCommented(films);
 
     if (mostCommented[0].comments.length > 0) {
       mostCommented.forEach((film) => {
-        filmController.render(film);
+        movieController.render(film);
       });
 
       render(this._parentElement, mostCommentedComponent.getElement());
