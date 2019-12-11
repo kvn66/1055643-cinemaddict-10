@@ -42,19 +42,58 @@ export default class MovieController {
       }
     };
 
-    const onWatchlistClick = () => {
+    const onCardWatchlistClick = () => {
+      film.isAddedToWatchlist = !film.isAddedToWatchlist;
+      const cardWatchlist = filmCard.getElement().querySelector(`.film-card__controls-item--add-to-watchlist`);
+      const detailWatchlist = filmDetails.getElement().querySelector(`#watchlist`);
+      if (film.isAddedToWatchlist) {
+        cardWatchlist.classList.add(`film-card__controls-item--active`);
+        detailWatchlist.checked = true;
+      } else {
+        cardWatchlist.classList.remove(`film-card__controls-item--active`);
+        detailWatchlist.checked = false;
+      }
+    };
+
+    const onDetailWatchlistClick = () => {
       film.isAddedToWatchlist = !film.isAddedToWatchlist;
       rerenderFilmCard();
       rerenderDetails();
     };
 
-    const onWatchedClick = () => {
+    const onCardWatchedClick = () => {
+      film.isAlreadyWatched = !film.isAlreadyWatched;
+      const cardWatched = filmCard.getElement().querySelector(`.film-card__controls-item--mark-as-watched`);
+      const detailWatched = filmDetails.getElement().querySelector(`#watched`);
+      if (film.isAlreadyWatched) {
+        cardWatched.classList.add(`film-card__controls-item--active`);
+        detailWatched.checked = true;
+      } else {
+        cardWatched.classList.remove(`film-card__controls-item--active`);
+        detailWatched.checked = false;
+      }
+    };
+
+    const onDetailWatchedClick = () => {
       film.isAlreadyWatched = !film.isAlreadyWatched;
       rerenderFilmCard();
       rerenderDetails();
     };
 
-    const onFavoriteClick = () => {
+    const onCardFavoriteClick = () => {
+      film.isAddedToFavorites = !film.isAddedToFavorites;
+      const cardFavorite = filmCard.getElement().querySelector(`.film-card__controls-item--favorite`);
+      const detailFavorite = filmDetails.getElement().querySelector(`#favorite`);
+      if (film.isAddedToFavorites) {
+        cardFavorite.classList.add(`film-card__controls-item--active`);
+        detailFavorite.checked = true;
+      } else {
+        cardFavorite.classList.remove(`film-card__controls-item--active`);
+        detailFavorite.checked = false;
+      }
+    };
+
+    const onDetailFavoriteClick = () => {
       film.isAddedToFavorites = !film.isAddedToFavorites;
       rerenderFilmCard();
       rerenderDetails();
@@ -64,9 +103,9 @@ export default class MovieController {
       filmDetails.setCloseClickHandler(() => {
         closeDetails();
       });
-      filmDetails.setWatchlistClickHandler(onWatchlistClick);
-      filmDetails.setWatchedClickHandler(onWatchedClick);
-      filmDetails.setFavoriteClickHandler(onFavoriteClick);
+      filmDetails.setWatchlistClickHandler(onDetailWatchlistClick);
+      filmDetails.setWatchedClickHandler(onDetailWatchedClick);
+      filmDetails.setFavoriteClickHandler(onDetailFavoriteClick);
     };
 
     const onOpenDetailsClick = () => {
@@ -77,9 +116,9 @@ export default class MovieController {
 
     const setFilmCardHandlers = () => {
       filmCard.setOpenDetailsClickHandler(onOpenDetailsClick);
-      filmCard.setWatchlistClickHandler(onWatchlistClick);
-      filmCard.setWatchedClickHandler(onWatchedClick);
-      filmCard.setFavoriteClickHandler(onFavoriteClick);
+      filmCard.setWatchlistClickHandler(onCardWatchlistClick);
+      filmCard.setWatchedClickHandler(onCardWatchedClick);
+      filmCard.setFavoriteClickHandler(onCardFavoriteClick);
     };
 
     setFilmCardHandlers();
