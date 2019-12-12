@@ -12,7 +12,7 @@ export default class FilmsListController {
     this._filmsListComponent = null;
   }
 
-  renderElement(container, element, place = RenderPosition.BEFOREEND) {
+  _renderElement(container, element, place = RenderPosition.BEFOREEND) {
     if (!this._filmsListComponent) {
       render(this._parentElement, element, place);
     } else {
@@ -59,7 +59,7 @@ export default class FilmsListController {
       title.classList.remove(`visually-hidden`);
     }
 
-    this.renderElement(this._parentElement, filmsListElement, RenderPosition.AFTERBEGIN);
+    this._renderElement(this._parentElement, filmsListElement, RenderPosition.AFTERBEGIN);
 
     this._filmsListComponent = filmsListComponent;
   }

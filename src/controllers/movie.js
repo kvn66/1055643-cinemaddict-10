@@ -1,6 +1,7 @@
 import {render, RenderPosition} from "../utils";
 import FilmCardComponent from "../components/film-card";
 import FilmDetailsComponent from "../components/film-details";
+import UserRatingComponent from "../components/user-rating";
 import CommentsController from "./comments";
 
 export default class MovieController {
@@ -8,26 +9,36 @@ export default class MovieController {
     this._parentElement = parentElement;
   }
 
+  _applayChangeToView(datafield, cardElement, detailElement) {
+    if (datafield) {
+      cardElement.classList.add(`film-card__controls-item--active`);
+      detailElement.checked = true;
+    } else {
+      cardElement.classList.remove(`film-card__controls-item--active`);
+      detailElement.checked = false;
+    }
+  }
+
+  _renderUserRating(datafield, filmDetails, userRatingComponent) {
+    const controls = filmDetails.getElement().querySelector(`.film-details__controls`);
+    const userRatingElement = filmDetails.getElement().querySelector(`.form-details__middle-container`);
+    if (datafield) {
+      if (!userRatingElement) {
+        render(controls, userRatingComponent.getElement(), RenderPosition.AFTEREND);
+      }
+    } else {
+      if (userRatingElement) {
+        userRatingComponent.getElement().remove();
+      }
+    }
+  }
+
   render(film) {
     let filmCard = new FilmCardComponent(film);
     let filmDetails = new FilmDetailsComponent(film);
     const footer = document.querySelector(`.footer`);
     new CommentsController(filmDetails.getElement()).render(film);
-
-    const rerenderFilmCard = () => {
-      const newFilmCard = new FilmCardComponent(film);
-      filmCard.getElement().replaceWith(newFilmCard.getElement());
-      filmCard = newFilmCard;
-      setFilmCardHandlers();
-    };
-
-    const rerenderDetails = () => {
-      const newFilmDetails = new FilmDetailsComponent(film);
-      filmDetails.getElement().replaceWith(newFilmDetails.getElement());
-      filmDetails = newFilmDetails;
-      setDetailHandlers();
-      new CommentsController(filmDetails.getElement()).render(film);
-    };
+    const userRatingComponent = new UserRatingComponent();
 
     const closeDetails = () => {
       filmDetails.remove();
@@ -42,70 +53,38 @@ export default class MovieController {
       }
     };
 
-    const onCardWatchlistClick = () => {
+    const onWatchlistClick = (evt) => {
+      evt.preventDefault();
       film.isAddedToWatchlist = !film.isAddedToWatchlist;
       const cardWatchlist = filmCard.getElement().querySelector(`.film-card__controls-item--add-to-watchlist`);
       const detailWatchlist = filmDetails.getElement().querySelector(`#watchlist`);
-      if (film.isAddedToWatchlist) {
-        cardWatchlist.classList.add(`film-card__controls-item--active`);
-        detailWatchlist.checked = true;
-      } else {
-        cardWatchlist.classList.remove(`film-card__controls-item--active`);
-        detailWatchlist.checked = false;
-      }
+      this._applayChangeToView(film.isAddedToWatchlist, cardWatchlist, detailWatchlist);
     };
 
-    const onDetailWatchlistClick = () => {
-      film.isAddedToWatchlist = !film.isAddedToWatchlist;
-      rerenderFilmCard();
-      rerenderDetails();
-    };
-
-    const onCardWatchedClick = () => {
+    const onWatchedClick = (evt) => {
+      evt.preventDefault();
       film.isAlreadyWatched = !film.isAlreadyWatched;
       const cardWatched = filmCard.getElement().querySelector(`.film-card__controls-item--mark-as-watched`);
       const detailWatched = filmDetails.getElement().querySelector(`#watched`);
-      if (film.isAlreadyWatched) {
-        cardWatched.classList.add(`film-card__controls-item--active`);
-        detailWatched.checked = true;
-      } else {
-        cardWatched.classList.remove(`film-card__controls-item--active`);
-        detailWatched.checked = false;
-      }
+      this._applayChangeToView(film.isAlreadyWatched, cardWatched, detailWatched);
+      this._renderUserRating(film.isAlreadyWatched, filmDetails, userRatingComponent);
     };
 
-    const onDetailWatchedClick = () => {
-      film.isAlreadyWatched = !film.isAlreadyWatched;
-      rerenderFilmCard();
-      rerenderDetails();
-    };
-
-    const onCardFavoriteClick = () => {
+    const onFavoriteClick = (evt) => {
+      evt.preventDefault();
       film.isAddedToFavorites = !film.isAddedToFavorites;
       const cardFavorite = filmCard.getElement().querySelector(`.film-card__controls-item--favorite`);
       const detailFavorite = filmDetails.getElement().querySelector(`#favorite`);
-      if (film.isAddedToFavorites) {
-        cardFavorite.classList.add(`film-card__controls-item--active`);
-        detailFavorite.checked = true;
-      } else {
-        cardFavorite.classList.remove(`film-card__controls-item--active`);
-        detailFavorite.checked = false;
-      }
-    };
-
-    const onDetailFavoriteClick = () => {
-      film.isAddedToFavorites = !film.isAddedToFavorites;
-      rerenderFilmCard();
-      rerenderDetails();
+      this._applayChangeToView(film.isAddedToFavorites, cardFavorite, detailFavorite);
     };
 
     const setDetailHandlers = () => {
       filmDetails.setCloseClickHandler(() => {
         closeDetails();
       });
-      filmDetails.setWatchlistClickHandler(onDetailWatchlistClick);
-      filmDetails.setWatchedClickHandler(onDetailWatchedClick);
-      filmDetails.setFavoriteClickHandler(onDetailFavoriteClick);
+      filmDetails.setWatchlistClickHandler(onWatchlistClick);
+      filmDetails.setWatchedClickHandler(onWatchedClick);
+      filmDetails.setFavoriteClickHandler(onFavoriteClick);
     };
 
     const onOpenDetailsClick = () => {
@@ -116,12 +95,13 @@ export default class MovieController {
 
     const setFilmCardHandlers = () => {
       filmCard.setOpenDetailsClickHandler(onOpenDetailsClick);
-      filmCard.setWatchlistClickHandler(onCardWatchlistClick);
-      filmCard.setWatchedClickHandler(onCardWatchedClick);
-      filmCard.setFavoriteClickHandler(onCardFavoriteClick);
+      filmCard.setWatchlistClickHandler(onWatchlistClick);
+      filmCard.setWatchedClickHandler(onWatchedClick);
+      filmCard.setFavoriteClickHandler(onFavoriteClick);
     };
 
     setFilmCardHandlers();
+    this._renderUserRating(film.isAlreadyWatched, filmDetails, userRatingComponent);
     render(this._parentElement, filmCard.getElement());
   }
 }
