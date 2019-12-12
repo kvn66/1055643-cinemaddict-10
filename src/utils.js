@@ -8,16 +8,16 @@ const formatDateTime = (date) => {
   return moment(date).format(`YYYY/MM/DD hh:mm`);
 };
 
-const RenderPosition = {
-  AFTERBEGIN: `afterbegin`,
-  AFTEREND: `afterend`,
-  BEFOREEND: `beforeend`
-};
-
 const SortType = {
   DATE: `date`,
   RATING: `rating`,
   DEFAULT: `default`,
+};
+
+const RenderPosition = {
+  AFTERBEGIN: `afterbegin`,
+  AFTEREND: `afterend`,
+  BEFOREEND: `beforeend`
 };
 
 const getCheckedParametersCount = (films, parametr) => {
