@@ -11,11 +11,19 @@ export default class MovieController {
 
   _applayChangeToView(datafield, cardElement, detailElement) {
     if (datafield) {
-      cardElement.classList.add(`film-card__controls-item--active`);
-      detailElement.checked = true;
+      if (!cardElement.classList.contains(`film-card__controls-item--active`)) {
+        cardElement.classList.add(`film-card__controls-item--active`);
+      }
+      if (!detailElement.checked) {
+        detailElement.checked = true;
+      }
     } else {
-      cardElement.classList.remove(`film-card__controls-item--active`);
-      detailElement.checked = false;
+      if (cardElement.classList.contains(`film-card__controls-item--active`)) {
+        cardElement.classList.remove(`film-card__controls-item--active`);
+      }
+      if (detailElement.checked) {
+        detailElement.checked = false;
+      }
     }
   }
 
@@ -56,27 +64,42 @@ export default class MovieController {
     const onWatchlistClick = (evt) => {
       evt.preventDefault();
       film.isAddedToWatchlist = !film.isAddedToWatchlist;
+      const event = new Event(`watchlistChange`);
+      document.dispatchEvent(event);
+    };
+
+    document.addEventListener(`watchlistChange`, () => {
       const cardWatchlist = filmCard.getElement().querySelector(`.film-card__controls-item--add-to-watchlist`);
       const detailWatchlist = filmDetails.getElement().querySelector(`#watchlist`);
       this._applayChangeToView(film.isAddedToWatchlist, cardWatchlist, detailWatchlist);
-    };
+    });
 
     const onWatchedClick = (evt) => {
       evt.preventDefault();
       film.isAlreadyWatched = !film.isAlreadyWatched;
+      const event = new Event(`watchedChange`);
+      document.dispatchEvent(event);
+    };
+
+    document.addEventListener(`watchedChange`, () => {
       const cardWatched = filmCard.getElement().querySelector(`.film-card__controls-item--mark-as-watched`);
       const detailWatched = filmDetails.getElement().querySelector(`#watched`);
       this._applayChangeToView(film.isAlreadyWatched, cardWatched, detailWatched);
       this._renderUserRating(film.isAlreadyWatched, filmDetails, userRatingComponent);
-    };
+    });
 
     const onFavoriteClick = (evt) => {
       evt.preventDefault();
       film.isAddedToFavorites = !film.isAddedToFavorites;
+      const event = new Event(`favoriteChange`);
+      document.dispatchEvent(event);
+    };
+
+    document.addEventListener(`favoriteChange`, () => {
       const cardFavorite = filmCard.getElement().querySelector(`.film-card__controls-item--favorite`);
       const detailFavorite = filmDetails.getElement().querySelector(`#favorite`);
       this._applayChangeToView(film.isAddedToFavorites, cardFavorite, detailFavorite);
-    };
+    });
 
     const setDetailHandlers = () => {
       filmDetails.setCloseClickHandler(() => {
