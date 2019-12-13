@@ -1,11 +1,28 @@
-import moment from 'moment';
+const ADD_NULL_LIMIT = 10;
 
 const getFullDate = (date) => {
-  return moment(date).format(`DD MMMM YYYY`);
+  const MonthItems = [
+    `January`,
+    `February`,
+    `March`,
+    `April`,
+    `May`,
+    `June`,
+    `July`,
+    `August`,
+    `September`,
+    `October`,
+    `November`,
+    `December`
+  ];
+  const day = date.getDate() < ADD_NULL_LIMIT ? `0` + date.getDate() : date.getDate().toString();
+  return (day + ` ` + MonthItems [date.getMonth()] + ` ` + date.getFullYear());
 };
 
 const formatDateTime = (date) => {
-  return moment(date).format(`YYYY/MM/DD hh:mm`);
+  const day = date.getDate() < ADD_NULL_LIMIT ? `0` + date.getDate() : date.getDate().toString();
+  const month = date.getMonth() + 1;
+  return date.getFullYear() + `/` + month + `/` + day + ` ` + date.getHours() + `:` + date.getMinutes();
 };
 
 const SortType = {
