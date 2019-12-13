@@ -10,7 +10,6 @@ export default class PageController {
   constructor(parentElement) {
     this._parentElement = parentElement;
 
-    this._siteMenuComponent = null;
     this._siteSortComponent = new SiteSortComponent();
     this._filmsComponent = new FilmsComponent();
     this._filmsElement = this._filmsComponent.getElement();
@@ -40,10 +39,7 @@ export default class PageController {
   }
 
   render(films) {
-    if (!this._siteMenuComponent) {
-      this._siteMenuComponent = new SiteMenuComponent(films);
-    }
-    render(this._parentElement, this._siteMenuComponent.getElement());
+    render(this._parentElement, new SiteMenuComponent(films).getElement());
 
     let sortedFilms = films.slice();
 

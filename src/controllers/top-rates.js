@@ -15,8 +15,7 @@ export default class TopRatesController {
 
   render(films) {
     const topRates = new TopRatesComponent();
-    const topRatedFilmsListContainerElement = topRates.getElement().querySelector(`.films-list__container`);
-    const movieController = new MovieController(topRatedFilmsListContainerElement);
+    const movieController = new MovieController(topRates.getContainerElement());
     const topRated = this.getTopRated(films);
 
     if (topRated[0].rating > 0) {

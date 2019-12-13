@@ -26,10 +26,7 @@ export default class FilmsListController {
   render(films) {
     let showingFilmsCount = SHOWING_FILMS_COUNT_ON_START;
     const filmsListComponent = new FilmsListComponent();
-    const filmsListElement = filmsListComponent.getElement();
-    const title = filmsListElement.querySelector(`.films-list__title`);
-    const filmsListContainerElement = filmsListElement.querySelector(`.films-list__container`);
-    const movieController = new MovieController(filmsListContainerElement);
+    const movieController = new MovieController(filmsListComponent.getContainer());
     const showMoreComponent = new ShowMoreComponent();
 
     const onClick = () => {
@@ -45,21 +42,21 @@ export default class FilmsListController {
     };
 
     if (films.length) {
-      title.classList.add(`visually-hidden`);
+      filmsListComponent.titleHide = true;
 
       films.slice(0, showingFilmsCount).forEach((film) => {
         movieController.render(film);
       });
 
-      render(filmsListContainerElement, showMoreComponent.getElement(), RenderPosition.AFTEREND);
+      render(filmsListComponent.getContainer(), showMoreComponent.getElement(), RenderPosition.AFTEREND);
 
       showMoreComponent.setClickHandler(onClick);
     } else {
-      title.textContent = `There are no movies in our database`;
-      title.classList.remove(`visually-hidden`);
+      filmsListComponent.titleText = `There are no movies in our database`;
+      filmsListComponent.titleHide = false;
     }
 
-    this._renderElement(this._parentElement, filmsListElement, RenderPosition.AFTERBEGIN);
+    this._renderElement(this._parentElement, filmsListComponent.getElement(), RenderPosition.AFTERBEGIN);
 
     this._filmsListComponent = filmsListComponent;
   }

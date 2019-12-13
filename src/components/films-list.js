@@ -7,12 +7,20 @@ export default class FilmsListComponent extends AbstractComponent {
     this.container = this.getElement().querySelector(`.films-list__container`);
   }
 
-  set hideTitle(hide) {
+  set titleHide(hide) {
     if (hide) {
       this.title.classList.add(`visually-hidden`);
     } else {
       this.title.classList.remove(`visually-hidden`);
     }
+  }
+
+  set titleText(text) {
+    this.title.textContent = text;
+  }
+
+  getContainer() {
+    return this.container;
   }
 
   getTemplate() {

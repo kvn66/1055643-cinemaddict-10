@@ -15,8 +15,7 @@ export default class MostCommentedController {
 
   render(films) {
     const mostCommentedComponent = new MostCommentedComponent();
-    const mostCommentedFilmsListContainerElement = mostCommentedComponent.getElement().querySelector(`.films-list__container`);
-    const movieController = new MovieController(mostCommentedFilmsListContainerElement);
+    const movieController = new MovieController(mostCommentedComponent.getContainerElement());
     const mostCommented = this.getMostCommented(films);
 
     if (mostCommented[0].comments.length > 0) {

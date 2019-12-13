@@ -12,6 +12,41 @@ export default class FilmDetailsComponent extends AbstractComponent {
       return (`<span class="film-details__genre">` + item + `</span>`);
     }).join(``);
     this._releaseDate = getFullDate(this._film.releaseDate);
+    this._watchlist = this.getElement().querySelector(`#watchlist`);
+    this._watched = this.getElement().querySelector(`#watched`);
+    this._favorite = this.getElement().querySelector(`#favorite`);
+  }
+
+  get watchlistChecked() {
+    return this._watchlist.checked;
+  }
+
+  set watchlistChecked(checked) {
+    this._watchlist.checked = checked;
+  }
+
+  get watchedChecked() {
+    return this._watched.checked;
+  }
+
+  set watchedChecked(checked) {
+    this._watched.checked = checked;
+  }
+
+  get favoriteChecked() {
+    return this._favorite.checked;
+  }
+
+  set favoriteChecked(checked) {
+    this._favorite.checked = checked;
+  }
+
+  getControlsElement() {
+    return this.getElement().querySelector(`.film-details__controls`);
+  }
+
+  getUserRatingElement() {
+    return this.getElement().querySelector(`.form-details__middle-container`);
   }
 
   setChecked(isChecked) {

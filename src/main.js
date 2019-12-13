@@ -5,7 +5,7 @@ import FooterStatisticComponent from './components/footer-statistic';
 import {generateFilms} from './mock/films';
 
 
-const FILMS_COUNT = 19;
+const FILMS_COUNT = 22;
 
 const films = generateFilms(FILMS_COUNT);
 

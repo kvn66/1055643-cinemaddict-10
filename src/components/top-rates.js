@@ -1,6 +1,10 @@
 import AbstractComponent from './abstract-component';
 
 export default class TopRatesComponent extends AbstractComponent {
+  getContainerElement() {
+    return this.getElement().querySelector(`.films-list__container`);
+  }
+
   getTemplate() {
     return (
       `<section class="films-list--extra">

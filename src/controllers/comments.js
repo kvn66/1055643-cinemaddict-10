@@ -8,8 +8,7 @@ export default class CommentsController {
   }
 
   render(film) {
-    const commentsComponent = new CommentsComponent();
-    const commentsElement = commentsComponent.getElement();
+    const commentsElement = new CommentsComponent().getElement();
     film.comments.forEach((item) => {
       render(commentsElement, new CommentComponent(item).getElement());
     });
