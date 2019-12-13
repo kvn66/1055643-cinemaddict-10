@@ -1,6 +1,20 @@
 import AbstractComponent from './abstract-component';
 
 export default class FilmsListComponent extends AbstractComponent {
+  constructor() {
+    super();
+    this.title = this.getElement().querySelector(`.films-list__title`);
+    this.container = this.getElement().querySelector(`.films-list__container`);
+  }
+
+  set hideTitle(hide) {
+    if (hide) {
+      this.title.classList.add(`visually-hidden`);
+    } else {
+      this.title.classList.remove(`visually-hidden`);
+    }
+  }
+
   getTemplate() {
     return (
       `<section class="films-list">
