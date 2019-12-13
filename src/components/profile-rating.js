@@ -1,5 +1,5 @@
-import {getCheckedParametersCount} from '../utils.js';
-import AbstractComponent from './abstract-component.js';
+import {getCheckedParametersCount} from '../utils';
+import AbstractComponent from './abstract-component';
 
 const NOVICE_RATING_LIMIT = 0;
 const FAN_RATING_LIMIT = 10;

@@ -1,5 +1,5 @@
 import {render, RenderPosition} from "../utils";
-import FilmController from "./film.js";
+import MovieController from "./movie";
 import ShowMoreComponent from "../components/show-more";
 import FilmsListComponent from "../components/films-list";
 
@@ -12,7 +12,7 @@ export default class FilmsListController {
     this._filmsListComponent = null;
   }
 
-  renderElement(container, element, place = RenderPosition.BEFOREEND) {
+  _renderElement(container, element, place = RenderPosition.BEFOREEND) {
     if (!this._filmsListComponent) {
       render(this._parentElement, element, place);
     } else {
@@ -29,7 +29,7 @@ export default class FilmsListController {
     const filmsListElement = filmsListComponent.getElement();
     const title = filmsListElement.querySelector(`.films-list__title`);
     const filmsListContainerElement = filmsListElement.querySelector(`.films-list__container`);
-    const filmController = new FilmController(filmsListContainerElement);
+    const movieController = new MovieController(filmsListContainerElement);
     const showMoreComponent = new ShowMoreComponent();
 
     const onClick = () => {
@@ -37,7 +37,7 @@ export default class FilmsListController {
       showingFilmsCount = showingFilmsCount + SHOWING_FILMS_COUNT_BY_BUTTON;
 
       films.slice(prevFilmsCount, showingFilmsCount)
-        .forEach((film) => filmController.render(film));
+        .forEach((film) => movieController.render(film));
 
       if (showingFilmsCount >= films.length) {
         showMoreComponent.remove();
@@ -48,7 +48,7 @@ export default class FilmsListController {
       title.classList.add(`visually-hidden`);
 
       films.slice(0, showingFilmsCount).forEach((film) => {
-        filmController.render(film);
+        movieController.render(film);
       });
 
       render(filmsListContainerElement, showMoreComponent.getElement(), RenderPosition.AFTEREND);
@@ -59,7 +59,7 @@ export default class FilmsListController {
       title.classList.remove(`visually-hidden`);
     }
 
-    this.renderElement(this._parentElement, filmsListElement, RenderPosition.AFTERBEGIN);
+    this._renderElement(this._parentElement, filmsListElement, RenderPosition.AFTERBEGIN);
 
     this._filmsListComponent = filmsListComponent;
   }

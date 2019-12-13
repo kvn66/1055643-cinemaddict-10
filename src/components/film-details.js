@@ -1,8 +1,7 @@
-import CommentsComponent from './comments.js';
-import AbstractComponent from './abstract-component.js';
+import AbstractComponent from './abstract-component';
+import {getFullDate} from '../utils';
 
 const GENRES_NAME_SWITCH_LIMIT = 1;
-const ADD_NULL_LIMIT = 10;
 
 export default class FilmDetailsComponent extends AbstractComponent {
   constructor(film) {
@@ -12,36 +11,31 @@ export default class FilmDetailsComponent extends AbstractComponent {
     this._genres = this._film.genres.map((item) => {
       return (`<span class="film-details__genre">` + item + `</span>`);
     }).join(``);
-    this._releaseDate = this.getFullDate(this._film.releaseDate);
-    this._comments = new CommentsComponent(this._film);
+    this._releaseDate = getFullDate(this._film.releaseDate);
   }
 
   setChecked(isChecked) {
     return isChecked ? `checked` : ``;
   }
 
-  getFullDate(date) {
-    const MonthItems = [
-      `January`,
-      `February`,
-      `March`,
-      `April`,
-      `May`,
-      `June`,
-      `July`,
-      `August`,
-      `September`,
-      `October`,
-      `November`,
-      `December`
-    ];
-    const day = date.getDate() < ADD_NULL_LIMIT ? `0` + date.getDate() : date.getDate().toString();
-    return (day + ` ` + MonthItems [date.getMonth()] + ` ` + date.getFullYear());
+  setCloseClickHandler(handler) {
+    this.getElement().querySelector(`.film-details__close-btn`).addEventListener(`click`, handler);
   }
 
-  setClickHandler(handler) {
-    const closeButton = this.getElement().querySelector(`.film-details__close-btn`);
-    closeButton.addEventListener(`click`, handler);
+  setWatchlistClickHandler(handler) {
+    this.getElement().querySelector(`.film-details__control-label--watchlist`).addEventListener(`click`, handler);
+  }
+
+  setWatchedClickHandler(handler) {
+    this.getElement().querySelector(`.film-details__control-label--watched`).addEventListener(`click`, handler);
+  }
+
+  setFavoriteClickHandler(handler) {
+    this.getElement().querySelector(`.film-details__control-label--favorite`).addEventListener(`click`, handler);
+  }
+
+  remove() {
+    this.getElement().remove();
   }
 
   getTemplate() {
@@ -119,7 +113,7 @@ export default class FilmDetailsComponent extends AbstractComponent {
             <label for="favorite" class="film-details__control-label film-details__control-label--favorite">Add to favorites</label>
           </section>
         </div>
-    
+        
         <div class="form-details__bottom-container">
           <section class="film-details__comments-wrap">
             <h3 class="film-details__comments-title">Comments <span class="film-details__comments-count">${this._film.comments.length}</span></h3>

@@ -1,8 +1,8 @@
-import FilmsComponent from "../components/films.js";
-import FilmsListController from "./films-list.js";
-import TopRatesController from "./top-rates.js";
-import MostCommentedController from "./most-commented.js";
-import {render, SortType} from "../utils.js";
+import FilmsComponent from "../components/films";
+import FilmsListController from "./films-list";
+import TopRatesController from "./top-rates";
+import MostCommentedController from "./most-commented";
+import {render, SortType} from "../utils";
 import SiteMenuComponent from "../components/site-menu";
 import SiteSortComponent from "../components/site-sort";
 

@@ -1,4 +1,4 @@
-import AbstractComponent from './abstract-component.js';
+import AbstractComponent from './abstract-component';
 
 
 const MAX_DESCRIPTION_LENGTH = 140;
@@ -10,10 +10,22 @@ export default class FilmCardComponent extends AbstractComponent {
     this._description = this._film.description.length > MAX_DESCRIPTION_LENGTH ? this._film.description.slice(0, MAX_DESCRIPTION_LENGTH - 1) + `...` : this._film.description;
   }
 
-  setClickHandler(handler) {
+  setOpenDetailsClickHandler(handler) {
     this.getElement().querySelector(`.film-card__title`).addEventListener(`click`, handler);
     this.getElement().querySelector(`.film-card__poster`).addEventListener(`click`, handler);
     this.getElement().querySelector(`.film-card__comments`).addEventListener(`click`, handler);
+  }
+
+  setWatchlistClickHandler(handler) {
+    this.getElement().querySelector(`.film-card__controls-item--add-to-watchlist`).addEventListener(`click`, handler);
+  }
+
+  setWatchedClickHandler(handler) {
+    this.getElement().querySelector(`.film-card__controls-item--mark-as-watched`).addEventListener(`click`, handler);
+  }
+
+  setFavoriteClickHandler(handler) {
+    this.getElement().querySelector(`.film-card__controls-item--favorite`).addEventListener(`click`, handler);
   }
 
   getTemplate() {
@@ -30,9 +42,9 @@ export default class FilmCardComponent extends AbstractComponent {
       <p class="film-card__description">${this._description}</p>
       <a class="film-card__comments">${this._film.comments.length.toString()} comments</a>
       <form class="film-card__controls">
-        <button class="film-card__controls-item button film-card__controls-item--add-to-watchlist">Add to watchlist</button>
-        <button class="film-card__controls-item button film-card__controls-item--mark-as-watched">Mark as watched</button>
-        <button class="film-card__controls-item button film-card__controls-item--favorite">Mark as favorite</button>
+        <button class="film-card__controls-item button film-card__controls-item--add-to-watchlist${this._film.isAddedToWatchlist ? ` film-card__controls-item--active` : ``}">Add to watchlist</button>
+        <button class="film-card__controls-item button film-card__controls-item--mark-as-watched${this._film.isAlreadyWatched ? ` film-card__controls-item--active` : ``}">Mark as watched</button>
+        <button class="film-card__controls-item button film-card__controls-item--favorite${this._film.isAddedToFavorites ? ` film-card__controls-item--active` : ``}">Mark as favorite</button>
       </form>
     </article>`
     );
