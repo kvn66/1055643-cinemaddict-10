@@ -3,8 +3,8 @@ import CommentsComponent from "../components/comments";
 import CommentComponent from "../components/comment";
 
 export default class CommentsController {
-  constructor(parentElement) {
-    this._parentElement = parentElement;
+  constructor(parentComponent) {
+    this._parentComponent = parentComponent;
   }
 
   render(film) {
@@ -12,7 +12,7 @@ export default class CommentsController {
     film.comments.forEach((item) => {
       render(commentsElement, new CommentComponent(item).getElement());
     });
-    const commentsList = this._parentElement.querySelector(`.film-details__comments-list`);
-    commentsList.replaceWith(commentsElement);
+    const commentsListElement = this._parentComponent.getCommentsListElement();
+    commentsListElement.replaceWith(commentsElement);
   }
 }

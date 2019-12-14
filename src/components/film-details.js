@@ -12,37 +12,47 @@ export default class FilmDetailsComponent extends AbstractComponent {
       return (`<span class="film-details__genre">` + item + `</span>`);
     }).join(``);
     this._releaseDate = getFullDate(this._film.releaseDate);
-    this._watchlist = this.getElement().querySelector(`#watchlist`);
-    this._watched = this.getElement().querySelector(`#watched`);
-    this._favorite = this.getElement().querySelector(`#favorite`);
+    this._watchlistElement = this.getElement().querySelector(`#watchlist`);
+    this._watchedElement = this.getElement().querySelector(`#watched`);
+    this._favoriteElement = this.getElement().querySelector(`#favorite`);
+    this._watchlistLabelElement = this.getElement().querySelector(`.film-details__control-label--watchlist`);
+    this._watchedLabelElement = this.getElement().querySelector(`.film-details__control-label--watched`);
+    this._favoriteLabelElement = this.getElement().querySelector(`.film-details__control-label--favorite`);
+    this._controlsElement = this.getElement().querySelector(`.film-details__controls`);
+    this._closeButtonElement = this.getElement().querySelector(`.film-details__close-btn`);
+    this._commentsListElement = this.getElement().querySelector(`.film-details__comments-list`);
   }
 
   get watchlistChecked() {
-    return this._watchlist.checked;
+    return this._watchlistElement.checked;
   }
 
   set watchlistChecked(checked) {
-    this._watchlist.checked = checked;
+    this._watchlistElement.checked = checked;
   }
 
   get watchedChecked() {
-    return this._watched.checked;
+    return this._watchedElement.checked;
   }
 
   set watchedChecked(checked) {
-    this._watched.checked = checked;
+    this._watchedElement.checked = checked;
   }
 
   get favoriteChecked() {
-    return this._favorite.checked;
+    return this._favoriteElement.checked;
   }
 
   set favoriteChecked(checked) {
-    this._favorite.checked = checked;
+    this._favoriteElement.checked = checked;
   }
 
   getControlsElement() {
-    return this.getElement().querySelector(`.film-details__controls`);
+    return this._controlsElement;
+  }
+
+  getCommentsListElement() {
+    return this._commentsListElement;
   }
 
   getUserRatingElement() {
@@ -54,19 +64,19 @@ export default class FilmDetailsComponent extends AbstractComponent {
   }
 
   setCloseClickHandler(handler) {
-    this.getElement().querySelector(`.film-details__close-btn`).addEventListener(`click`, handler);
+    this._closeButtonElement.addEventListener(`click`, handler);
   }
 
   setWatchlistClickHandler(handler) {
-    this.getElement().querySelector(`.film-details__control-label--watchlist`).addEventListener(`click`, handler);
+    this._watchlistLabelElement.addEventListener(`click`, handler);
   }
 
   setWatchedClickHandler(handler) {
-    this.getElement().querySelector(`.film-details__control-label--watched`).addEventListener(`click`, handler);
+    this._watchedLabelElement.addEventListener(`click`, handler);
   }
 
   setFavoriteClickHandler(handler) {
-    this.getElement().querySelector(`.film-details__control-label--favorite`).addEventListener(`click`, handler);
+    this._favoriteLabelElement.addEventListener(`click`, handler);
   }
 
   remove() {

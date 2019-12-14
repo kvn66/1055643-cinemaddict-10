@@ -19,7 +19,7 @@ export default class FilmsListComponent extends AbstractComponent {
     this.title.textContent = text;
   }
 
-  getContainer() {
+  getContainerElement() {
     return this.container;
   }
 

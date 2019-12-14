@@ -5,8 +5,8 @@ import MostCommentedComponent from "../components/most-commented";
 const MOST_COMMENTED_FILMS_COUNT = 2;
 
 export default class MostCommentedController {
-  constructor(parentElement) {
-    this._parentElement = parentElement;
+  constructor(parentComponent) {
+    this._parentComponent = parentComponent;
   }
 
   getMostCommented(films) {
@@ -15,7 +15,7 @@ export default class MostCommentedController {
 
   render(films) {
     const mostCommentedComponent = new MostCommentedComponent();
-    const movieController = new MovieController(mostCommentedComponent.getContainerElement());
+    const movieController = new MovieController(mostCommentedComponent);
     const mostCommented = this.getMostCommented(films);
 
     if (mostCommented[0].comments.length > 0) {
@@ -23,7 +23,7 @@ export default class MostCommentedController {
         movieController.render(film);
       });
 
-      render(this._parentElement, mostCommentedComponent.getElement());
+      render(this._parentComponent.getElement(), mostCommentedComponent.getElement());
     }
   }
 }

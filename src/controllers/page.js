@@ -12,10 +12,9 @@ export default class PageController {
 
     this._siteSortComponent = new SiteSortComponent();
     this._filmsComponent = new FilmsComponent();
-    this._filmsElement = this._filmsComponent.getElement();
-    this._filmsListController = new FilmsListController(this._filmsElement);
-    this._topRatesController = new TopRatesController(this._filmsElement);
-    this._mostCommentedController = new MostCommentedController(this._filmsElement);
+    this._filmsListController = new FilmsListController(this._filmsComponent);
+    this._topRatesController = new TopRatesController(this._filmsComponent);
+    this._mostCommentedController = new MostCommentedController(this._filmsComponent);
   }
 
   siteSortRender(films, sortedFilms) {
@@ -52,6 +51,6 @@ export default class PageController {
       this._mostCommentedController.render(films);
     }
 
-    render(this._parentElement, this._filmsElement);
+    render(this._parentElement, this._filmsComponent.getElement());
   }
 }

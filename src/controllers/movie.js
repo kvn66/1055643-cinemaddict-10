@@ -5,8 +5,8 @@ import UserRatingComponent from "../components/user-rating";
 import CommentsController from "./comments";
 
 export default class MovieController {
-  constructor(parentElement) {
-    this._parentElement = parentElement;
+  constructor(parentComponent) {
+    this._parentComponent = parentComponent;
   }
 
   _renderUserRating(datafield, filmDetails, userRatingComponent) {
@@ -25,7 +25,7 @@ export default class MovieController {
     let filmCard = new FilmCardComponent(film);
     let filmDetails = new FilmDetailsComponent(film);
     const footer = document.querySelector(`.footer`);
-    new CommentsController(filmDetails.getElement()).render(film);
+    new CommentsController(filmDetails).render(film);
     const userRatingComponent = new UserRatingComponent();
 
     const closeDetails = () => {
@@ -102,6 +102,6 @@ export default class MovieController {
 
     setFilmCardHandlers();
     this._renderUserRating(film.isAlreadyWatched, filmDetails, userRatingComponent);
-    render(this._parentElement, filmCard.getElement());
+    render(this._parentComponent.getContainerElement(), filmCard.getElement());
   }
 }

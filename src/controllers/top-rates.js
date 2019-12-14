@@ -5,8 +5,8 @@ import MovieController from "./movie";
 const TOP_RATED_FILMS_COUNT = 2;
 
 export default class TopRatesController {
-  constructor(parentElement) {
-    this._parentElement = parentElement;
+  constructor(parentComponent) {
+    this._parentComponent = parentComponent;
   }
 
   getTopRated(films) {
@@ -15,7 +15,7 @@ export default class TopRatesController {
 
   render(films) {
     const topRates = new TopRatesComponent();
-    const movieController = new MovieController(topRates.getContainerElement());
+    const movieController = new MovieController(topRates);
     const topRated = this.getTopRated(films);
 
     if (topRated[0].rating > 0) {
@@ -23,7 +23,7 @@ export default class TopRatesController {
         movieController.render(film);
       });
 
-      render(this._parentElement, topRates.getElement());
+      render(this._parentComponent.getElement(), topRates.getElement());
     }
   }
 }

@@ -7,14 +7,14 @@ const SHOWING_FILMS_COUNT_ON_START = 5;
 const SHOWING_FILMS_COUNT_BY_BUTTON = 5;
 
 export default class FilmsListController {
-  constructor(parentElement) {
-    this._parentElement = parentElement;
+  constructor(parentComponent) {
+    this._parentComponent = parentComponent;
     this._filmsListComponent = null;
   }
 
   _renderElement(container, element, place = RenderPosition.BEFOREEND) {
     if (!this._filmsListComponent) {
-      render(this._parentElement, element, place);
+      render(this._parentComponent.getElement(), element, place);
     } else {
       const filmsListElement = this._filmsListComponent.getElement();
       if (container.contains(filmsListElement)) {
@@ -26,7 +26,7 @@ export default class FilmsListController {
   render(films) {
     let showingFilmsCount = SHOWING_FILMS_COUNT_ON_START;
     const filmsListComponent = new FilmsListComponent();
-    const movieController = new MovieController(filmsListComponent.getContainer());
+    const movieController = new MovieController(filmsListComponent);
     const showMoreComponent = new ShowMoreComponent();
 
     const onClick = () => {
@@ -48,7 +48,7 @@ export default class FilmsListController {
         movieController.render(film);
       });
 
-      render(filmsListComponent.getContainer(), showMoreComponent.getElement(), RenderPosition.AFTEREND);
+      render(filmsListComponent.getContainerElement(), showMoreComponent.getElement(), RenderPosition.AFTEREND);
 
       showMoreComponent.setClickHandler(onClick);
     } else {
@@ -56,7 +56,7 @@ export default class FilmsListController {
       filmsListComponent.titleHide = false;
     }
 
-    this._renderElement(this._parentElement, filmsListComponent.getElement(), RenderPosition.AFTERBEGIN);
+    this._renderElement(this._parentComponent.getElement(), filmsListComponent.getElement(), RenderPosition.AFTERBEGIN);
 
     this._filmsListComponent = filmsListComponent;
   }
