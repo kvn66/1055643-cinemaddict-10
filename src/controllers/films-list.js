@@ -12,12 +12,12 @@ export default class FilmsListController {
     this._filmsListComponent = null;
   }
 
-  _renderElement(container, element, place = RenderPosition.BEFOREEND) {
+  _renderElement(containerElement, element, place = RenderPosition.BEFOREEND) {
     if (!this._filmsListComponent) {
       render(this._parentComponent.getElement(), element, place);
     } else {
       const filmsListElement = this._filmsListComponent.getElement();
-      if (container.contains(filmsListElement)) {
+      if (containerElement.contains(filmsListElement)) {
         filmsListElement.replaceWith(element);
       }
     }

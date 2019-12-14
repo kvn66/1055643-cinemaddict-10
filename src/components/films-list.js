@@ -4,7 +4,7 @@ export default class FilmsListComponent extends AbstractComponent {
   constructor() {
     super();
     this.title = this.getElement().querySelector(`.films-list__title`);
-    this.container = this.getElement().querySelector(`.films-list__container`);
+    this.containerElement = this.getElement().querySelector(`.films-list__container`);
   }
 
   set titleHide(hide) {
@@ -20,7 +20,7 @@ export default class FilmsListComponent extends AbstractComponent {
   }
 
   getContainerElement() {
-    return this.container;
+    return this.containerElement;
   }
 
   getTemplate() {

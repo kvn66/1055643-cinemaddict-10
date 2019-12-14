@@ -22,9 +22,9 @@ export default class MovieController {
   }
 
   render(film) {
-    let filmCard = new FilmCardComponent(film);
-    let filmDetails = new FilmDetailsComponent(film);
-    const footer = document.querySelector(`.footer`);
+    const filmCard = new FilmCardComponent(film);
+    const filmDetails = new FilmDetailsComponent(film);
+    const footerElement = document.querySelector(`.footer`);
     new CommentsController(filmDetails).render(film);
     const userRatingComponent = new UserRatingComponent();
 
@@ -44,8 +44,7 @@ export default class MovieController {
     const onWatchlistClick = (evt) => {
       evt.preventDefault();
       film.isAddedToWatchlist = !film.isAddedToWatchlist;
-      const event = new Event(`watchlistChange`);
-      document.dispatchEvent(event);
+      document.dispatchEvent(new Event(`watchlistChange`));
     };
 
     document.addEventListener(`watchlistChange`, () => {
@@ -56,8 +55,7 @@ export default class MovieController {
     const onWatchedClick = (evt) => {
       evt.preventDefault();
       film.isAlreadyWatched = !film.isAlreadyWatched;
-      const event = new Event(`watchedChange`);
-      document.dispatchEvent(event);
+      document.dispatchEvent(new Event(`watchedChange`));
     };
 
     document.addEventListener(`watchedChange`, () => {
@@ -69,8 +67,7 @@ export default class MovieController {
     const onFavoriteClick = (evt) => {
       evt.preventDefault();
       film.isAddedToFavorites = !film.isAddedToFavorites;
-      const event = new Event(`favoriteChange`);
-      document.dispatchEvent(event);
+      document.dispatchEvent(new Event(`favoriteChange`));
     };
 
     document.addEventListener(`favoriteChange`, () => {
@@ -89,7 +86,7 @@ export default class MovieController {
 
     const onOpenDetailsClick = () => {
       setDetailHandlers();
-      render(footer, filmDetails.getElement(), RenderPosition.AFTEREND);
+      render(footerElement, filmDetails.getElement(), RenderPosition.AFTEREND);
       document.addEventListener(`keydown`, onEscKeyDown);
     };
 

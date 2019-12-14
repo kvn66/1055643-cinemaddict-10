@@ -30,16 +30,16 @@ const getCheckedParametersCount = (films, parametr) => {
   return count;
 };
 
-const render = (container, element, place = RenderPosition.BEFOREEND) => {
+const render = (containerElement, element, place = RenderPosition.BEFOREEND) => {
   switch (place) {
     case RenderPosition.AFTERBEGIN:
-      container.prepend(element);
+      containerElement.prepend(element);
       break;
     case RenderPosition.AFTEREND:
-      container.after(element);
+      containerElement.after(element);
       break;
     case RenderPosition.BEFOREEND:
-      container.append(element);
+      containerElement.append(element);
       break;
     default:
       throw new Error(`Указана неверная цель при вызове функции render`);
