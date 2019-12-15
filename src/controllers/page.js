@@ -1,56 +1,16 @@
-import FilmsComponent from "../components/films";
-import FilmsListController from "./films-list";
-import TopRatesController from "./top-rates";
-import MostCommentedController from "./most-commented";
-import {render, SortType} from "../utils";
-import SiteMenuComponent from "../components/site-menu";
-import SiteSortComponent from "../components/site-sort";
+import ProfileRatingController from "./profile-rating";
+import MainController from "./main";
+import FooterStatisticComponent from "../components/footer-statistic";
 
 export default class PageController {
-  constructor(parentElement) {
-    this._parentElement = parentElement;
-
-    this._siteSortComponent = new SiteSortComponent();
-    this._filmsComponent = new FilmsComponent();
-    this._filmsListController = new FilmsListController(this._filmsComponent);
-    this._topRatesController = new TopRatesController(this._filmsComponent);
-    this._mostCommentedController = new MostCommentedController(this._filmsComponent);
+  constructor(parentComponent) {
+    this._parentComponent = parentComponent;
   }
-
-  siteSortRender(films, sortedFilms) {
-    const siteSortElement = this._siteSortComponent.getElement();
-    render(this._parentElement, siteSortElement);
-
-    this._siteSortComponent.setSortTypeChangeHandler((sortType) => {
-      switch (sortType) {
-        case SortType.RATING:
-          sortedFilms = films.slice().sort((a, b) => b.rating - a.rating);
-          break;
-        case SortType.DATE:
-          sortedFilms = films.slice().sort((a, b) => b.releaseDate - a.releaseDate);
-          break;
-        case SortType.DEFAULT:
-          sortedFilms = films.slice();
-          break;
-      }
-      this._filmsListController.render(sortedFilms);
-    });
-  }
-
   render(films) {
-    render(this._parentElement, new SiteMenuComponent(films).getElement());
+    new ProfileRatingController(this._parentComponent.querySelector(`.header`)).render(films);
 
-    let sortedFilms = films.slice();
+    new MainController(this._parentComponent.querySelector(`.main`)).render(films);
 
-    this.siteSortRender(films, sortedFilms);
-
-    this._filmsListController.render(sortedFilms);
-
-    if (films.length) {
-      this._topRatesController.render(films);
-      this._mostCommentedController.render(films);
-    }
-
-    render(this._parentElement, this._filmsComponent.getElement());
+    this._parentComponent.querySelector(`.footer__statistics`).replaceWith(new FooterStatisticComponent(films).getElement());
   }
 }
