@@ -120,12 +120,14 @@ const generateRandomCheck = () => {
   return Math.random() > 0.5;
 };
 
-const generateFilm = () => {
+const generateFilm = (item, index) => {
   const filmTitle = getRandomArrayItem(TitleItems);
   return {
+    id: index,
     title: filmTitle,
     titleOriginal: filmTitle,
     rating: generateRating(),
+    userRating: getRandomIntegerNumber(0, 9),
     releaseDate: new Date(getRandomIntegerNumber(1930, 1950), getRandomIntegerNumber(0, 11), getRandomIntegerNumber(1, 28)),
     duration: generateDuration(),
     genres: generateRandomArray(getRandomIntegerNumber(1, 3), GenreItems),
