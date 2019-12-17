@@ -114,7 +114,7 @@ export default class MovieModel {
   set isAddedToFavorites(favorite) {
     if (favorite !== this._isAddedToFavorites) {
       this._isAddedToFavorites = favorite;
-      document.dispatchEvent(new CustomEvent(`watchlistChange`, {'detail': favorite}));
+      document.dispatchEvent(new CustomEvent(`favoriteChange`, {'detail': favorite}));
     }
   }
 

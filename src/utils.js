@@ -20,16 +20,6 @@ const RenderPosition = {
   BEFOREEND: `beforeend`
 };
 
-const getCheckedParametersCount = (films, parametr) => {
-  let count = 0;
-  films.forEach((item) => {
-    if (item[parametr]) {
-      count++;
-    }
-  });
-  return count;
-};
-
 const render = (containerElement, element, place = RenderPosition.BEFOREEND) => {
   switch (place) {
     case RenderPosition.AFTERBEGIN:
@@ -46,4 +36,4 @@ const render = (containerElement, element, place = RenderPosition.BEFOREEND) => 
   }
 };
 
-export {getCheckedParametersCount, getFullDate, formatDateTime, RenderPosition, render, SortType};
+export {getFullDate, formatDateTime, RenderPosition, render, SortType};

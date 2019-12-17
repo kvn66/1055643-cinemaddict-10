@@ -1,4 +1,4 @@
-import {getCheckedParametersCount, render} from "../utils";
+import {render} from "../utils";
 import ProfileRatingComponent from "../components/profile-rating";
 
 const NOVICE_RATING_LIMIT = 0;
@@ -22,8 +22,8 @@ export default class ProfileRatingController {
     return ``;
   }
 
-  render(films) {
-    this._rating = getCheckedParametersCount(films, `isAlreadyWatched`);
+  render(moviesModel) {
+    this._rating = moviesModel.getCheckedParametersCount(`isAlreadyWatched`);
     const profileRatingComponent = new ProfileRatingComponent();
     profileRatingComponent.profileRating = this.createRatingStr(this._rating);
     render(this._parentElement, profileRatingComponent.getElement());

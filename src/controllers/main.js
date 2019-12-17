@@ -2,7 +2,7 @@ import FilmsComponent from "../components/films";
 import FilmsListController from "./films-list";
 import TopRatesController from "./top-rates";
 import MostCommentedController from "./most-commented";
-import {render, SortType} from "../utils";
+import {render} from "../utils";
 import SiteMenuController from "./site-menu";
 import SiteSortComponent from "../components/site-sort";
 
@@ -17,38 +17,25 @@ export default class MainController {
     this._mostCommentedController = new MostCommentedController(this._filmsComponent);
   }
 
-  siteSortRender(films, sortedFilms) {
+  siteSortRender(moviesModel) {
     const siteSortElement = this._siteSortComponent.getElement();
     render(this._parentElement, siteSortElement);
 
     this._siteSortComponent.setSortTypeChangeHandler((sortType) => {
-      switch (sortType) {
-        case SortType.RATING:
-          sortedFilms = films.slice().sort((a, b) => b.rating - a.rating);
-          break;
-        case SortType.DATE:
-          sortedFilms = films.slice().sort((a, b) => b.releaseDate - a.releaseDate);
-          break;
-        case SortType.DEFAULT:
-          sortedFilms = films.slice();
-          break;
-      }
-      this._filmsListController.render(sortedFilms);
+      this._filmsListController.render(moviesModel.getMovies(sortType));
     });
   }
 
-  render(films) {
-    new SiteMenuController(this._parentElement).render(films);
+  render(moviesModel) {
+    new SiteMenuController(this._parentElement).render(moviesModel);
 
-    let sortedFilms = films.slice();
+    this.siteSortRender(moviesModel);
 
-    this.siteSortRender(films, sortedFilms);
+    this._filmsListController.render(moviesModel.getMovies());
 
-    this._filmsListController.render(sortedFilms);
-
-    if (films.length) {
-      this._topRatesController.render(films);
-      this._mostCommentedController.render(films);
+    if (moviesModel.length) {
+      this._topRatesController.render(moviesModel);
+      this._mostCommentedController.render(moviesModel);
     }
 
     render(this._parentElement, this._filmsComponent.getElement());

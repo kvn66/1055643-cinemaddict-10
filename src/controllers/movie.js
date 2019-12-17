@@ -44,7 +44,6 @@ export default class MovieController {
     const onWatchlistClick = (evt) => {
       evt.preventDefault();
       film.isAddedToWatchlist = !film.isAddedToWatchlist;
-      document.dispatchEvent(new CustomEvent(`watchlistChange`, {'detail': film.isAddedToWatchlist}));
     };
 
     document.addEventListener(`watchlistChange`, () => {
@@ -55,7 +54,6 @@ export default class MovieController {
     const onWatchedClick = (evt) => {
       evt.preventDefault();
       film.isAlreadyWatched = !film.isAlreadyWatched;
-      document.dispatchEvent(new CustomEvent(`watchedChange`, {'detail': film.isAlreadyWatched}));
     };
 
     document.addEventListener(`watchedChange`, () => {
@@ -67,7 +65,6 @@ export default class MovieController {
     const onFavoriteClick = (evt) => {
       evt.preventDefault();
       film.isAddedToFavorites = !film.isAddedToFavorites;
-      document.dispatchEvent(new CustomEvent(`favoriteChange`, {'detail': film.isAddedToFavorites}));
     };
 
     document.addEventListener(`favoriteChange`, () => {

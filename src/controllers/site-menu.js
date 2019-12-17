@@ -1,4 +1,4 @@
-import {getCheckedParametersCount, render} from "../utils";
+import {render} from "../utils";
 import SiteMenuComponent from "../components/site-menu";
 
 export default class SiteMenuController {
@@ -9,10 +9,10 @@ export default class SiteMenuController {
     this._favoritesCount = null;
   }
 
-  render(films) {
-    this._watchlistCount = getCheckedParametersCount(films, `isAddedToWatchlist`);
-    this._historyCount = getCheckedParametersCount(films, `isAlreadyWatched`);
-    this._favoritesCount = getCheckedParametersCount(films, `isAddedToFavorites`);
+  render(moviesModel) {
+    this._watchlistCount = moviesModel.getCheckedParametersCount(`isAddedToWatchlist`);
+    this._historyCount = moviesModel.getCheckedParametersCount(`isAlreadyWatched`);
+    this._favoritesCount = moviesModel.getCheckedParametersCount(`isAddedToFavorites`);
     const siteMenuComponent = new SiteMenuComponent();
     siteMenuComponent.watchlistCount = this._watchlistCount;
     siteMenuComponent.historyCount = this._historyCount;

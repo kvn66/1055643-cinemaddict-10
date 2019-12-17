@@ -1,9 +1,11 @@
 import PageController from './controllers/page';
+import MoviesModel from './models/movies';
 import {generateFilms} from './mock/films';
 
 
-const FILMS_COUNT = 22;
+const MOVIES_COUNT = 22;
 
-const films = generateFilms(FILMS_COUNT);
+const movies = generateFilms(MOVIES_COUNT);
+const moviesModel = new MoviesModel(movies);
 
-new PageController(document).render(films);
+new PageController(document, moviesModel).render();

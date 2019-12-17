@@ -23,7 +23,7 @@ export default class FilmsListController {
     }
   }
 
-  render(films) {
+  render(movies) {
     let showingFilmsCount = SHOWING_FILMS_COUNT_ON_START;
     const filmsListComponent = new FilmsListComponent();
     const movieController = new MovieController(filmsListComponent);
@@ -33,19 +33,19 @@ export default class FilmsListController {
       const prevFilmsCount = showingFilmsCount;
       showingFilmsCount = showingFilmsCount + SHOWING_FILMS_COUNT_BY_BUTTON;
 
-      films.slice(prevFilmsCount, showingFilmsCount)
-        .forEach((film) => movieController.render(film));
+      movies.slice(prevFilmsCount, showingFilmsCount)
+        .forEach((movieModel) => movieController.render(movieModel));
 
-      if (showingFilmsCount >= films.length) {
+      if (showingFilmsCount >= movies.length) {
         showMoreComponent.remove();
       }
     };
 
-    if (films.length) {
+    if (movies.length) {
       filmsListComponent.titleHide = true;
 
-      films.slice(0, showingFilmsCount).forEach((film) => {
-        movieController.render(film);
+      movies.slice(0, showingFilmsCount).forEach((movieModel) => {
+        movieController.render(movieModel);
       });
 
       render(filmsListComponent.getContainerElement(), showMoreComponent.getElement(), RenderPosition.AFTEREND);

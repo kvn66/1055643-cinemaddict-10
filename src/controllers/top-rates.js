@@ -9,18 +9,14 @@ export default class TopRatesController {
     this._parentComponent = parentComponent;
   }
 
-  getTopRated(films) {
-    return films.slice().sort((a, b) => b.rating - a.rating).slice(0, TOP_RATED_FILMS_COUNT);
-  }
-
-  render(films) {
+  render(moviesModel) {
     const topRates = new TopRatesComponent();
     const movieController = new MovieController(topRates);
-    const topRated = this.getTopRated(films);
+    const topRated = moviesModel.getTopRated(TOP_RATED_FILMS_COUNT);
 
     if (topRated[0].rating > 0) {
-      topRated.forEach((film) => {
-        movieController.render(film);
+      topRated.forEach((movieModel) => {
+        movieController.render(movieModel);
       });
 
       render(this._parentComponent.getElement(), topRates.getElement());
