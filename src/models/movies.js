@@ -1,8 +1,10 @@
-import {render, SortType} from "../utils";
+import {FilterType, SortType} from "../utils";
 import MovieModel from "./movie";
 
 export default class MoviesModel {
   constructor(movies) {
+    this._filterType = FilterType.ALL;
+    this._sortType = SortType.DEFAULT;
     this._movies = [];
     movies.map((item) => {
       this._movies.push(new MovieModel(item));
@@ -13,8 +15,22 @@ export default class MoviesModel {
     return this._movies.length;
   }
 
-  sortMovies(sortType) {
-    switch (sortType) {
+  setFilterType(type) {
+    if (type !== this._filterType) {
+      this._filterType = type;
+      document.dispatchEvent(new CustomEvent(`filterChange`, {'detail': type}));
+    }
+  }
+
+  setSortType(type) {
+    if (type !== this._sortType) {
+      this._sortType = type;
+      document.dispatchEvent(new CustomEvent(`filterChange`, {'detail': type}));
+    }
+  }
+
+  sortMovies() {
+    switch (this._sortType) {
       case SortType.RATING:
         return this._movies.slice().sort((a, b) => b.rating - a.rating);
       case SortType.DATE:
@@ -25,8 +41,8 @@ export default class MoviesModel {
     return this._movies.slice();
   }
 
-  getMovies(sortType) {
-    return this.sortMovies(sortType);
+  getMovies() {
+    return this.sortMovies();
   }
 
   getTopRated(count) {

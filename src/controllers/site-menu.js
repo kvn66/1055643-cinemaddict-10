@@ -17,6 +17,9 @@ export default class SiteMenuController {
     siteMenuComponent.watchlistCount = this._watchlistCount;
     siteMenuComponent.historyCount = this._historyCount;
     siteMenuComponent.favoritesCount = this._favoritesCount;
+    siteMenuComponent.setFilterTypeChangeHandler((filterType) => {
+      moviesModel.setFilterType(filterType);
+    });
     render(this._parentElement, siteMenuComponent.getElement());
 
     document.addEventListener(`watchlistChange`, (evt) => {

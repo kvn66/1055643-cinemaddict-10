@@ -4,7 +4,7 @@ import {SortType} from '../utils';
 export default class SiteSortComponent extends AbstractComponent {
   constructor() {
     super();
-    this._currenSortType = SortType.DEFAULT;
+    this._currentSortType = SortType.DEFAULT;
   }
 
   setSortTypeChangeHandler(handler) {
@@ -15,21 +15,21 @@ export default class SiteSortComponent extends AbstractComponent {
 
         const sortType = evt.target.dataset.sortType;
 
-        if (this._currenSortType === sortType) {
+        if (this._currentSortType === sortType) {
           return;
         }
 
-        this._currenSortType = sortType;
+        this._currentSortType = sortType;
         listItems.forEach((elem) => {
           const attr = elem.getAttribute(`data-sort-type`);
-          if (attr.includes(this._currenSortType)) {
+          if (attr.includes(this._currentSortType)) {
             elem.classList.add(`sort__button--active`);
           } else {
             elem.classList.remove(`sort__button--active`);
           }
         });
 
-        handler(this._currenSortType);
+        handler(this._currentSortType);
       });
     });
   }

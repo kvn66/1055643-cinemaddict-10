@@ -8,6 +8,13 @@ const formatDateTime = (date) => {
   return moment(date).format(`YYYY/MM/DD hh:mm`);
 };
 
+const FilterType = {
+  WATCHLIST: `watchlist`,
+  HISTORY: `history`,
+  FAVORITES: `favorites`,
+  ALL: `all`,
+};
+
 const SortType = {
   DATE: `date`,
   RATING: `rating`,
@@ -36,4 +43,4 @@ const render = (containerElement, element, place = RenderPosition.BEFOREEND) => 
   }
 };
 
-export {getFullDate, formatDateTime, RenderPosition, render, SortType};
+export {getFullDate, formatDateTime, RenderPosition, render, FilterType, SortType};

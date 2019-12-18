@@ -22,7 +22,7 @@ export default class MainController {
     render(this._parentElement, siteSortElement);
 
     this._siteSortComponent.setSortTypeChangeHandler((sortType) => {
-      this._filmsListController.render(moviesModel.getMovies(sortType));
+      moviesModel.setSortType(sortType);
     });
   }
 
@@ -39,5 +39,9 @@ export default class MainController {
     }
 
     render(this._parentElement, this._filmsComponent.getElement());
+
+    document.addEventListener(`filterChange`, () => {
+      this._filmsListController.render(moviesModel.getMovies());
+    });
   }
 }
