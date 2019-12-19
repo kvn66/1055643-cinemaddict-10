@@ -2,7 +2,7 @@ export default class CommentModel {
   constructor() {
     this._id = -1;
     this._text = ``;
-    this._emoji = ``;
+    this._emoji = null;
     this._author = ``;
     this._date = null;
   }
@@ -11,12 +11,24 @@ export default class CommentModel {
     return this._id;
   }
 
+  set id(id) {
+    this._id = id;
+  }
+
   get text() {
     return this._text;
   }
 
+  set text(text) {
+    this._text = text;
+  }
+
   get emoji() {
     return this._emoji;
+  }
+
+  set emoji(emoji) {
+    this._emoji = emoji;
   }
 
   get author() {
@@ -25,6 +37,10 @@ export default class CommentModel {
 
   get date() {
     return this._date;
+  }
+
+  set date(date) {
+    this._date = date;
   }
 
   fillFromObject(comment) {

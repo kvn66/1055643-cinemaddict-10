@@ -17,4 +17,15 @@ export default class CommentsModel {
   getComments() {
     return this._comments;
   }
+
+  getMaxId() {
+    return this._comments.reduce(function (a, b) {
+      return Math.max(a.id, b.id);
+    });
+  }
+
+  addComment(commentModel) {
+    this._comments.push(commentModel);
+    document.dispatchEvent(new CustomEvent(`commentAdded`, {'detail': commentModel}));
+  }
 }

@@ -18,14 +18,14 @@ export default class MoviesModel {
   setFilterType(type) {
     if (type !== this._filterType) {
       this._filterType = type;
-      document.dispatchEvent(new CustomEvent(`filterChange`, {'detail': type}));
+      document.dispatchEvent(new Event(`filterChange`));
     }
   }
 
   setSortType(type) {
     if (type !== this._sortType) {
       this._sortType = type;
-      document.dispatchEvent(new CustomEvent(`filterChange`, {'detail': type}));
+      document.dispatchEvent(new Event(`filterChange`));
     }
   }
 

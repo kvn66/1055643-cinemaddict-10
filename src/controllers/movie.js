@@ -35,8 +35,15 @@ export default class MovieController {
       const comment = formData.get(`comment`);
       const emoji = formData.get(`comment-emoji`);
 
-      if (comment !== `` || emoji) {
-        commentModel = new CommentModel()
+      if (comment !== `` && emoji) {
+        const commentModel = new CommentModel();
+        commentModel.id = movieModel.comments.getMaxId() + 1;
+        commentModel.text = comment;
+        commentModel.emoji = emoji;
+        commentModel.date = new Date();
+        movieModel.comments.addComment(commentModel);
+      } else {
+
       }
     };
 

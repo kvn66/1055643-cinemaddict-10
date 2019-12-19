@@ -14,5 +14,9 @@ export default class CommentsController {
     });
     const commentsListElement = this._parentComponent.getCommentsListElement();
     commentsListElement.replaceWith(commentsElement);
+
+    document.addEventListener(`commentAdded`, (evt) => {
+      render(commentsElement, new CommentComponent(evt.detail).getElement());
+    });
   }
 }
