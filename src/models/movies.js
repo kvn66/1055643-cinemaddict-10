@@ -29,20 +29,34 @@ export default class MoviesModel {
     }
   }
 
-  sortMovies() {
+  filterMovies(movies) {
+    switch (this._filterType) {
+      case FilterType.WATCHLIST:
+        return movies.slice().filter((movieModel) => movieModel.isAddedToWatchlist);
+      case FilterType.HISTORY:
+        return movies.slice().filter((movieModel) => movieModel.isAlreadyWatched);
+      case FilterType.FAVORITES:
+        return movies.slice().filter((movieModel) => movieModel.isAddedToFavorites);
+      case FilterType.ALL:
+        return movies;
+    }
+    return movies;
+  }
+
+  sortMovies(movies) {
     switch (this._sortType) {
       case SortType.RATING:
-        return this._movies.slice().sort((a, b) => b.rating - a.rating);
+        return movies.slice().sort((a, b) => b.rating - a.rating);
       case SortType.DATE:
-        return this._movies.slice().sort((a, b) => b.releaseDate - a.releaseDate);
+        return movies.slice().sort((a, b) => b.releaseDate - a.releaseDate);
       case SortType.DEFAULT:
-        return this._movies.slice();
+        return movies;
     }
-    return this._movies.slice();
+    return movies;
   }
 
   getMovies() {
-    return this.sortMovies();
+    return this.sortMovies(this.filterMovies(this._movies));
   }
 
   getTopRated(count) {

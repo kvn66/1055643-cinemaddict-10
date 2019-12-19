@@ -3,6 +3,7 @@ import FilmCardComponent from "../components/film-card";
 import FilmDetailsComponent from "../components/film-details";
 import UserRatingComponent from "../components/user-rating";
 import CommentsController from "./comments";
+import CommentModel from "../models/comment";
 
 export default class MovieController {
   constructor(parentComponent) {
@@ -21,16 +22,42 @@ export default class MovieController {
     }
   }
 
-  render(film) {
-    const filmCard = new FilmCardComponent(film);
-    const filmDetails = new FilmDetailsComponent(film);
+  render(movieModel) {
+    const filmCard = new FilmCardComponent(movieModel);
+    const filmDetails = new FilmDetailsComponent(movieModel);
     const footerElement = document.querySelector(`.footer`);
-    new CommentsController(filmDetails).render(film);
+    new CommentsController(filmDetails).render(movieModel);
     const userRatingComponent = new UserRatingComponent();
+    let pressedKey = new Set();
+
+    const submitDetailForm = () => {
+      const formData = new FormData(filmDetails.getFormElement());
+      const comment = formData.get(`comment`);
+      const emoji = formData.get(`comment-emoji`);
+
+      if (comment !== `` || emoji) {
+        commentModel = new CommentModel()
+      }
+    };
+
+    const onCtrlEnterKeyDown = (evt) => {
+      pressedKey.add(evt.key);
+      if (!((pressedKey.has(`Control`) || pressedKey.has(`Meta`)) && pressedKey.has(`Enter`))) {
+        return;
+      }
+      pressedKey.clear();
+      submitDetailForm();
+    };
+
+    const onCtrlEnterKeyUp = (evt) => {
+      pressedKey.delete(evt.key);
+    };
 
     const closeDetails = () => {
       filmDetails.remove();
       document.removeEventListener(`keydown`, onEscKeyDown);
+      document.removeEventListener(`keydown`, onCtrlEnterKeyDown);
+      document.removeEventListener(`keyup`, onCtrlEnterKeyUp);
     };
 
     const onEscKeyDown = (evt) => {
@@ -43,33 +70,33 @@ export default class MovieController {
 
     const onWatchlistClick = (evt) => {
       evt.preventDefault();
-      film.isAddedToWatchlist = !film.isAddedToWatchlist;
+      movieModel.isAddedToWatchlist = !movieModel.isAddedToWatchlist;
     };
 
     document.addEventListener(`watchlistChange`, () => {
-      filmCard.watchlistChecked = film.isAddedToWatchlist;
-      filmDetails.watchlistChecked = film.isAddedToWatchlist;
+      filmCard.watchlistChecked = movieModel.isAddedToWatchlist;
+      filmDetails.watchlistChecked = movieModel.isAddedToWatchlist;
     });
 
     const onWatchedClick = (evt) => {
       evt.preventDefault();
-      film.isAlreadyWatched = !film.isAlreadyWatched;
+      movieModel.isAlreadyWatched = !movieModel.isAlreadyWatched;
     };
 
     document.addEventListener(`watchedChange`, () => {
-      filmCard.watchedChecked = film.isAlreadyWatched;
-      filmDetails.watchedChecked = film.isAlreadyWatched;
-      this._renderUserRating(film.isAlreadyWatched, filmDetails, userRatingComponent);
+      filmCard.watchedChecked = movieModel.isAlreadyWatched;
+      filmDetails.watchedChecked = movieModel.isAlreadyWatched;
+      this._renderUserRating(movieModel.isAlreadyWatched, filmDetails, userRatingComponent);
     });
 
     const onFavoriteClick = (evt) => {
       evt.preventDefault();
-      film.isAddedToFavorites = !film.isAddedToFavorites;
+      movieModel.isAddedToFavorites = !movieModel.isAddedToFavorites;
     };
 
     document.addEventListener(`favoriteChange`, () => {
-      filmCard.favoriteChecked = film.isAddedToFavorites;
-      filmDetails.favoriteChecked = film.isAddedToFavorites;
+      filmCard.favoriteChecked = movieModel.isAddedToFavorites;
+      filmDetails.favoriteChecked = movieModel.isAddedToFavorites;
     });
 
     const setDetailHandlers = () => {
@@ -85,6 +112,8 @@ export default class MovieController {
       setDetailHandlers();
       render(footerElement, filmDetails.getElement(), RenderPosition.AFTEREND);
       document.addEventListener(`keydown`, onEscKeyDown);
+      document.addEventListener(`keydown`, onCtrlEnterKeyDown);
+      document.addEventListener(`keyup`, onCtrlEnterKeyUp);
     };
 
     const setFilmCardHandlers = () => {
@@ -95,7 +124,7 @@ export default class MovieController {
     };
 
     setFilmCardHandlers();
-    this._renderUserRating(film.isAlreadyWatched, filmDetails, userRatingComponent);
+    this._renderUserRating(movieModel.isAlreadyWatched, filmDetails, userRatingComponent);
     render(this._parentComponent.getContainerElement(), filmCard.getElement());
   }
 }

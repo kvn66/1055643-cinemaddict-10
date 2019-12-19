@@ -7,10 +7,10 @@ export default class CommentsController {
     this._parentComponent = parentComponent;
   }
 
-  render(film) {
+  render(movieModel) {
     const commentsElement = new CommentsComponent().getElement();
-    film.comments.forEach((item) => {
-      render(commentsElement, new CommentComponent(item).getElement());
+    movieModel.comments.getComments().forEach((commentModel) => {
+      render(commentsElement, new CommentComponent(commentModel).getElement());
     });
     const commentsListElement = this._parentComponent.getCommentsListElement();
     commentsListElement.replaceWith(commentsElement);

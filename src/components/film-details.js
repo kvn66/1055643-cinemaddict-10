@@ -21,6 +21,7 @@ export default class FilmDetailsComponent extends AbstractComponent {
     this._controlsElement = this.getElement().querySelector(`.film-details__controls`);
     this._closeButtonElement = this.getElement().querySelector(`.film-details__close-btn`);
     this._commentsListElement = this.getElement().querySelector(`.film-details__comments-list`);
+    this._formElement = this.getElement().querySelector(`.film-details__inner`);
   }
 
   get watchlistChecked() {
@@ -45,6 +46,10 @@ export default class FilmDetailsComponent extends AbstractComponent {
 
   set favoriteChecked(checked) {
     this._favoriteElement.checked = checked;
+  }
+
+  getFormElement() {
+    return this._formElement;
   }
 
   getControlsElement() {

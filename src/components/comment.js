@@ -2,12 +2,12 @@ import AbstractComponent from './abstract-component';
 import {formatDateTime} from '../utils';
 
 export default class CommentComponent extends AbstractComponent {
-  constructor(comment) {
+  constructor(commentModel) {
     super();
-    this._comment = comment;
+    this._commentModel = commentModel;
     this._emoji = ``;
 
-    switch (this._comment.emoji) {
+    switch (this._commentModel.emoji) {
       case `sleeping`:
         this._emoji = `smile.png`;
         break;
@@ -30,10 +30,10 @@ export default class CommentComponent extends AbstractComponent {
         <img src="./images/emoji/${this._emoji}" width="55" height="55" alt="emoji">
       </span>
       <div>
-        <p class="film-details__comment-text">${this._comment.text}</p>
+        <p class="film-details__comment-text">${this._commentModel.text}</p>
         <p class="film-details__comment-info">
-          <span class="film-details__comment-author">${this._comment.author}</span>
-          <span class="film-details__comment-day">${formatDateTime(this._comment.date)}</span>
+          <span class="film-details__comment-author">${this._commentModel.author}</span>
+          <span class="film-details__comment-day">${formatDateTime(this._commentModel.date)}</span>
           <button class="film-details__comment-delete">Delete</button>
         </p>
       </div>

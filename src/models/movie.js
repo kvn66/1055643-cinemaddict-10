@@ -1,3 +1,5 @@
+import CommentsModel from "./comments";
+
 export default class MovieModel {
   constructor(film) {
     this._id = film.id;
@@ -10,7 +12,7 @@ export default class MovieModel {
     this._genres = film.genres;
     this._poster = film.poster;
     this._description = film.description;
-    this._comments = film.comments;
+    this._comments = new CommentsModel(film.comments);
     this._director = film.director;
     this._writers = film.writers;
     this._actors = film.actors;
