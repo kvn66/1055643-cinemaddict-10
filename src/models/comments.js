@@ -1,5 +1,7 @@
 import CommentModel from "./comment";
 
+const INITIAL_ID = -1;
+
 export default class CommentsModel {
   constructor(comments) {
     this._comments = [];
@@ -19,9 +21,9 @@ export default class CommentsModel {
   }
 
   getMaxId() {
-    return this._comments.reduce(function (a, b) {
-      return Math.max(a.id, b.id);
-    });
+    return (this._comments.length ? this._comments.reduce((a, b) => {
+      return a.id > b.id ? a : b;
+    }).id : INITIAL_ID);
   }
 
   addComment(commentModel) {

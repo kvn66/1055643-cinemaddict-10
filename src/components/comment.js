@@ -5,6 +5,7 @@ export default class CommentComponent extends AbstractComponent {
   constructor(commentModel) {
     super();
     this._commentModel = commentModel;
+    this._deleteButtonElement = this.getElement().querySelector(`.film-details__comment-delete`);
     this._emoji = ``;
 
     switch (this._commentModel.emoji) {
@@ -23,9 +24,17 @@ export default class CommentComponent extends AbstractComponent {
     }
   }
 
+  setDeleteButtonClickHandler(handler) {
+    this._deleteButtonElement.addEventListener(`click`, (evt) => {
+      evt.preventDefault();
+      const commentId = evt.target.dataset.commentId;
+      handler(commentId);
+    });
+  }
+
   getTemplate() {
     return (
-      `<li class="film-details__comment">
+      `<li data-comment-id="${this._commentModel.id}" class="film-details__comment">
       <span class="film-details__comment-emoji">
         <img src="./images/emoji/${this._emoji}" width="55" height="55" alt="emoji">
       </span>

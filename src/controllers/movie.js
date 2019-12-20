@@ -42,10 +42,13 @@ export default class MovieController {
         commentModel.emoji = emoji;
         commentModel.date = new Date();
         movieModel.comments.addComment(commentModel);
-      } else {
-
       }
     };
+
+    document.addEventListener(`commentAdded`, () => {
+      filmDetails.updateCommentsCount();
+      filmDetails.resetComment();
+    });
 
     const onCtrlEnterKeyDown = (evt) => {
       pressedKey.add(evt.key);
@@ -65,6 +68,7 @@ export default class MovieController {
       document.removeEventListener(`keydown`, onEscKeyDown);
       document.removeEventListener(`keydown`, onCtrlEnterKeyDown);
       document.removeEventListener(`keyup`, onCtrlEnterKeyUp);
+      pressedKey.clear();
     };
 
     const onEscKeyDown = (evt) => {
