@@ -30,4 +30,9 @@ export default class CommentsModel {
     this._comments.push(commentModel);
     document.dispatchEvent(new CustomEvent(`commentAdded`, {'detail': commentModel}));
   }
+
+  removeComment(commentId) {
+    this._comments.splice(this._comments.findIndex((item) => item.id === commentId), 1);
+    document.dispatchEvent(new CustomEvent(`commentRemoved`, {'detail': commentId}));
+  }
 }

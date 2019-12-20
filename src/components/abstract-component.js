@@ -6,11 +6,11 @@ export default class AbstractComponent {
     this._element = null;
   }
 
-  getTemplate() {
+  _getTemplate() {
     throw new Error(`Abstract method not implemented: getTemplate`);
   }
 
-  createElement(template) {
+  _createElement(template) {
     const newElement = document.createElement(`div`);
     newElement.innerHTML = template;
 
@@ -19,7 +19,7 @@ export default class AbstractComponent {
 
   getElement() {
     if (!this._element) {
-      this._element = this.createElement(this.getTemplate());
+      this._element = this._createElement(this._getTemplate());
     }
     return this._element;
   }

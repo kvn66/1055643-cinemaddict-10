@@ -79,7 +79,7 @@ export default class FilmCardComponent extends AbstractComponent {
     this.getElement().querySelector(`.film-card__controls-item--favorite`).addEventListener(`click`, handler);
   }
 
-  getTemplate() {
+  _getTemplate() {
     return (
       `<article class="film-card">
       <h3 class="film-card__title">${this._film.title}</h3>

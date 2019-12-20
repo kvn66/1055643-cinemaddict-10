@@ -6,7 +6,7 @@ export default class FooterStatisticComponent extends AbstractComponent {
     this._moviesModel = moviesModel;
   }
 
-  getTemplate() {
+  _getTemplate() {
     return (
       `<section class="footer__statistics">
         <p>${this._moviesModel.length.toString()} movies inside</p>

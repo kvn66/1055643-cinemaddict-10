@@ -1,7 +1,7 @@
 import AbstractComponent from './abstract-component';
 
 export default class UserRatingComponent extends AbstractComponent {
-  getTemplate() {
+  _getTemplate() {
     return (
       `<div class="form-details__middle-container">
         <section class="film-details__user-rating-wrap">

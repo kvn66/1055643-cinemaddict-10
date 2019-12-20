@@ -23,7 +23,7 @@ export default class FilmsListComponent extends AbstractComponent {
     return this.containerElement;
   }
 
-  getTemplate() {
+  _getTemplate() {
     return (
       `<section class="films-list">
       <h2 class="films-list__title visually-hidden">All movies. Upcoming</h2>

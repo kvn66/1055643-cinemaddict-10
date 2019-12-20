@@ -48,7 +48,7 @@ export default class SiteMenuComponent extends AbstractComponent {
     });
   }
 
-  getTemplate() {
+  _getTemplate() {
     return (
       `<nav class="main-navigation">
       <a href="#all" data-filter-type="${FilterType.ALL}" class="main-navigation__item main-navigation__item--active">All movies</a>

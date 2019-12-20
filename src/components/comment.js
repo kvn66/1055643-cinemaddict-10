@@ -6,22 +6,6 @@ export default class CommentComponent extends AbstractComponent {
     super();
     this._commentModel = commentModel;
     this._deleteButtonElement = this.getElement().querySelector(`.film-details__comment-delete`);
-    this._emoji = ``;
-
-    switch (this._commentModel.emoji) {
-      case `sleeping`:
-        this._emoji = `smile.png`;
-        break;
-      case `neutral-face`:
-        this._emoji = `sleeping.png`;
-        break;
-      case `grinning`:
-        this._emoji = Math.random() > 0.5 ? `puke.png` : `angry.png`;
-        break;
-      default:
-        this._emoji = ``;
-        break;
-    }
   }
 
   setDeleteButtonClickHandler(handler) {
@@ -32,18 +16,35 @@ export default class CommentComponent extends AbstractComponent {
     });
   }
 
-  getTemplate() {
+  _getTemplate() {
+    let emoji = ``;
+
+    switch (this._commentModel.emoji) {
+      case `sleeping`:
+        emoji = `smile.png`;
+        break;
+      case `neutral-face`:
+        emoji = `sleeping.png`;
+        break;
+      case `grinning`:
+        emoji = Math.random() > 0.5 ? `puke.png` : `angry.png`;
+        break;
+      default:
+        emoji = ``;
+        break;
+    }
+
     return (
       `<li data-comment-id="${this._commentModel.id}" class="film-details__comment">
       <span class="film-details__comment-emoji">
-        <img src="./images/emoji/${this._emoji}" width="55" height="55" alt="emoji">
+        <img src="./images/emoji/${emoji}" width="55" height="55" alt="emoji">
       </span>
       <div>
         <p class="film-details__comment-text">${this._commentModel.text}</p>
         <p class="film-details__comment-info">
           <span class="film-details__comment-author">${this._commentModel.author}</span>
           <span class="film-details__comment-day">${formatDateTime(this._commentModel.date)}</span>
-          <button class="film-details__comment-delete">Delete</button>
+          <button data-comment-id="${this._commentModel.id}" class="film-details__comment-delete">Delete</button>
         </p>
       </div>
     </li>`

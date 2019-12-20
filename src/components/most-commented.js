@@ -5,7 +5,7 @@ export default class MostCommentedComponent extends AbstractComponent {
     return this.getElement().querySelector(`.films-list__container`);
   }
 
-  getTemplate() {
+  _getTemplate() {
     return (
       `<section class="films-list--extra">
       <h2 class="films-list__title">Most commented</h2>

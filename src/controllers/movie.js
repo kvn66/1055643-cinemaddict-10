@@ -26,7 +26,7 @@ export default class MovieController {
     const filmCard = new FilmCardComponent(movieModel);
     const filmDetails = new FilmDetailsComponent(movieModel);
     const footerElement = document.querySelector(`.footer`);
-    new CommentsController(filmDetails).render(movieModel);
+    new CommentsController(filmDetails, movieModel).render();
     const userRatingComponent = new UserRatingComponent();
     let pressedKey = new Set();
 
@@ -48,6 +48,10 @@ export default class MovieController {
     document.addEventListener(`commentAdded`, () => {
       filmDetails.updateCommentsCount();
       filmDetails.resetComment();
+    });
+
+    document.addEventListener(`commentRemoved`, () => {
+      filmDetails.updateCommentsCount();
     });
 
     const onCtrlEnterKeyDown = (evt) => {

@@ -5,7 +5,7 @@ export default class ProfileRatingComponent extends AbstractComponent {
     this.getElement().querySelector(`.profile__rating`).textContent = ratingStr;
   }
 
-  getTemplate() {
+  _getTemplate() {
     return (
       `<section class="header__profile profile">
       <p class="profile__rating"></p>

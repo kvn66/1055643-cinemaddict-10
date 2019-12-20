@@ -146,7 +146,7 @@ export default class FilmDetailsComponent extends AbstractComponent {
     this._resetEmojiInputElements();
   }
 
-  getTemplate() {
+  _getTemplate() {
     return (
       `<section class="film-details">
       <form class="film-details__inner" action="" method="get">
