@@ -11,12 +11,11 @@ export default class MostCommentedController {
 
   render(moviesModel) {
     const mostCommentedComponent = new MostCommentedComponent();
-    const movieController = new MovieController(mostCommentedComponent);
     const mostCommented = moviesModel.getMostCommented(MOST_COMMENTED_FILMS_COUNT);
 
     if (mostCommented[0].comments.length > 0) {
       mostCommented.forEach((movieModel) => {
-        movieController.render(movieModel);
+        new MovieController(mostCommentedComponent, movieModel).render();
       });
 
       render(this._parentComponent.getElement(), mostCommentedComponent.getElement());

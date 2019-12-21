@@ -11,12 +11,11 @@ export default class TopRatesController {
 
   render(moviesModel) {
     const topRates = new TopRatesComponent();
-    const movieController = new MovieController(topRates);
     const topRated = moviesModel.getTopRated(TOP_RATED_FILMS_COUNT);
 
     if (topRated[0].rating > 0) {
       topRated.forEach((movieModel) => {
-        movieController.render(movieModel);
+        new MovieController(topRates, movieModel).render();
       });
 
       render(this._parentComponent.getElement(), topRates.getElement());

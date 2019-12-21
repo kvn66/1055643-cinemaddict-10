@@ -26,7 +26,6 @@ export default class FilmsListController {
   render(movies) {
     let showingFilmsCount = SHOWING_FILMS_COUNT_ON_START;
     const filmsListComponent = new FilmsListComponent();
-    const movieController = new MovieController(filmsListComponent);
     const showMoreComponent = new ShowMoreComponent();
 
     const onClick = () => {
@@ -34,7 +33,7 @@ export default class FilmsListController {
       showingFilmsCount = showingFilmsCount + SHOWING_FILMS_COUNT_BY_BUTTON;
 
       movies.slice(prevFilmsCount, showingFilmsCount)
-        .forEach((movieModel) => movieController.render(movieModel));
+        .forEach((movieModel) => new MovieController(filmsListComponent, movieModel).render());
 
       if (showingFilmsCount >= movies.length) {
         showMoreComponent.remove();
@@ -45,7 +44,7 @@ export default class FilmsListController {
       filmsListComponent.titleHide = true;
 
       movies.slice(0, showingFilmsCount).forEach((movieModel) => {
-        movieController.render(movieModel);
+        new MovieController(filmsListComponent, movieModel).render();
       });
 
       render(filmsListComponent.getContainerElement(), showMoreComponent.getElement(), RenderPosition.AFTEREND);
