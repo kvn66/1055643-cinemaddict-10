@@ -39,7 +39,7 @@ export default class MovieController {
 
   _submitDetailForm() {
     const formData = new FormData(this._filmDetails.getFormElement());
-    const comment = window.he.encode(formData.get(`comment`));
+    const comment = he.encode(formData.get(`comment`));
     const emoji = formData.get(`comment-emoji`);
 
     if (comment !== `` && emoji) {
