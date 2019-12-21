@@ -1,3 +1,4 @@
+import he from 'he';
 import {render, RenderPosition} from "../utils";
 import FilmCardComponent from "../components/film-card";
 import FilmDetailsComponent from "../components/film-details";
@@ -38,7 +39,8 @@ export default class MovieController {
 
   _submitDetailForm() {
     const formData = new FormData(this._filmDetails.getFormElement());
-    const comment = formData.get(`comment`);
+    const comment = window.he.encode(formData.get(`comment`));
+    debugger;
     const emoji = formData.get(`comment-emoji`);
 
     if (comment !== `` && emoji) {
