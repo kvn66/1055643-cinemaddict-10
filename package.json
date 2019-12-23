@@ -21,6 +21,7 @@
     "node": "10"
   },
   "dependencies": {
+    "coderain": "^1.1.0",
     "he": "1.2.0",
     "moment": "2.24.0"
   }
