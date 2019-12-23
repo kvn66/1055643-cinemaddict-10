@@ -2,39 +2,49 @@ import AbstractComponent from './abstract-component';
 import {formatDateTime} from '../utils';
 
 export default class CommentComponent extends AbstractComponent {
-  constructor(comment) {
+  constructor(commentModel) {
     super();
-    this._comment = comment;
-    this._emoji = ``;
-
-    switch (this._comment.emoji) {
-      case `sleeping`:
-        this._emoji = `smile.png`;
-        break;
-      case `neutral-face`:
-        this._emoji = `sleeping.png`;
-        break;
-      case `grinning`:
-        this._emoji = Math.random() > 0.5 ? `puke.png` : `angry.png`;
-        break;
-      default:
-        this._emoji = ``;
-        break;
-    }
+    this._commentModel = commentModel;
+    this._deleteButtonElement = this.getElement().querySelector(`.film-details__comment-delete`);
   }
 
-  getTemplate() {
+  setDeleteButtonClickHandler(handler) {
+    this._deleteButtonElement.addEventListener(`click`, (evt) => {
+      evt.preventDefault();
+      const commentId = evt.target.dataset.commentId;
+      handler(commentId);
+    });
+  }
+
+  _getTemplate() {
+    let emoji = ``;
+
+    switch (this._commentModel.emoji) {
+      case `sleeping`:
+        emoji = `smile.png`;
+        break;
+      case `neutral-face`:
+        emoji = `sleeping.png`;
+        break;
+      case `grinning`:
+        emoji = Math.random() > 0.5 ? `puke.png` : `angry.png`;
+        break;
+      default:
+        emoji = ``;
+        break;
+    }
+
     return (
-      `<li class="film-details__comment">
+      `<li data-comment-id="${this._commentModel.id}" class="film-details__comment">
       <span class="film-details__comment-emoji">
-        <img src="./images/emoji/${this._emoji}" width="55" height="55" alt="emoji">
+        <img src="./images/emoji/${emoji}" width="55" height="55" alt="emoji">
       </span>
       <div>
-        <p class="film-details__comment-text">${this._comment.text}</p>
+        <p class="film-details__comment-text">${this._commentModel.text}</p>
         <p class="film-details__comment-info">
-          <span class="film-details__comment-author">${this._comment.author}</span>
-          <span class="film-details__comment-day">${formatDateTime(this._comment.date)}</span>
-          <button class="film-details__comment-delete">Delete</button>
+          <span class="film-details__comment-author">${this._commentModel.author}</span>
+          <span class="film-details__comment-day">${formatDateTime(this._commentModel.date)}</span>
+          <button data-comment-id="${this._commentModel.id}" class="film-details__comment-delete">Delete</button>
         </p>
       </div>
     </li>`

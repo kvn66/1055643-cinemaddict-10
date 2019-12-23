@@ -5,26 +5,20 @@ import MostCommentedComponent from "../components/most-commented";
 const MOST_COMMENTED_FILMS_COUNT = 2;
 
 export default class MostCommentedController {
-  constructor(parentElement) {
-    this._parentElement = parentElement;
+  constructor(parentComponent) {
+    this._parentComponent = parentComponent;
   }
 
-  getMostCommented(films) {
-    return films.slice().sort((a, b) => b.comments.length - a.comments.length).slice(0, MOST_COMMENTED_FILMS_COUNT);
-  }
-
-  render(films) {
+  render(moviesModel) {
     const mostCommentedComponent = new MostCommentedComponent();
-    const mostCommentedFilmsListContainerElement = mostCommentedComponent.getElement().querySelector(`.films-list__container`);
-    const movieController = new MovieController(mostCommentedFilmsListContainerElement);
-    const mostCommented = this.getMostCommented(films);
+    const mostCommented = moviesModel.getMostCommented(MOST_COMMENTED_FILMS_COUNT);
 
     if (mostCommented[0].comments.length > 0) {
-      mostCommented.forEach((film) => {
-        movieController.render(film);
+      mostCommented.forEach((movieModel) => {
+        new MovieController(mostCommentedComponent, movieModel).render();
       });
 
-      render(this._parentElement, mostCommentedComponent.getElement());
+      render(this._parentComponent.getElement(), mostCommentedComponent.getElement());
     }
   }
 }

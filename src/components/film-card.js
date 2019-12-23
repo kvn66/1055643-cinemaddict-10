@@ -8,6 +8,57 @@ export default class FilmCardComponent extends AbstractComponent {
     super();
     this._film = film;
     this._description = this._film.description.length > MAX_DESCRIPTION_LENGTH ? this._film.description.slice(0, MAX_DESCRIPTION_LENGTH - 1) + `...` : this._film.description;
+    this._watchlistElement = this.getElement().querySelector(`.film-card__controls-item--add-to-watchlist`);
+    this._watchedElement = this.getElement().querySelector(`.film-card__controls-item--mark-as-watched`);
+    this._favoriteElement = this.getElement().querySelector(`.film-card__controls-item--favorite`);
+  }
+
+  get watchlistChecked() {
+    return this._watchlistElement.classList.contains(`film-card__controls-item--active`);
+  }
+
+  set watchlistChecked(checked) {
+    if (checked) {
+      if (!this.watchlistChecked) {
+        this._watchlistElement.classList.add(`film-card__controls-item--active`);
+      }
+    } else {
+      if (this.watchlistChecked) {
+        this._watchlistElement.classList.remove(`film-card__controls-item--active`);
+      }
+    }
+  }
+
+  get watchedChecked() {
+    return this._watchedElement.classList.contains(`film-card__controls-item--active`);
+  }
+
+  set watchedChecked(checked) {
+    if (checked) {
+      if (!this.watchedChecked) {
+        this._watchedElement.classList.add(`film-card__controls-item--active`);
+      }
+    } else {
+      if (this.watchedChecked) {
+        this._watchedElement.classList.remove(`film-card__controls-item--active`);
+      }
+    }
+  }
+
+  get favoriteChecked() {
+    return this._favoriteElement.classList.contains(`film-card__controls-item--active`);
+  }
+
+  set favoriteChecked(checked) {
+    if (checked) {
+      if (!this.favoriteChecked) {
+        this._favoriteElement.classList.add(`film-card__controls-item--active`);
+      }
+    } else {
+      if (this.favoriteChecked) {
+        this._favoriteElement.classList.remove(`film-card__controls-item--active`);
+      }
+    }
   }
 
   setOpenDetailsClickHandler(handler) {
@@ -28,7 +79,7 @@ export default class FilmCardComponent extends AbstractComponent {
     this.getElement().querySelector(`.film-card__controls-item--favorite`).addEventListener(`click`, handler);
   }
 
-  getTemplate() {
+  _getTemplate() {
     return (
       `<article class="film-card">
       <h3 class="film-card__title">${this._film.title}</h3>

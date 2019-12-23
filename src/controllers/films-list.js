@@ -7,59 +7,55 @@ const SHOWING_FILMS_COUNT_ON_START = 5;
 const SHOWING_FILMS_COUNT_BY_BUTTON = 5;
 
 export default class FilmsListController {
-  constructor(parentElement) {
-    this._parentElement = parentElement;
+  constructor(parentComponent) {
+    this._parentComponent = parentComponent;
     this._filmsListComponent = null;
   }
 
-  _renderElement(container, element, place = RenderPosition.BEFOREEND) {
+  _renderElement(containerElement, element, place = RenderPosition.BEFOREEND) {
     if (!this._filmsListComponent) {
-      render(this._parentElement, element, place);
+      render(this._parentComponent.getElement(), element, place);
     } else {
       const filmsListElement = this._filmsListComponent.getElement();
-      if (container.contains(filmsListElement)) {
+      if (containerElement.contains(filmsListElement)) {
         filmsListElement.replaceWith(element);
       }
     }
   }
 
-  render(films) {
+  render(movies) {
     let showingFilmsCount = SHOWING_FILMS_COUNT_ON_START;
     const filmsListComponent = new FilmsListComponent();
-    const filmsListElement = filmsListComponent.getElement();
-    const title = filmsListElement.querySelector(`.films-list__title`);
-    const filmsListContainerElement = filmsListElement.querySelector(`.films-list__container`);
-    const movieController = new MovieController(filmsListContainerElement);
     const showMoreComponent = new ShowMoreComponent();
 
     const onClick = () => {
       const prevFilmsCount = showingFilmsCount;
       showingFilmsCount = showingFilmsCount + SHOWING_FILMS_COUNT_BY_BUTTON;
 
-      films.slice(prevFilmsCount, showingFilmsCount)
-        .forEach((film) => movieController.render(film));
+      movies.slice(prevFilmsCount, showingFilmsCount)
+        .forEach((movieModel) => new MovieController(filmsListComponent, movieModel).render());
 
-      if (showingFilmsCount >= films.length) {
+      if (showingFilmsCount >= movies.length) {
         showMoreComponent.remove();
       }
     };
 
-    if (films.length) {
-      title.classList.add(`visually-hidden`);
+    if (movies.length) {
+      filmsListComponent.titleHide = true;
 
-      films.slice(0, showingFilmsCount).forEach((film) => {
-        movieController.render(film);
+      movies.slice(0, showingFilmsCount).forEach((movieModel) => {
+        new MovieController(filmsListComponent, movieModel).render();
       });
 
-      render(filmsListContainerElement, showMoreComponent.getElement(), RenderPosition.AFTEREND);
+      render(filmsListComponent.getContainerElement(), showMoreComponent.getElement(), RenderPosition.AFTEREND);
 
       showMoreComponent.setClickHandler(onClick);
     } else {
-      title.textContent = `There are no movies in our database`;
-      title.classList.remove(`visually-hidden`);
+      filmsListComponent.titleText = `There are no movies in our database`;
+      filmsListComponent.titleHide = false;
     }
 
-    this._renderElement(this._parentElement, filmsListElement, RenderPosition.AFTERBEGIN);
+    this._renderElement(this._parentComponent.getElement(), filmsListComponent.getElement(), RenderPosition.AFTERBEGIN);
 
     this._filmsListComponent = filmsListComponent;
   }

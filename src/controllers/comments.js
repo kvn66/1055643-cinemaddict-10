@@ -3,17 +3,36 @@ import CommentsComponent from "../components/comments";
 import CommentComponent from "../components/comment";
 
 export default class CommentsController {
-  constructor(parentElement) {
-    this._parentElement = parentElement;
+  constructor(parentComponent, movieModel) {
+    this._parentComponent = parentComponent;
+    this._movieModel = movieModel;
+    this._commentsComponent = new CommentsComponent();
+    this._onDeleteButtonClick = this._onDeleteButtonClick.bind(this);
   }
 
-  render(film) {
-    const commentsComponent = new CommentsComponent();
-    const commentsElement = commentsComponent.getElement();
-    film.comments.forEach((item) => {
-      render(commentsElement, new CommentComponent(item).getElement());
+  _onDeleteButtonClick(commentId) {
+    this._movieModel.comments.removeComment(commentId);
+  }
+
+  _renderComment(commentModel) {
+    const commentComponent = new CommentComponent(commentModel);
+    commentComponent.setDeleteButtonClickHandler(this._onDeleteButtonClick);
+    render(this._commentsComponent.getElement(), commentComponent.getElement());
+  }
+
+  render() {
+    this._movieModel.comments.getComments().forEach((commentModel) => {
+      this._renderComment(commentModel);
     });
-    const commentsList = this._parentElement.querySelector(`.film-details__comments-list`);
-    commentsList.replaceWith(commentsElement);
+    const commentsListElement = this._parentComponent.getCommentsListElement();
+    commentsListElement.replaceWith(this._commentsComponent.getElement());
+
+    document.addEventListener(`commentAdded`, (evt) => {
+      this._renderComment(evt.detail);
+    });
+
+    document.addEventListener(`commentRemoved`, (evt) => {
+      this._commentsComponent.removeComment(evt.detail);
+    });
   }
 }

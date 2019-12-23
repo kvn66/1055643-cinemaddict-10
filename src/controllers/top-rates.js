@@ -5,26 +5,20 @@ import MovieController from "./movie";
 const TOP_RATED_FILMS_COUNT = 2;
 
 export default class TopRatesController {
-  constructor(parentElement) {
-    this._parentElement = parentElement;
+  constructor(parentComponent) {
+    this._parentComponent = parentComponent;
   }
 
-  getTopRated(films) {
-    return films.slice().sort((a, b) => b.rating - a.rating).slice(0, TOP_RATED_FILMS_COUNT);
-  }
-
-  render(films) {
+  render(moviesModel) {
     const topRates = new TopRatesComponent();
-    const topRatedFilmsListContainerElement = topRates.getElement().querySelector(`.films-list__container`);
-    const movieController = new MovieController(topRatedFilmsListContainerElement);
-    const topRated = this.getTopRated(films);
+    const topRated = moviesModel.getTopRated(TOP_RATED_FILMS_COUNT);
 
     if (topRated[0].rating > 0) {
-      topRated.forEach((film) => {
-        movieController.render(film);
+      topRated.forEach((movieModel) => {
+        new MovieController(topRates, movieModel).render();
       });
 
-      render(this._parentElement, topRates.getElement());
+      render(this._parentComponent.getElement(), topRates.getElement());
     }
   }
 }

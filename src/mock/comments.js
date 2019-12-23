@@ -34,8 +34,9 @@ const getRandomDate = () => {
   return targetDate;
 };
 
-const generateComment = () => {
+const generateComment = (item, index) => {
   return {
+    id: index,
     text: getRandomArrayItem(TextItems),
     emoji: getRandomArrayItem(EmojiItems),
     author: getRandomArrayItem(AuthorItems),

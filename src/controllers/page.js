@@ -1,61 +1,17 @@
-import FilmsComponent from "../components/films";
-import FilmsListController from "./films-list";
-import TopRatesController from "./top-rates";
-import MostCommentedController from "./most-commented";
-import {render, SortType} from "../utils";
-import SiteMenuComponent from "../components/site-menu";
-import SiteSortComponent from "../components/site-sort";
+import ProfileRatingController from "./profile-rating";
+import MainController from "./main";
+import FooterStatisticComponent from "../components/footer-statistic";
 
 export default class PageController {
-  constructor(parentElement) {
-    this._parentElement = parentElement;
-
-    this._siteMenuComponent = null;
-    this._siteSortComponent = new SiteSortComponent();
-    this._filmsComponent = new FilmsComponent();
-    this._filmsElement = this._filmsComponent.getElement();
-    this._filmsListController = new FilmsListController(this._filmsElement);
-    this._topRatesController = new TopRatesController(this._filmsElement);
-    this._mostCommentedController = new MostCommentedController(this._filmsElement);
+  constructor(parentComponent, moviesModel) {
+    this._parentComponent = parentComponent;
+    this._moviesModel = moviesModel;
   }
+  render() {
+    new ProfileRatingController(this._parentComponent.querySelector(`.header`)).render(this._moviesModel);
 
-  siteSortRender(films, sortedFilms) {
-    const siteSortElement = this._siteSortComponent.getElement();
-    render(this._parentElement, siteSortElement);
+    new MainController(this._parentComponent.querySelector(`.main`)).render(this._moviesModel);
 
-    this._siteSortComponent.setSortTypeChangeHandler((sortType) => {
-      switch (sortType) {
-        case SortType.RATING:
-          sortedFilms = films.slice().sort((a, b) => b.rating - a.rating);
-          break;
-        case SortType.DATE:
-          sortedFilms = films.slice().sort((a, b) => b.releaseDate - a.releaseDate);
-          break;
-        case SortType.DEFAULT:
-          sortedFilms = films.slice();
-          break;
-      }
-      this._filmsListController.render(sortedFilms);
-    });
-  }
-
-  render(films) {
-    if (!this._siteMenuComponent) {
-      this._siteMenuComponent = new SiteMenuComponent(films);
-    }
-    render(this._parentElement, this._siteMenuComponent.getElement());
-
-    let sortedFilms = films.slice();
-
-    this.siteSortRender(films, sortedFilms);
-
-    this._filmsListController.render(sortedFilms);
-
-    if (films.length) {
-      this._topRatesController.render(films);
-      this._mostCommentedController.render(films);
-    }
-
-    render(this._parentElement, this._filmsElement);
+    this._parentComponent.querySelector(`.footer__statistics`).replaceWith(new FooterStatisticComponent(this._moviesModel).getElement());
   }
 }
