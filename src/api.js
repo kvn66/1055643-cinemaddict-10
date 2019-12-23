@@ -1,4 +1,4 @@
-//import Task from './models/task.js';
+import MoviesModel from './models/movies';
 
 const Method = {
   GET: `GET`,
@@ -21,15 +21,15 @@ export default class API {
     this._authorization = authorization;
   }
 
-  getTasks() {
+  getMovies() {
     return this._load({url: `movies`})
-      .then((response) => response.json());
-      //.then(Task.parseTasks);
+      .then((response) => response.json())
+      .then(MoviesModel.parseMovies);
   }
 
-  createTask(task) {
+  createMovies(task) {
     return this._load({
-      url: `tasks`,
+      url: `movies`,
       method: Method.POST,
       body: JSON.stringify(task.toRAW()),
       headers: new Headers({'Content-Type': `application/json`})
@@ -38,9 +38,9 @@ export default class API {
       //.then(Task.parseTask);
   }
 
-  updateTask(id, data) {
+  updateMovie(id, data) {
     return this._load({
-      url: `tasks/${id}`,
+      url: `movies/${id}`,
       method: Method.PUT,
       body: JSON.stringify(data.toRAW()),
       headers: new Headers({'Content-Type': `application/json`})
@@ -49,8 +49,8 @@ export default class API {
       //.then(Task.parseTask);
   }
 
-  deleteTask(id) {
-    return this._load({url: `tasks/${id}`, method: Method.DELETE});
+  deleteMovie(id) {
+    return this._load({url: `movies/${id}`, method: Method.DELETE});
   }
 
   _load({url, method = Method.GET, body = null, headers = new Headers()}) {

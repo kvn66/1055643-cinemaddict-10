@@ -1,26 +1,27 @@
 import CommentsModel from "./comments";
 
 export default class MovieModel {
-  constructor(film) {
-    this._id = film.id;
-    this._title = film.title;
-    this._titleOriginal = film.titleOriginal;
-    this._rating = film.rating;
-    this._userRating = film.userRating;
-    this._releaseDate = film.releaseDate;
-    this._duration = film.duration;
-    this._genres = film.genres;
-    this._poster = film.poster;
-    this._description = film.description;
-    this._comments = new CommentsModel(film.comments);
-    this._director = film.director;
-    this._writers = film.writers;
-    this._actors = film.actors;
-    this._country = film.country;
-    this._age = film.age;
-    this._isAddedToWatchlist = film.isAddedToWatchlist;
-    this._isAlreadyWatched = film.isAlreadyWatched;
-    this._isAddedToFavorites = film.isAddedToFavorites;
+  constructor(movie) {
+    this._id = movie.id;
+    this._comments = movie.comments;
+    this._title = movie.film_info.title;
+    this._titleOriginal = movie.film_info.alternative_title;
+    this._rating = movie.film_info.total_rating;
+    this._poster = movie.film_info.poster;
+    this._age = movie.film_info.age_rating;
+    this._director = movie.film_info.director;
+    this._writers = movie.film_info.writers;
+    this._actors = movie.film_info.actors;
+    this._releaseDate = movie.film_info.release.date;
+    this._country = movie.film_info.release.release_country;
+    this._duration = movie.film_info.runtime;
+    this._genres = movie.film_info.genre;
+    this._description = movie.film_info.description;
+    this._userRating = movie.user_details.personal_rating;
+    this._isAddedToWatchlist = movie.user_details.watchlist;
+    this._isAlreadyWatched = movie.user_details.already_watched;
+    this._watchingDate = movie.user_details.watching_date;
+    this._isAddedToFavorites = movie.user_details.favorite;
   }
 
   get id() {
