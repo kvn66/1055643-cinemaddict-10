@@ -21,6 +21,7 @@ export default class CommentsController {
   }
 
   render() {
+/*
     this._movieModel.comments.getComments().forEach((commentModel) => {
       this._renderComment(commentModel);
     });
@@ -34,5 +35,6 @@ export default class CommentsController {
     document.addEventListener(`commentRemoved`, (evt) => {
       this._commentsComponent.removeComment(evt.detail);
     });
+*/
   }
 }

@@ -12,7 +12,7 @@ export default class MovieModel {
     this._director = movie.film_info.director;
     this._writers = movie.film_info.writers;
     this._actors = movie.film_info.actors;
-    this._releaseDate = movie.film_info.release.date;
+    this._releaseDate = new Date(movie.film_info.release.date);
     this._country = movie.film_info.release.release_country;
     this._duration = movie.film_info.runtime;
     this._genres = movie.film_info.genre;
