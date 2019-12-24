@@ -5,6 +5,7 @@ import FilmDetailsComponent from "../components/film-details";
 import UserRatingComponent from "../components/user-rating";
 import CommentsController from "./comments";
 import CommentModel from "../models/comment";
+import CommentsModel from "../models/comments";
 
 export default class MovieController {
   constructor(parentComponent, movieModel) {
@@ -15,6 +16,7 @@ export default class MovieController {
     this._footerElement = document.querySelector(`.footer`);
     this._userRatingComponent = new UserRatingComponent();
     this._pressedKey = new Set();
+    this._detailsIsOpened = false;
 
     this._onCtrlEnterKeyDown = this._onCtrlEnterKeyDown.bind(this);
     this._onCtrlEnterKeyUp = this._onCtrlEnterKeyUp.bind(this);
@@ -26,8 +28,6 @@ export default class MovieController {
   }
 
   render() {
-    new CommentsController(this._filmDetails, this._movieModel).render();
-
     document.addEventListener(`commentAdded`, () => {
       this._filmDetails.updateCommentsCount();
       this._filmDetails.resetComment();
@@ -51,6 +51,26 @@ export default class MovieController {
     document.addEventListener(`favoriteChange`, () => {
       this._filmCard.favoriteChecked = this._movieModel.isAddedToFavorites;
       this._filmDetails.favoriteChecked = this._movieModel.isAddedToFavorites;
+    });
+
+    document.addEventListener(`openDetails`, (evt) => {
+      if (this._detailsIsOpened && evt.detail !== this._movieModel.id) {
+        this._closeDetails();
+      }
+    });
+
+    document.addEventListener(`commentsLoaded`, (evt) => {
+      if (evt.detail.id === this._movieModel.id) {
+        evt.detail.promise
+          .then((comments) => {
+            console.log(comments);
+            const commentsModel = new CommentsModel();
+            commentsModel.fillModel(comments);
+            this._movieModel.comments = commentsModel;
+            new CommentsController(this._filmDetails, this._movieModel).render();
+            this._openDetails();
+          });
+      }
     });
 
     this._setFilmCardHandlers();
@@ -104,6 +124,7 @@ export default class MovieController {
     document.removeEventListener(`keydown`, this._onCtrlEnterKeyDown);
     document.removeEventListener(`keyup`, this._onCtrlEnterKeyUp);
     this._pressedKey.clear();
+    this._detailsIsOpened = false;
   }
 
   _onEscKeyDown(evt) {
@@ -138,12 +159,17 @@ export default class MovieController {
     this._filmDetails.setFavoriteClickHandler(this._onFavoriteClick);
   }
 
-  _onOpenDetailsClick() {
+  _openDetails() {
     this._setDetailHandlers();
     render(this._footerElement, this._filmDetails.getElement(), RenderPosition.AFTEREND);
     document.addEventListener(`keydown`, this._onEscKeyDown);
     document.addEventListener(`keydown`, this._onCtrlEnterKeyDown);
     document.addEventListener(`keyup`, this._onCtrlEnterKeyUp);
+    this._detailsIsOpened = true;
+  }
+
+  _onOpenDetailsClick() {
+    document.dispatchEvent(new CustomEvent(`openDetails`, {'detail': this._movieModel.id}));
   }
 
   _setFilmCardHandlers() {

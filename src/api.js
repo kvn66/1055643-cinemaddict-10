@@ -20,6 +20,7 @@ export default class API {
   constructor(endPoint, authorization) {
     this._endPoint = endPoint;
     this._authorization = authorization;
+    this._init();
   }
 
   getMovies() {
@@ -68,5 +69,15 @@ export default class API {
       .catch((err) => {
         throw err;
       });
+  }
+
+  _init() {
+    document.addEventListener(`openDetails`, (evt) => {
+      const msg = {
+        id: evt.detail,
+        promise: this.getComments(evt.detail)
+      };
+      document.dispatchEvent(new CustomEvent(`commentsLoaded`, {'detail': msg}));
+    });
   }
 }

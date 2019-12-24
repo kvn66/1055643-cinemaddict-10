@@ -1,16 +1,10 @@
 import CommentModel from "./comment";
-import MovieModel from "./movie";
 
 const INITIAL_ID = -1;
 
 export default class CommentsModel {
-  constructor(comments) {
+  constructor() {
     this._comments = [];
-    comments.map((comment) => {
-      const commentModel = new CommentModel();
-      commentModel.fillFromObject(comment);
-      this._comments.push(commentModel);
-    });
   }
 
   get length() {
@@ -42,7 +36,9 @@ export default class CommentsModel {
   }
 
   static parseComment(comment) {
-    return (new CommentModel().fillFromObject(comment));
+    const model = new CommentModel();
+    model.fillFromObject(comment);
+    return model;
   }
 
   static parseComments(comments) {

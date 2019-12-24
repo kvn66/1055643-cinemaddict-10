@@ -45,10 +45,10 @@ export default class CommentModel {
 
   fillFromObject(comment) {
     this._id = comment.id;
-    this._text = comment.text;
-    this._emoji = comment.emoji;
+    this._text = comment.comment;
+    this._emoji = comment.emotion;
     this._author = comment.author;
-    this._date = comment.date;
+    this._date = new Date(comment.date);
   }
 
 }

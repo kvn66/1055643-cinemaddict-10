@@ -1,5 +1,3 @@
-import CommentsModel from "./comments";
-
 export default class MovieModel {
   constructor(movie) {
     this._id = movie.id;
@@ -26,6 +24,14 @@ export default class MovieModel {
 
   get id() {
     return this._id;
+  }
+
+  get comments() {
+    return this._comments;
+  }
+
+  set comments(comments) {
+    this._comments = comments;
   }
 
   get title() {
@@ -62,10 +68,6 @@ export default class MovieModel {
 
   get description() {
     return this._description;
-  }
-
-  get comments() {
-    return this._comments;
   }
 
   get director() {
