@@ -156,7 +156,7 @@ export default class FilmDetailsComponent extends AbstractComponent {
           </div>
           <div class="film-details__info-wrap">
             <div class="film-details__poster">
-              <img class="film-details__poster-img" src="./images/posters/${this._film.poster}" alt="">
+              <img class="film-details__poster-img" src="${this._film.poster}" alt="">
     
               <p class="film-details__age">${this._film.age.toString()}+</p>
             </div>

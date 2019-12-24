@@ -13,6 +13,7 @@ const moviesModel = new MoviesModel();
 
 api.getMovies()
   .then((movies) => {
+    console.log(movies);
     moviesModel.fillModel(movies);
     new PageController(document, moviesModel).render();
   });

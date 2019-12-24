@@ -25,6 +25,39 @@ export default class MovieController {
     this._onOpenDetailsClick = this._onOpenDetailsClick.bind(this);
   }
 
+  render() {
+    new CommentsController(this._filmDetails, this._movieModel).render();
+
+    document.addEventListener(`commentAdded`, () => {
+      this._filmDetails.updateCommentsCount();
+      this._filmDetails.resetComment();
+    });
+
+    document.addEventListener(`commentRemoved`, () => {
+      this._filmDetails.updateCommentsCount();
+    });
+
+    document.addEventListener(`watchlistChange`, () => {
+      this._filmCard.watchlistChecked = this._movieModel.isAddedToWatchlist;
+      this._filmDetails.watchlistChecked = this._movieModel.isAddedToWatchlist;
+    });
+
+    document.addEventListener(`watchedChange`, () => {
+      this._filmCard.watchedChecked = this._movieModel.isAlreadyWatched;
+      this._filmDetails.watchedChecked = this._movieModel.isAlreadyWatched;
+      this._renderUserRating(this._movieModel.isAlreadyWatched);
+    });
+
+    document.addEventListener(`favoriteChange`, () => {
+      this._filmCard.favoriteChecked = this._movieModel.isAddedToFavorites;
+      this._filmDetails.favoriteChecked = this._movieModel.isAddedToFavorites;
+    });
+
+    this._setFilmCardHandlers();
+    this._renderUserRating(this._movieModel.isAlreadyWatched);
+    render(this._parentComponent.getContainerElement(), this._filmCard.getElement());
+  }
+
   _renderUserRating(datafield) {
     if (datafield) {
       if (!this._filmDetails.getUserRatingElement()) {
@@ -118,38 +151,5 @@ export default class MovieController {
     this._filmCard.setWatchlistClickHandler(this._onWatchlistClick);
     this._filmCard.setWatchedClickHandler(this._onWatchedClick);
     this._filmCard.setFavoriteClickHandler(this._onFavoriteClick);
-  }
-
-  render() {
-    new CommentsController(this._filmDetails, this._movieModel).render();
-
-    document.addEventListener(`commentAdded`, () => {
-      this._filmDetails.updateCommentsCount();
-      this._filmDetails.resetComment();
-    });
-
-    document.addEventListener(`commentRemoved`, () => {
-      this._filmDetails.updateCommentsCount();
-    });
-
-    document.addEventListener(`watchlistChange`, () => {
-      this._filmCard.watchlistChecked = this._movieModel.isAddedToWatchlist;
-      this._filmDetails.watchlistChecked = this._movieModel.isAddedToWatchlist;
-    });
-
-    document.addEventListener(`watchedChange`, () => {
-      this._filmCard.watchedChecked = this._movieModel.isAlreadyWatched;
-      this._filmDetails.watchedChecked = this._movieModel.isAlreadyWatched;
-      this._renderUserRating(this._movieModel.isAlreadyWatched);
-    });
-
-    document.addEventListener(`favoriteChange`, () => {
-      this._filmCard.favoriteChecked = this._movieModel.isAddedToFavorites;
-      this._filmDetails.favoriteChecked = this._movieModel.isAddedToFavorites;
-    });
-
-    this._setFilmCardHandlers();
-    this._renderUserRating(this._movieModel.isAlreadyWatched);
-    render(this._parentComponent.getContainerElement(), this._filmCard.getElement());
   }
 }

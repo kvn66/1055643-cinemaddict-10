@@ -1,4 +1,5 @@
 import CommentModel from "./comment";
+import MovieModel from "./movie";
 
 const INITIAL_ID = -1;
 
@@ -26,6 +27,10 @@ export default class CommentsModel {
     }).id : INITIAL_ID);
   }
 
+  fillModel(comments) {
+    this._comments = Array.from(comments);
+  }
+
   addComment(commentModel) {
     this._comments.push(commentModel);
     document.dispatchEvent(new CustomEvent(`commentAdded`, {'detail': commentModel}));
@@ -34,5 +39,13 @@ export default class CommentsModel {
   removeComment(commentId) {
     this._comments.splice(this._comments.findIndex((item) => item.id === commentId), 1);
     document.dispatchEvent(new CustomEvent(`commentRemoved`, {'detail': commentId}));
+  }
+
+  static parseComment(comment) {
+    return (new CommentModel().fillFromObject(comment));
+  }
+
+  static parseComments(comments) {
+    return comments.map(CommentsModel.parseComment);
   }
 }

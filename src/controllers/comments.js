@@ -1,6 +1,7 @@
 import {render} from "../utils";
 import CommentsComponent from "../components/comments";
 import CommentComponent from "../components/comment";
+import PageController from "./page";
 
 export default class CommentsController {
   constructor(parentComponent, movieModel) {
@@ -21,7 +22,15 @@ export default class CommentsController {
   }
 
   render() {
-/*
+    api.getMovies()
+      .then((movies) => {
+        console.log(movies);
+        moviesModel.fillModel(movies);
+        new PageController(document, moviesModel).render();
+      });
+
+
+    /*
     this._movieModel.comments.getComments().forEach((commentModel) => {
       this._renderComment(commentModel);
     });
