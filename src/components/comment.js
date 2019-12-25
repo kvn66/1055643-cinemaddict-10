@@ -17,27 +17,10 @@ export default class CommentComponent extends AbstractComponent {
   }
 
   _getTemplate() {
-    let emoji = ``;
-
-    switch (this._commentModel.emoji) {
-      case `sleeping`:
-        emoji = `smile.png`;
-        break;
-      case `neutral-face`:
-        emoji = `sleeping.png`;
-        break;
-      case `grinning`:
-        emoji = Math.random() > 0.5 ? `puke.png` : `angry.png`;
-        break;
-      default:
-        emoji = ``;
-        break;
-    }
-
     return (
       `<li data-comment-id="${this._commentModel.id}" class="film-details__comment">
       <span class="film-details__comment-emoji">
-        <img src="./images/emoji/${emoji}" width="55" height="55" alt="emoji">
+        <img src="./images/emoji/${this._commentModel.emoji}.png" width="55" height="55" alt="emoji">
       </span>
       <div>
         <p class="film-details__comment-text">${this._commentModel.text}</p>

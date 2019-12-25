@@ -9,7 +9,7 @@ const Method = {
 };
 
 const checkStatus = (response) => {
-  if (response.status >= 200 && response.status < 300) {
+  if (response.status >= 200 && response.status < 300 && response.ok) {
     return response;
   } else {
     throw new Error(`${response.status}: ${response.statusText}`);
@@ -73,6 +73,7 @@ export default class API {
 
   _init() {
     document.addEventListener(`openDetails`, (evt) => {
+      console.log(`openDetailsApi`);
       const msg = {
         id: evt.detail,
         promise: this.getComments(evt.detail)

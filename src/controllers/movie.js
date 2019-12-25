@@ -54,12 +54,14 @@ export default class MovieController {
     });
 
     document.addEventListener(`openDetails`, (evt) => {
+      console.log(`openDetails`);
       if (this._detailsIsOpened && evt.detail !== this._movieModel.id) {
         this._closeDetails();
       }
     });
 
     document.addEventListener(`commentsLoaded`, (evt) => {
+      console.log(`commentsLoaded`);
       if (evt.detail.id === this._movieModel.id) {
         evt.detail.promise
           .then((comments) => {
@@ -160,12 +162,14 @@ export default class MovieController {
   }
 
   _openDetails() {
-    this._setDetailHandlers();
-    render(this._footerElement, this._filmDetails.getElement(), RenderPosition.AFTEREND);
-    document.addEventListener(`keydown`, this._onEscKeyDown);
-    document.addEventListener(`keydown`, this._onCtrlEnterKeyDown);
-    document.addEventListener(`keyup`, this._onCtrlEnterKeyUp);
-    this._detailsIsOpened = true;
+    if (!this._detailsIsOpened) {
+      this._setDetailHandlers();
+      render(this._footerElement, this._filmDetails.getElement(), RenderPosition.AFTEREND);
+      document.addEventListener(`keydown`, this._onEscKeyDown);
+      document.addEventListener(`keydown`, this._onCtrlEnterKeyDown);
+      document.addEventListener(`keyup`, this._onCtrlEnterKeyUp);
+      this._detailsIsOpened = true;
+    }
   }
 
   _onOpenDetailsClick() {
