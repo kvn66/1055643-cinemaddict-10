@@ -1,6 +1,3 @@
-import MoviesModel from './models/movies';
-import CommentsModel from './models/comments';
-
 const Method = {
   GET: `GET`,
   POST: `POST`,
@@ -20,19 +17,16 @@ export default class API {
   constructor(endPoint, authorization) {
     this._endPoint = endPoint;
     this._authorization = authorization;
-    this._init();
   }
 
   getMovies() {
     return this._load({url: `movies`})
-      .then((response) => response.json())
-      .then(MoviesModel.parseMovies);
+      .then((response) => response.json());
   }
 
   getComments(id) {
     return this._load({url: `comments/${id}`})
-      .then((response) => response.json())
-      .then(CommentsModel.parseComments);
+      .then((response) => response.json());
   }
 
   createMovies(task) {
@@ -46,15 +40,14 @@ export default class API {
       //.then(Task.parseTask);
   }
 
-  updateMovie(id, data) {
+  updateMovie(id, movie) {
     return this._load({
       url: `movies/${id}`,
       method: Method.PUT,
-      body: JSON.stringify(data.toRAW()),
+      body: JSON.stringify(movie),
       headers: new Headers({'Content-Type': `application/json`})
     })
       .then((response) => response.json());
-      //.then(Task.parseTask);
   }
 
   deleteMovie(id) {
@@ -69,16 +62,5 @@ export default class API {
       .catch((err) => {
         throw err;
       });
-  }
-
-  _init() {
-    document.addEventListener(`openDetails`, (evt) => {
-      console.log(`openDetailsApi`);
-      const msg = {
-        id: evt.detail,
-        promise: this.getComments(evt.detail)
-      };
-      document.dispatchEvent(new CustomEvent(`commentsLoaded`, {'detail': msg}));
-    });
   }
 }

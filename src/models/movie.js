@@ -1,25 +1,8 @@
+import CommentsModel from "./comments";
+
 export default class MovieModel {
-  constructor(movie) {
-    this._id = movie.id;
-    this._comments = movie.comments;
-    this._title = movie.film_info.title;
-    this._titleOriginal = movie.film_info.alternative_title;
-    this._rating = movie.film_info.total_rating;
-    this._poster = movie.film_info.poster;
-    this._age = movie.film_info.age_rating;
-    this._director = movie.film_info.director;
-    this._writers = movie.film_info.writers;
-    this._actors = movie.film_info.actors;
-    this._releaseDate = new Date(movie.film_info.release.date);
-    this._country = movie.film_info.release.release_country;
-    this._duration = movie.film_info.runtime;
-    this._genres = movie.film_info.genre;
-    this._description = movie.film_info.description;
-    this._userRating = movie.user_details.personal_rating;
-    this._isAddedToWatchlist = movie.user_details.watchlist;
-    this._isAlreadyWatched = movie.user_details.already_watched;
-    this._watchingDate = movie.user_details.watching_date;
-    this._isAddedToFavorites = movie.user_details.favorite;
+  constructor(movieJson) {
+    this.update(movieJson);
   }
 
   get id() {
@@ -123,27 +106,58 @@ export default class MovieModel {
     }
   }
 
-  getMovie() {
+  update(movieJson) {
+    this._id = movieJson.id;
+    this._comments = movieJson.comments;
+    this._title = movieJson.film_info.title;
+    this._titleOriginal = movieJson.film_info.alternative_title;
+    this._rating = movieJson.film_info.total_rating;
+    this._poster = movieJson.film_info.poster;
+    this._age = movieJson.film_info.age_rating;
+    this._director = movieJson.film_info.director;
+    this._writers = movieJson.film_info.writers;
+    this._actors = movieJson.film_info.actors;
+    this._releaseDate = new Date(movieJson.film_info.release.date);
+    this._country = movieJson.film_info.release.release_country;
+    this._duration = movieJson.film_info.runtime;
+    this._genres = movieJson.film_info.genre;
+    this._description = movieJson.film_info.description;
+    this._userRating = movieJson.user_details.personal_rating;
+    this._isAddedToWatchlist = movieJson.user_details.watchlist;
+    this._isAlreadyWatched = movieJson.user_details.already_watched;
+    this._watchingDate = movieJson.user_details.watching_date;
+    this._isAddedToFavorites = movieJson.user_details.favorite;
+  }
+
+  toRAW() {
+    const comments = this._comments instanceof CommentsModel ? this._comments.toRAW() : this._comments;
     return {
-      id: this._id,
-      title: this._title,
-      titleOriginal: this._titleOriginal,
-      rating: this._rating,
-      userRating: this._userRating,
-      releaseDate: this._releaseDate,
-      duration: this._duration,
-      genres: this._genres,
-      poster: this._poster,
-      description: this._description,
-      comments: this._comments,
-      director: this._director,
-      writers: this._writers,
-      actors: this._actors,
-      country: this._country,
-      age: this._age,
-      isAddedToWatchlist: this._isAddedToWatchlist,
-      isAlreadyWatched: this._isAlreadyWatched,
-      isAddedToFavorites: this._isAddedToFavorites
+      'id': this._id,
+      'comments': comments,
+      'film_info': {
+        'title': this._title,
+        'alternative_title': this._titleOriginal,
+        'total_rating': this._rating,
+        'poster': this._poster,
+        'age_rating': this._age,
+        'director': this._director,
+        'writers': this._writers,
+        'actors': this._actors,
+        'release': {
+          'date': this._releaseDate,
+          'release_country': this._country,
+        },
+        'runtime': this._duration,
+        'genre': this._genres,
+        'description': this._description
+      },
+      'user_details': {
+        'personal_rating': this._userRating,
+        'watchlist': this._isAddedToWatchlist,
+        'already_watched': this._isAlreadyWatched,
+        'watching_date': this._watchingDate,
+        'favorite': this._isAddedToFavorites
+      }
     };
   }
 }

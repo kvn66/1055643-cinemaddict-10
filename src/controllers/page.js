@@ -3,15 +3,15 @@ import MainController from "./main";
 import FooterStatisticComponent from "../components/footer-statistic";
 
 export default class PageController {
-  constructor(parentComponent, moviesModel) {
-    this._parentComponent = parentComponent;
+  constructor(moviesModel, api) {
     this._moviesModel = moviesModel;
+    this._api = api;
   }
-  render() {
-    new ProfileRatingController(this._parentComponent.querySelector(`.header`)).render(this._moviesModel);
+  render(parentComponent) {
+    new ProfileRatingController(this._moviesModel).render(parentComponent.querySelector(`.header`));
 
-    new MainController(this._parentComponent.querySelector(`.main`)).render(this._moviesModel);
+    new MainController(this._moviesModel, this._api).render(parentComponent.querySelector(`.main`));
 
-    this._parentComponent.querySelector(`.footer__statistics`).replaceWith(new FooterStatisticComponent(this._moviesModel).getElement());
+    parentComponent.querySelector(`.footer__statistics`).replaceWith(new FooterStatisticComponent(this._moviesModel).getElement());
   }
 }

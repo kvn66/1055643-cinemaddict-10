@@ -6,9 +6,20 @@ const FAN_RATING_LIMIT = 10;
 const MOVIE_BUFF_RATING_LIMIT = 20;
 
 export default class ProfileRatingController {
-  constructor(parentElement) {
-    this._parentElement = parentElement;
-    this._rating = null;
+  constructor(moviesModel) {
+    this._moviesModel = moviesModel;
+    this._rating = this._moviesModel.getCheckedParametersCount(`isAlreadyWatched`);
+    this._profileRatingComponent = new ProfileRatingComponent();
+    this._profileRatingComponent.profileRating = this.createRatingStr(this._rating);
+
+    document.addEventListener(`watchedChange`, (evt) => {
+      if (evt.detail) {
+        this._rating++;
+      } else {
+        this._rating--;
+      }
+      this._profileRatingComponent.profileRating = this.createRatingStr(this._rating);
+    });
   }
 
   createRatingStr(rating) {
@@ -22,19 +33,7 @@ export default class ProfileRatingController {
     return ``;
   }
 
-  render(moviesModel) {
-    this._rating = moviesModel.getCheckedParametersCount(`isAlreadyWatched`);
-    const profileRatingComponent = new ProfileRatingComponent();
-    profileRatingComponent.profileRating = this.createRatingStr(this._rating);
-    render(this._parentElement, profileRatingComponent.getElement());
-
-    document.addEventListener(`watchedChange`, (evt) => {
-      if (evt.detail) {
-        this._rating++;
-      } else {
-        this._rating--;
-      }
-      profileRatingComponent.profileRating = this.createRatingStr(this._rating);
-    });
+  render(parentElement) {
+    render(parentElement, this._profileRatingComponent.getElement());
   }
 }

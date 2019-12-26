@@ -8,9 +8,9 @@ import CommentModel from "../models/comment";
 import CommentsModel from "../models/comments";
 
 export default class MovieController {
-  constructor(parentComponent, movieModel) {
-    this._parentComponent = parentComponent;
+  constructor(movieModel, api) {
     this._movieModel = movieModel;
+    this._api = api;
     this._filmCard = new FilmCardComponent(this._movieModel);
     this._filmDetails = new FilmDetailsComponent(this._movieModel);
     this._footerElement = document.querySelector(`.footer`);
@@ -27,7 +27,7 @@ export default class MovieController {
     this._onOpenDetailsClick = this._onOpenDetailsClick.bind(this);
   }
 
-  render() {
+  render(parentComponent) {
     document.addEventListener(`commentAdded`, () => {
       this._filmDetails.updateCommentsCount();
       this._filmDetails.resetComment();
@@ -38,46 +38,39 @@ export default class MovieController {
     });
 
     document.addEventListener(`watchlistChange`, () => {
-      this._filmCard.watchlistChecked = this._movieModel.isAddedToWatchlist;
-      this._filmDetails.watchlistChecked = this._movieModel.isAddedToWatchlist;
+      this._api.updateMovie(this._movieModel.id, this._movieModel.toRAW()).then((movieJson) => {
+        this._movieModel.update(movieJson);
+        this._filmCard.watchlistChecked = this._movieModel.isAddedToWatchlist;
+        this._filmDetails.watchlistChecked = this._movieModel.isAddedToWatchlist;
+      });
     });
 
     document.addEventListener(`watchedChange`, () => {
-      this._filmCard.watchedChecked = this._movieModel.isAlreadyWatched;
-      this._filmDetails.watchedChecked = this._movieModel.isAlreadyWatched;
-      this._renderUserRating(this._movieModel.isAlreadyWatched);
+      this._api.updateMovie(this._movieModel.id, this._movieModel.toRAW()).then((movieJson) => {
+        this._movieModel.update(movieJson);
+        this._filmCard.watchedChecked = this._movieModel.isAlreadyWatched;
+        this._filmDetails.watchedChecked = this._movieModel.isAlreadyWatched;
+        this._renderUserRating(this._movieModel.isAlreadyWatched);
+      });
     });
 
     document.addEventListener(`favoriteChange`, () => {
-      this._filmCard.favoriteChecked = this._movieModel.isAddedToFavorites;
-      this._filmDetails.favoriteChecked = this._movieModel.isAddedToFavorites;
+      this._api.updateMovie(this._movieModel.id, this._movieModel.toRAW()).then((movieJson) => {
+        this._movieModel.update(movieJson);
+        this._filmCard.favoriteChecked = this._movieModel.isAddedToFavorites;
+        this._filmDetails.favoriteChecked = this._movieModel.isAddedToFavorites;
+      });
     });
 
-    document.addEventListener(`openDetails`, (evt) => {
-      console.log(`openDetails`);
-      if (this._detailsIsOpened && evt.detail !== this._movieModel.id) {
+    document.addEventListener(`openDetails`, () => {
+      if (this._detailsIsOpened) {
         this._closeDetails();
-      }
-    });
-
-    document.addEventListener(`commentsLoaded`, (evt) => {
-      console.log(`commentsLoaded`);
-      if (evt.detail.id === this._movieModel.id) {
-        evt.detail.promise
-          .then((comments) => {
-            console.log(comments);
-            const commentsModel = new CommentsModel();
-            commentsModel.fillModel(comments);
-            this._movieModel.comments = commentsModel;
-            new CommentsController(this._filmDetails, this._movieModel).render();
-            this._openDetails();
-          });
       }
     });
 
     this._setFilmCardHandlers();
     this._renderUserRating(this._movieModel.isAlreadyWatched);
-    render(this._parentComponent.getContainerElement(), this._filmCard.getElement());
+    render(parentComponent.getContainerElement(), this._filmCard.getElement());
   }
 
   _renderUserRating(datafield) {
@@ -163,17 +156,26 @@ export default class MovieController {
 
   _openDetails() {
     if (!this._detailsIsOpened) {
+      this._detailsIsOpened = true;
       this._setDetailHandlers();
       render(this._footerElement, this._filmDetails.getElement(), RenderPosition.AFTEREND);
       document.addEventListener(`keydown`, this._onEscKeyDown);
       document.addEventListener(`keydown`, this._onCtrlEnterKeyDown);
       document.addEventListener(`keyup`, this._onCtrlEnterKeyUp);
-      this._detailsIsOpened = true;
     }
   }
 
   _onOpenDetailsClick() {
     document.dispatchEvent(new CustomEvent(`openDetails`, {'detail': this._movieModel.id}));
+    this._openDetails();
+    this._api.getComments(this._movieModel.id)
+      .then(CommentsModel.parseComments)
+      .then((comments) => {
+        const commentsModel = new CommentsModel();
+        commentsModel.fillModel(comments);
+        this._movieModel.comments = commentsModel;
+        new CommentsController(this._filmDetails, this._movieModel).render();
+      });
   }
 
   _setFilmCardHandlers() {

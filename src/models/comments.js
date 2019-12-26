@@ -15,6 +15,10 @@ export default class CommentsModel {
     return this._comments;
   }
 
+  toRAW() {
+    return this._comments.map((commentModel) => commentModel.id);
+  }
+
   getMaxId() {
     return (this._comments.length ? this._comments.reduce((a, b) => {
       return a.id > b.id ? a : b;
