@@ -14,7 +14,7 @@ export default class TopRatesController {
     const topRates = new TopRatesComponent();
     const topRated = moviesModel.getTopRated(TOP_RATED_FILMS_COUNT);
 
-    if (topRated[0].rating > 0) {
+    if (topRated[0].totalRating > 0) {
       topRated.forEach((movieModel) => {
         new MovieController(movieModel, this._api).render(topRates);
       });

@@ -1,6 +1,28 @@
 import AbstractComponent from './abstract-component';
 
 export default class UserRatingComponent extends AbstractComponent {
+  constructor() {
+    super();
+    this._inputs = this.getElement().querySelectorAll(`.film-details__user-rating-input`);
+    this._undoButton = this.getElement().querySelector(`.film-details__watched-reset`);
+  }
+
+  setChecked(index) {
+    this._inputs.forEach((input, inputIndex) => {
+      input.checked = !index ? false : index === inputIndex + 1;
+    });
+  }
+
+  setUserRatingClickHandler(handler) {
+    this._inputs.forEach((input) => {
+      input.addEventListener(`click`, handler);
+    });
+  }
+
+  setUndoUserRatingClickHandler(handler) {
+    this._undoButton.addEventListener(`click`, handler);
+  }
+
   _getTemplate() {
     return (
       `<div class="form-details__middle-container">

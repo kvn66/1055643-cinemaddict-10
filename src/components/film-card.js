@@ -83,7 +83,7 @@ export default class FilmCardComponent extends AbstractComponent {
     return (
       `<article class="film-card">
       <h3 class="film-card__title">${this._film.title}</h3>
-      <p class="film-card__rating">${this._film.rating}</p>
+      <p class="film-card__rating">${this._film.totalRating}</p>
       <p class="film-card__info">
         <span class="film-card__year">${this._film.releaseDate.getFullYear().toString()}</span>
         <span class="film-card__duration">${this._film.duration}</span>

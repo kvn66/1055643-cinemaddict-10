@@ -25,12 +25,16 @@ export default class MovieModel {
     return this._titleOriginal;
   }
 
-  get rating() {
-    return this._rating;
+  get totalRating() {
+    return this._totalRating;
   }
 
   get userRating() {
     return this._userRating;
+  }
+
+  set userRating(userRating) {
+    this._userRating = userRating;
   }
 
   get releaseDate() {
@@ -80,7 +84,6 @@ export default class MovieModel {
   set isAddedToWatchlist(watchlist) {
     if (watchlist !== this._isAddedToWatchlist) {
       this._isAddedToWatchlist = watchlist;
-      document.dispatchEvent(new CustomEvent(`watchlistChange`, {'detail': watchlist}));
     }
   }
 
@@ -91,7 +94,6 @@ export default class MovieModel {
   set isAlreadyWatched(watched) {
     if (watched !== this._isAlreadyWatched) {
       this._isAlreadyWatched = watched;
-      document.dispatchEvent(new CustomEvent(`watchedChange`, {'detail': watched}));
     }
   }
 
@@ -102,8 +104,15 @@ export default class MovieModel {
   set isAddedToFavorites(favorite) {
     if (favorite !== this._isAddedToFavorites) {
       this._isAddedToFavorites = favorite;
-      document.dispatchEvent(new CustomEvent(`favoriteChange`, {'detail': favorite}));
     }
+  }
+
+  get watchingDate() {
+    return this._watchingDate;
+  }
+
+  set watchingDate(date) {
+    this._watchingDate = date;
   }
 
   update(movieJson) {
@@ -111,7 +120,7 @@ export default class MovieModel {
     this._comments = movieJson.comments;
     this._title = movieJson.film_info.title;
     this._titleOriginal = movieJson.film_info.alternative_title;
-    this._rating = movieJson.film_info.total_rating;
+    this._totalRating = movieJson.film_info.total_rating;
     this._poster = movieJson.film_info.poster;
     this._age = movieJson.film_info.age_rating;
     this._director = movieJson.film_info.director;
@@ -137,7 +146,7 @@ export default class MovieModel {
       'film_info': {
         'title': this._title,
         'alternative_title': this._titleOriginal,
-        'total_rating': this._rating,
+        'total_rating': this._totalRating,
         'poster': this._poster,
         'age_rating': this._age,
         'director': this._director,

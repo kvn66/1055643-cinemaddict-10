@@ -22,8 +22,9 @@ export default class FilmsListController {
       const prevFilmsCount = showingFilmsCount;
       showingFilmsCount = showingFilmsCount + SHOWING_FILMS_COUNT_BY_BUTTON;
 
-      moviesModel.getMovies().slice(prevFilmsCount, showingFilmsCount)
-        .forEach((movieModel) => new MovieController(movieModel, this._api).render(filmsListComponent));
+      moviesModel.slice(prevFilmsCount, showingFilmsCount).forEach((movieModel) => {
+        new MovieController(movieModel, this._api).render(filmsListComponent);
+      });
 
       if (showingFilmsCount >= moviesModel.length) {
         showMoreComponent.remove();

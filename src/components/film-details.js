@@ -4,14 +4,14 @@ import {getFullDate} from '../utils';
 const GENRES_NAME_SWITCH_LIMIT = 1;
 
 export default class FilmDetailsComponent extends AbstractComponent {
-  constructor(film) {
+  constructor(movieModel) {
     super();
-    this._film = film;
-    this._genreTitle = this._film.genres.length > GENRES_NAME_SWITCH_LIMIT ? `Genres` : `Genre`;
-    this._genres = this._film.genres.map((item) => {
+    this._movieModel = movieModel;
+    this._genreTitle = this._movieModel.genres.length > GENRES_NAME_SWITCH_LIMIT ? `Genres` : `Genre`;
+    this._genres = this._movieModel.genres.map((item) => {
       return (`<span class="film-details__genre">` + item + `</span>`);
     }).join(``);
-    this._releaseDate = getFullDate(this._film.releaseDate);
+    this._releaseDate = getFullDate(this._movieModel.releaseDate);
     this._watchlistElement = this.getElement().querySelector(`#watchlist`);
     this._watchedElement = this.getElement().querySelector(`#watched`);
     this._favoriteElement = this.getElement().querySelector(`#favorite`);
@@ -55,7 +55,7 @@ export default class FilmDetailsComponent extends AbstractComponent {
   }
 
   updateCommentsCount() {
-    this._commentsCountElement.textContent = this._film.comments.length.toString();
+    this._commentsCountElement.textContent = this._movieModel.comments.length.toString();
   }
 
   getFormElement() {
@@ -156,35 +156,35 @@ export default class FilmDetailsComponent extends AbstractComponent {
           </div>
           <div class="film-details__info-wrap">
             <div class="film-details__poster">
-              <img class="film-details__poster-img" src="${this._film.poster}" alt="">
+              <img class="film-details__poster-img" src="${this._movieModel.poster}" alt="">
     
-              <p class="film-details__age">${this._film.age.toString()}+</p>
+              <p class="film-details__age">${this._movieModel.age.toString()}+</p>
             </div>
     
             <div class="film-details__info">
               <div class="film-details__info-head">
                 <div class="film-details__title-wrap">
-                  <h3 class="film-details__title">${this._film.title}</h3>
-                  <p class="film-details__title-original">Original: ${this._film.titleOriginal}</p>
+                  <h3 class="film-details__title">${this._movieModel.title}</h3>
+                  <p class="film-details__title-original">Original: ${this._movieModel.titleOriginal}</p>
                 </div>
     
                 <div class="film-details__rating">
-                  <p class="film-details__total-rating">${this._film.rating.toString()}</p>
+                  <p class="film-details__total-rating">${this._movieModel.totalRating.toString()}</p>
                 </div>
               </div>
     
               <table class="film-details__table">
                 <tr class="film-details__row">
                   <td class="film-details__term">Director</td>
-                  <td class="film-details__cell">${this._film.director}</td>
+                  <td class="film-details__cell">${this._movieModel.director}</td>
                 </tr>
                 <tr class="film-details__row">
                   <td class="film-details__term">Writers</td>
-                  <td class="film-details__cell">${this._film.writers}</td>
+                  <td class="film-details__cell">${this._movieModel.writers}</td>
                 </tr>
                 <tr class="film-details__row">
                   <td class="film-details__term">Actors</td>
-                  <td class="film-details__cell">${this._film.actors}</td>
+                  <td class="film-details__cell">${this._movieModel.actors}</td>
                 </tr>
                 <tr class="film-details__row">
                   <td class="film-details__term">Release Date</td>
@@ -192,11 +192,11 @@ export default class FilmDetailsComponent extends AbstractComponent {
                 </tr>
                 <tr class="film-details__row">
                   <td class="film-details__term">Runtime</td>
-                  <td class="film-details__cell">${this._film.duration}</td>
+                  <td class="film-details__cell">${this._movieModel.duration}</td>
                 </tr>
                 <tr class="film-details__row">
                   <td class="film-details__term">Country</td>
-                  <td class="film-details__cell">${this._film.country}</td>
+                  <td class="film-details__cell">${this._movieModel.country}</td>
                 </tr>
                 <tr class="film-details__row">
                   <td class="film-details__term">${this._genreTitle}</td>
@@ -205,26 +205,26 @@ export default class FilmDetailsComponent extends AbstractComponent {
               </table>
     
               <p class="film-details__film-description">
-                ${this._film.description}
+                ${this._movieModel.description}
               </p>
             </div>
           </div>
     
           <section class="film-details__controls">
-            <input type="checkbox" class="film-details__control-input visually-hidden" id="watchlist" name="watchlist" ${this.setChecked(this._film.isAddedToWatchlist)}>
+            <input type="checkbox" class="film-details__control-input visually-hidden" id="watchlist" name="watchlist" ${this.setChecked(this._movieModel.isAddedToWatchlist)}>
             <label for="watchlist" class="film-details__control-label film-details__control-label--watchlist">Add to watchlist</label>
     
-            <input type="checkbox" class="film-details__control-input visually-hidden" id="watched" name="watched" ${this.setChecked(this._film.isAlreadyWatched)}>
+            <input type="checkbox" class="film-details__control-input visually-hidden" id="watched" name="watched" ${this.setChecked(this._movieModel.isAlreadyWatched)}>
             <label for="watched" class="film-details__control-label film-details__control-label--watched">Already watched</label>
     
-            <input type="checkbox" class="film-details__control-input visually-hidden" id="favorite" name="favorite" ${this.setChecked(this._film.isAddedToFavorites)}>
+            <input type="checkbox" class="film-details__control-input visually-hidden" id="favorite" name="favorite" ${this.setChecked(this._movieModel.isAddedToFavorites)}>
             <label for="favorite" class="film-details__control-label film-details__control-label--favorite">Add to favorites</label>
           </section>
         </div>
         
         <div class="form-details__bottom-container">
           <section class="film-details__comments-wrap">
-            <h3 class="film-details__comments-title">Comments <span class="film-details__comments-count">${this._film.comments.length}</span></h3>
+            <h3 class="film-details__comments-title">Comments <span class="film-details__comments-count">${this._movieModel.comments.length}</span></h3>
     
             <ul class="film-details__comments-list"></ul>
     

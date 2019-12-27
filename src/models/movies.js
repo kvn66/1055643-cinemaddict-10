@@ -35,7 +35,7 @@ export default class MoviesModel {
   }
 
   getTopRated(count) {
-    return this._movies.slice().sort((a, b) => b.rating - a.rating).slice(0, count);
+    return this._movies.slice().sort((a, b) => b.totalRating - a.totalRating).slice(0, count);
   }
 
   getMostCommented(count) {
@@ -69,7 +69,7 @@ export default class MoviesModel {
   _sortMovies(movies) {
     switch (this._sortType) {
       case SortType.RATING:
-        return movies.slice().sort((a, b) => b.rating - a.rating);
+        return movies.slice().sort((a, b) => b.totalRating - a.totalRating);
       case SortType.DATE:
         return movies.slice().sort((a, b) => b.releaseDate - a.releaseDate);
       case SortType.DEFAULT:
