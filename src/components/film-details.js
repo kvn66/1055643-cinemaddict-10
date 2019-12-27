@@ -21,7 +21,6 @@ export default class FilmDetailsComponent extends AbstractComponent {
     this._controlsElement = this.getElement().querySelector(`.film-details__controls`);
     this._closeButtonElement = this.getElement().querySelector(`.film-details__close-btn`);
     this._formElement = this.getElement().querySelector(`.film-details__inner`);
-    this._commentsListElement = this.getElement().querySelector(`.film-details__comments-list`);
     this._commentsCountElement = this.getElement().querySelector(`.film-details__comments-count`);
     this._commentInputElement = this.getElement().querySelector(`.film-details__comment-input`);
     this._commentEmojiListElement = this.getElement().querySelector(`.film-details__emoji-list`);
@@ -67,7 +66,7 @@ export default class FilmDetailsComponent extends AbstractComponent {
   }
 
   getCommentsListElement() {
-    return this._commentsListElement;
+    return this.getElement().querySelector(`.film-details__comments-list`);
   }
 
   getUserRatingElement() {

@@ -1,7 +1,5 @@
 import CommentModel from "./comment";
 
-const INITIAL_ID = -1;
-
 export default class CommentsModel {
   constructor() {
     this._comments = [];
@@ -19,19 +17,8 @@ export default class CommentsModel {
     return this._comments.map((commentModel) => commentModel.id);
   }
 
-  getMaxId() {
-    return (this._comments.length ? this._comments.reduce((a, b) => {
-      return a.id > b.id ? a : b;
-    }).id : INITIAL_ID);
-  }
-
   fillModel(comments) {
     this._comments = Array.from(comments);
-  }
-
-  addComment(commentModel) {
-    this._comments.push(commentModel);
-    document.dispatchEvent(new CustomEvent(`commentAdded`, {'detail': commentModel}));
   }
 
   removeComment(commentId) {

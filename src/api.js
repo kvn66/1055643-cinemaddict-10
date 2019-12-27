@@ -24,14 +24,24 @@ export default class API {
       .then((response) => response.json());
   }
 
-  getComments(id) {
-    return this._load({url: `comments/${id}`})
+  getComments(movieId) {
+    return this._load({url: `comments/${movieId}`})
       .then((response) => response.json());
   }
 
-  updateMovie(id, movie) {
+  createComment(movieId, comment) {
     return this._load({
-      url: `movies/${id}`,
+      url: `comments/${movieId}`,
+      method: Method.POST,
+      body: JSON.stringify(comment),
+      headers: new Headers({'Content-Type': `application/json`})
+    })
+      .then((response) => response.json());
+  }
+
+  updateMovie(movieId, movie) {
+    return this._load({
+      url: `movies/${movieId}`,
       method: Method.PUT,
       body: JSON.stringify(movie),
       headers: new Headers({'Content-Type': `application/json`})
@@ -39,8 +49,8 @@ export default class API {
       .then((response) => response.json());
   }
 
-  deleteMovie(id) {
-    return this._load({url: `movies/${id}`, method: Method.DELETE});
+  deleteComment(commentId) {
+    return this._load({url: `comments/${commentId}`, method: Method.DELETE});
   }
 
   _load({url, method = Method.GET, body = null, headers = new Headers()}) {

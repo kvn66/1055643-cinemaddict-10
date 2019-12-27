@@ -4,10 +4,15 @@ import FilmCardComponent from "../components/film-card";
 import FilmDetailsComponent from "../components/film-details";
 import UserRatingComponent from "../components/user-rating";
 import CommentsController from "./comments";
-import CommentModel from "../models/comment";
 import CommentsModel from "../models/comments";
 
 const RADIX = 10;
+
+const localComment = {
+  'comment': ``,
+  'date': null,
+  'emotion': ``
+};
 
 export default class MovieController {
   constructor(movieModel, api) {
@@ -102,18 +107,22 @@ export default class MovieController {
     }
   }
 
-  _submitDetailForm() {
+  _createComment() {
     const formData = new FormData(this._filmDetails.getFormElement());
-    const comment = he.encode(formData.get(`comment`));
+    const commentText = he.encode(formData.get(`comment`));
     const emoji = formData.get(`comment-emoji`);
 
-    if (comment !== `` && emoji) {
-      const commentModel = new CommentModel();
-      commentModel.id = this._movieModel.comments.getMaxId() + 1;
-      commentModel.text = comment;
-      commentModel.emoji = emoji;
-      commentModel.date = new Date();
-      this._movieModel.comments.addComment(commentModel);
+    if (commentText !== `` && emoji) {
+      localComment.comment = commentText;
+      localComment.emotion = emoji;
+      localComment.date = new Date();
+      this._api.createComment(this._movieModel.id, localComment)
+        .then((out) => out.comments)
+        .then(CommentsModel.parseComments)
+        .then((comments) => {
+          this._movieModel.comments.fillModel(comments);
+          document.dispatchEvent(new CustomEvent(`commentAdded`, {'detail': this._movieModel.id}));
+        });
     }
   }
 
@@ -123,7 +132,7 @@ export default class MovieController {
       return;
     }
     this._pressedKey.clear();
-    this._submitDetailForm();
+    this._createComment();
   }
 
   _onCtrlEnterKeyUp(evt) {

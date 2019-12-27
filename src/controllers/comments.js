@@ -6,31 +6,27 @@ export default class CommentsController {
   constructor(parentComponent, movieModel) {
     this._parentComponent = parentComponent;
     this._movieModel = movieModel;
-    this._commentsComponent = new CommentsComponent();
     this._onDeleteButtonClick = this._onDeleteButtonClick.bind(this);
     this._init();
   }
 
   render() {
+    const commentsComponent = new CommentsComponent();
     this._movieModel.comments.getComments().forEach((commentModel) => {
-      this._renderComment(commentModel);
+      this._renderComment(commentModel, commentsComponent);
     });
     const commentsListElement = this._parentComponent.getCommentsListElement();
-    commentsListElement.replaceWith(this._commentsComponent.getElement());
+    commentsListElement.replaceWith(commentsComponent.getElement());
   }
 
   _onDeleteButtonClick(commentId) {
-    const msg = {
-      movieId: this._movieModel.id,
-      commentId
-    };
-    document.dispatchEvent(new CustomEvent(`commentDelete`, {'detail': msg}));
+    document.dispatchEvent(new CustomEvent(`commentRemoved`, {'detail': this._movieModel.id}));
   }
 
-  _renderComment(commentModel) {
+  _renderComment(commentModel, commentsComponent) {
     const commentComponent = new CommentComponent(commentModel);
     commentComponent.setDeleteButtonClickHandler(this._onDeleteButtonClick);
-    render(this._commentsComponent.getElement(), commentComponent.getElement());
+    render(commentsComponent.getElement(), commentComponent.getElement());
   }
 
   _init() {
