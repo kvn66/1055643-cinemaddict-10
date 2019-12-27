@@ -2,17 +2,18 @@ import {FilterType, SortType} from "../utils";
 import MovieModel from "./movie";
 
 export default class MoviesModel {
-  constructor(movies) {
+  constructor() {
     this._filterType = FilterType.ALL;
     this._sortType = SortType.DEFAULT;
     this._movies = [];
-    movies.map((item) => {
-      this._movies.push(new MovieModel(item));
-    });
   }
 
   get length() {
     return this._movies.length;
+  }
+
+  fillModel(movies) {
+    this._movies = Array.from(movies);
   }
 
   setFilterType(type) {
@@ -29,38 +30,12 @@ export default class MoviesModel {
     }
   }
 
-  filterMovies(movies) {
-    switch (this._filterType) {
-      case FilterType.WATCHLIST:
-        return movies.slice().filter((movieModel) => movieModel.isAddedToWatchlist);
-      case FilterType.HISTORY:
-        return movies.slice().filter((movieModel) => movieModel.isAlreadyWatched);
-      case FilterType.FAVORITES:
-        return movies.slice().filter((movieModel) => movieModel.isAddedToFavorites);
-      case FilterType.ALL:
-        return movies;
-    }
-    return movies;
-  }
-
-  sortMovies(movies) {
-    switch (this._sortType) {
-      case SortType.RATING:
-        return movies.slice().sort((a, b) => b.rating - a.rating);
-      case SortType.DATE:
-        return movies.slice().sort((a, b) => b.releaseDate - a.releaseDate);
-      case SortType.DEFAULT:
-        return movies;
-    }
-    return movies;
-  }
-
   getMovies() {
-    return this.sortMovies(this.filterMovies(this._movies));
+    return this._sortMovies(this._filterMovies(this._movies));
   }
 
   getTopRated(count) {
-    return this._movies.slice().sort((a, b) => b.rating - a.rating).slice(0, count);
+    return this._movies.slice().sort((a, b) => b.totalRating - a.totalRating).slice(0, count);
   }
 
   getMostCommented(count) {
@@ -75,5 +50,39 @@ export default class MoviesModel {
       }
     });
     return count;
+  }
+
+  _filterMovies(movies) {
+    switch (this._filterType) {
+      case FilterType.WATCHLIST:
+        return movies.slice().filter((movieModel) => movieModel.isAddedToWatchlist);
+      case FilterType.HISTORY:
+        return movies.slice().filter((movieModel) => movieModel.isAlreadyWatched);
+      case FilterType.FAVORITES:
+        return movies.slice().filter((movieModel) => movieModel.isAddedToFavorites);
+      case FilterType.ALL:
+        return movies;
+    }
+    return movies;
+  }
+
+  _sortMovies(movies) {
+    switch (this._sortType) {
+      case SortType.RATING:
+        return movies.slice().sort((a, b) => b.totalRating - a.totalRating);
+      case SortType.DATE:
+        return movies.slice().sort((a, b) => b.releaseDate - a.releaseDate);
+      case SortType.DEFAULT:
+        return movies;
+    }
+    return movies;
+  }
+
+  static parseMovie(movie) {
+    return new MovieModel(movie);
+  }
+
+  static parseMovies(movies) {
+    return movies.map(MoviesModel.parseMovie);
   }
 }

@@ -5,16 +5,20 @@ import FilmDetailsComponent from "../components/film-details";
 import UserRatingComponent from "../components/user-rating";
 import CommentsController from "./comments";
 import CommentModel from "../models/comment";
+import CommentsModel from "../models/comments";
+
+const RADIX = 10;
 
 export default class MovieController {
-  constructor(parentComponent, movieModel) {
-    this._parentComponent = parentComponent;
+  constructor(movieModel, api) {
     this._movieModel = movieModel;
+    this._api = api;
     this._filmCard = new FilmCardComponent(this._movieModel);
     this._filmDetails = new FilmDetailsComponent(this._movieModel);
     this._footerElement = document.querySelector(`.footer`);
     this._userRatingComponent = new UserRatingComponent();
     this._pressedKey = new Set();
+    this._detailsIsOpened = false;
 
     this._onCtrlEnterKeyDown = this._onCtrlEnterKeyDown.bind(this);
     this._onCtrlEnterKeyUp = this._onCtrlEnterKeyUp.bind(this);
@@ -25,14 +29,75 @@ export default class MovieController {
     this._onOpenDetailsClick = this._onOpenDetailsClick.bind(this);
   }
 
+  render(parentComponent) {
+    document.addEventListener(`commentAdded`, () => {
+      this._filmDetails.updateCommentsCount();
+      this._filmDetails.resetComment();
+    });
+
+    document.addEventListener(`commentRemoved`, () => {
+      this._filmDetails.updateCommentsCount();
+    });
+
+    document.addEventListener(`watchlistChange`, () => {
+      this._filmCard.watchlistChecked = this._movieModel.isAddedToWatchlist;
+      this._filmDetails.watchlistChecked = this._movieModel.isAddedToWatchlist;
+    });
+
+    document.addEventListener(`watchedChange`, () => {
+      this._filmCard.watchedChecked = this._movieModel.isAlreadyWatched;
+      this._filmDetails.watchedChecked = this._movieModel.isAlreadyWatched;
+      this._renderUserRating(this._movieModel.isAlreadyWatched);
+    });
+
+    document.addEventListener(`favoriteChange`, () => {
+      this._filmCard.favoriteChecked = this._movieModel.isAddedToFavorites;
+      this._filmDetails.favoriteChecked = this._movieModel.isAddedToFavorites;
+    });
+
+    document.addEventListener(`openDetails`, () => {
+      if (this._detailsIsOpened) {
+        this._closeDetails();
+      }
+    });
+
+    this._setFilmCardHandlers();
+    this._renderUserRating(this._movieModel.isAlreadyWatched);
+    render(parentComponent.getContainerElement(), this._filmCard.getElement());
+  }
+
+  _setUserRating(rating) {
+    this._movieModel.userRating = rating;
+    this._api.updateMovie(this._movieModel.id, this._movieModel.toRAW()).then((movieJson) => {
+      this._movieModel.update(movieJson);
+    });
+  }
+
+  _resetUserRating() {
+    this._movieModel.userRating = 0;
+    this._api.updateMovie(this._movieModel.id, this._movieModel.toRAW()).then((movieJson) => {
+      this._movieModel.update(movieJson);
+    });
+  }
+
   _renderUserRating(datafield) {
     if (datafield) {
       if (!this._filmDetails.getUserRatingElement()) {
+        this._userRatingComponent.setChecked(this._movieModel.userRating);
+        this._userRatingComponent.setUserRatingClickHandler((evt) => {
+          this._setUserRating(parseInt(evt.target.value, RADIX));
+        });
+        this._userRatingComponent.setUndoUserRatingClickHandler(() => {
+          this._resetUserRating();
+          this._userRatingComponent.setChecked(this._movieModel.userRating);
+        });
         render(this._filmDetails.getControlsElement(), this._userRatingComponent.getElement(), RenderPosition.AFTEREND);
       }
     } else {
       if (this._filmDetails.getUserRatingElement()) {
         this._userRatingComponent.getElement().remove();
+        this._resetUserRating();
+        this._userRatingComponent.setChecked(this._movieModel.userRating);
       }
     }
   }
@@ -71,6 +136,7 @@ export default class MovieController {
     document.removeEventListener(`keydown`, this._onCtrlEnterKeyDown);
     document.removeEventListener(`keyup`, this._onCtrlEnterKeyUp);
     this._pressedKey.clear();
+    this._detailsIsOpened = false;
   }
 
   _onEscKeyDown(evt) {
@@ -84,16 +150,31 @@ export default class MovieController {
   _onWatchlistClick(evt) {
     evt.preventDefault();
     this._movieModel.isAddedToWatchlist = !this._movieModel.isAddedToWatchlist;
+    this._api.updateMovie(this._movieModel.id, this._movieModel.toRAW()).then((movieJson) => {
+      this._movieModel.update(movieJson);
+      document.dispatchEvent(new CustomEvent(`watchlistChange`, {'detail': this._movieModel.isAddedToWatchlist}));
+    });
   }
 
   _onWatchedClick(evt) {
     evt.preventDefault();
     this._movieModel.isAlreadyWatched = !this._movieModel.isAlreadyWatched;
+    if (this._movieModel.isAlreadyWatched) {
+      this._movieModel.watchingDate = new Date();
+    }
+    this._api.updateMovie(this._movieModel.id, this._movieModel.toRAW()).then((movieJson) => {
+      this._movieModel.update(movieJson);
+      document.dispatchEvent(new CustomEvent(`watchedChange`, {'detail': this._movieModel.isAlreadyWatched}));
+    });
   }
 
   _onFavoriteClick(evt) {
     evt.preventDefault();
     this._movieModel.isAddedToFavorites = !this._movieModel.isAddedToFavorites;
+    this._api.updateMovie(this._movieModel.id, this._movieModel.toRAW()).then((movieJson) => {
+      this._movieModel.update(movieJson);
+      document.dispatchEvent(new CustomEvent(`favoriteChange`, {'detail': this._movieModel.isAddedToFavorites}));
+    });
   }
 
   _setDetailHandlers() {
@@ -105,12 +186,28 @@ export default class MovieController {
     this._filmDetails.setFavoriteClickHandler(this._onFavoriteClick);
   }
 
+  _openDetails() {
+    if (!this._detailsIsOpened) {
+      this._detailsIsOpened = true;
+      this._setDetailHandlers();
+      render(this._footerElement, this._filmDetails.getElement(), RenderPosition.AFTEREND);
+      document.addEventListener(`keydown`, this._onEscKeyDown);
+      document.addEventListener(`keydown`, this._onCtrlEnterKeyDown);
+      document.addEventListener(`keyup`, this._onCtrlEnterKeyUp);
+    }
+  }
+
   _onOpenDetailsClick() {
-    this._setDetailHandlers();
-    render(this._footerElement, this._filmDetails.getElement(), RenderPosition.AFTEREND);
-    document.addEventListener(`keydown`, this._onEscKeyDown);
-    document.addEventListener(`keydown`, this._onCtrlEnterKeyDown);
-    document.addEventListener(`keyup`, this._onCtrlEnterKeyUp);
+    document.dispatchEvent(new CustomEvent(`openDetails`, {'detail': this._movieModel.id}));
+    this._openDetails();
+    this._api.getComments(this._movieModel.id)
+      .then(CommentsModel.parseComments)
+      .then((comments) => {
+        const commentsModel = new CommentsModel();
+        commentsModel.fillModel(comments);
+        this._movieModel.comments = commentsModel;
+        new CommentsController(this._filmDetails, this._movieModel).render();
+      });
   }
 
   _setFilmCardHandlers() {
@@ -118,38 +215,5 @@ export default class MovieController {
     this._filmCard.setWatchlistClickHandler(this._onWatchlistClick);
     this._filmCard.setWatchedClickHandler(this._onWatchedClick);
     this._filmCard.setFavoriteClickHandler(this._onFavoriteClick);
-  }
-
-  render() {
-    new CommentsController(this._filmDetails, this._movieModel).render();
-
-    document.addEventListener(`commentAdded`, () => {
-      this._filmDetails.updateCommentsCount();
-      this._filmDetails.resetComment();
-    });
-
-    document.addEventListener(`commentRemoved`, () => {
-      this._filmDetails.updateCommentsCount();
-    });
-
-    document.addEventListener(`watchlistChange`, () => {
-      this._filmCard.watchlistChecked = this._movieModel.isAddedToWatchlist;
-      this._filmDetails.watchlistChecked = this._movieModel.isAddedToWatchlist;
-    });
-
-    document.addEventListener(`watchedChange`, () => {
-      this._filmCard.watchedChecked = this._movieModel.isAlreadyWatched;
-      this._filmDetails.watchedChecked = this._movieModel.isAlreadyWatched;
-      this._renderUserRating(this._movieModel.isAlreadyWatched);
-    });
-
-    document.addEventListener(`favoriteChange`, () => {
-      this._filmCard.favoriteChecked = this._movieModel.isAddedToFavorites;
-      this._filmDetails.favoriteChecked = this._movieModel.isAddedToFavorites;
-    });
-
-    this._setFilmCardHandlers();
-    this._renderUserRating(this._movieModel.isAlreadyWatched);
-    render(this._parentComponent.getContainerElement(), this._filmCard.getElement());
   }
 }

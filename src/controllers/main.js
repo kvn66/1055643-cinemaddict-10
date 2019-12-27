@@ -7,41 +7,42 @@ import SiteMenuController from "./site-menu";
 import SiteSortComponent from "../components/site-sort";
 
 export default class MainController {
-  constructor(parentElement) {
-    this._parentElement = parentElement;
+  constructor(moviesModel, api) {
+    this._moviesModel = moviesModel;
+    this._api = api;
 
     this._siteSortComponent = new SiteSortComponent();
     this._filmsComponent = new FilmsComponent();
-    this._filmsListController = new FilmsListController(this._filmsComponent);
-    this._topRatesController = new TopRatesController(this._filmsComponent);
-    this._mostCommentedController = new MostCommentedController(this._filmsComponent);
+    this._filmsListController = new FilmsListController(this._filmsComponent, this._api);
+    this._topRatesController = new TopRatesController(this._filmsComponent, this._api);
+    this._mostCommentedController = new MostCommentedController(this._filmsComponent, this._api);
   }
 
-  siteSortRender(moviesModel) {
+  siteSortRender(parentElement) {
     const siteSortElement = this._siteSortComponent.getElement();
-    render(this._parentElement, siteSortElement);
+    render(parentElement, siteSortElement);
 
     this._siteSortComponent.setSortTypeChangeHandler((sortType) => {
-      moviesModel.setSortType(sortType);
+      this._moviesModel.setSortType(sortType);
     });
   }
 
-  render(moviesModel) {
-    new SiteMenuController(this._parentElement).render(moviesModel);
+  render(parentElement) {
+    new SiteMenuController(parentElement).render(this._moviesModel);
 
-    this.siteSortRender(moviesModel);
+    this.siteSortRender(parentElement);
 
-    this._filmsListController.render(moviesModel.getMovies());
+    this._filmsListController.render(this._moviesModel.getMovies());
 
-    if (moviesModel.length) {
-      this._topRatesController.render(moviesModel);
-      this._mostCommentedController.render(moviesModel);
+    if (this._moviesModel.length) {
+      this._topRatesController.render(this._moviesModel);
+      this._mostCommentedController.render(this._moviesModel);
     }
 
-    render(this._parentElement, this._filmsComponent.getElement());
+    render(parentElement, this._filmsComponent.getElement());
 
     document.addEventListener(`filterChange`, () => {
-      this._filmsListController.render(moviesModel.getMovies());
+      this._filmsListController.render(this._moviesModel.getMovies());
     });
   }
 }

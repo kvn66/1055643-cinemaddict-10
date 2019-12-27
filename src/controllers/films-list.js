@@ -7,23 +7,13 @@ const SHOWING_FILMS_COUNT_ON_START = 5;
 const SHOWING_FILMS_COUNT_BY_BUTTON = 5;
 
 export default class FilmsListController {
-  constructor(parentComponent) {
+  constructor(parentComponent, api) {
     this._parentComponent = parentComponent;
+    this._api = api;
     this._filmsListComponent = null;
   }
 
-  _renderElement(containerElement, element, place = RenderPosition.BEFOREEND) {
-    if (!this._filmsListComponent) {
-      render(this._parentComponent.getElement(), element, place);
-    } else {
-      const filmsListElement = this._filmsListComponent.getElement();
-      if (containerElement.contains(filmsListElement)) {
-        filmsListElement.replaceWith(element);
-      }
-    }
-  }
-
-  render(movies) {
+  render(moviesModel) {
     let showingFilmsCount = SHOWING_FILMS_COUNT_ON_START;
     const filmsListComponent = new FilmsListComponent();
     const showMoreComponent = new ShowMoreComponent();
@@ -32,19 +22,20 @@ export default class FilmsListController {
       const prevFilmsCount = showingFilmsCount;
       showingFilmsCount = showingFilmsCount + SHOWING_FILMS_COUNT_BY_BUTTON;
 
-      movies.slice(prevFilmsCount, showingFilmsCount)
-        .forEach((movieModel) => new MovieController(filmsListComponent, movieModel).render());
+      moviesModel.slice(prevFilmsCount, showingFilmsCount).forEach((movieModel) => {
+        new MovieController(movieModel, this._api).render(filmsListComponent);
+      });
 
-      if (showingFilmsCount >= movies.length) {
+      if (showingFilmsCount >= moviesModel.length) {
         showMoreComponent.remove();
       }
     };
 
-    if (movies.length) {
+    if (moviesModel.length) {
       filmsListComponent.titleHide = true;
 
-      movies.slice(0, showingFilmsCount).forEach((movieModel) => {
-        new MovieController(filmsListComponent, movieModel).render();
+      moviesModel.slice(0, showingFilmsCount).forEach((movieModel) => {
+        new MovieController(movieModel, this._api).render(filmsListComponent);
       });
 
       render(filmsListComponent.getContainerElement(), showMoreComponent.getElement(), RenderPosition.AFTEREND);
@@ -58,5 +49,16 @@ export default class FilmsListController {
     this._renderElement(this._parentComponent.getElement(), filmsListComponent.getElement(), RenderPosition.AFTERBEGIN);
 
     this._filmsListComponent = filmsListComponent;
+  }
+
+  _renderElement(containerElement, element, place = RenderPosition.BEFOREEND) {
+    if (!this._filmsListComponent) {
+      render(this._parentComponent.getElement(), element, place);
+    } else {
+      const filmsListElement = this._filmsListComponent.getElement();
+      if (containerElement.contains(filmsListElement)) {
+        filmsListElement.replaceWith(element);
+      }
+    }
   }
 }

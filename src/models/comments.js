@@ -3,13 +3,8 @@ import CommentModel from "./comment";
 const INITIAL_ID = -1;
 
 export default class CommentsModel {
-  constructor(comments) {
+  constructor() {
     this._comments = [];
-    comments.map((comment) => {
-      const commentModel = new CommentModel();
-      commentModel.fillFromObject(comment);
-      this._comments.push(commentModel);
-    });
   }
 
   get length() {
@@ -20,10 +15,18 @@ export default class CommentsModel {
     return this._comments;
   }
 
+  toRAW() {
+    return this._comments.map((commentModel) => commentModel.id);
+  }
+
   getMaxId() {
     return (this._comments.length ? this._comments.reduce((a, b) => {
       return a.id > b.id ? a : b;
     }).id : INITIAL_ID);
+  }
+
+  fillModel(comments) {
+    this._comments = Array.from(comments);
   }
 
   addComment(commentModel) {
@@ -34,5 +37,15 @@ export default class CommentsModel {
   removeComment(commentId) {
     this._comments.splice(this._comments.findIndex((item) => item.id === commentId), 1);
     document.dispatchEvent(new CustomEvent(`commentRemoved`, {'detail': commentId}));
+  }
+
+  static parseComment(comment) {
+    const model = new CommentModel();
+    model.fillFromObject(comment);
+    return model;
+  }
+
+  static parseComments(comments) {
+    return comments.map(CommentsModel.parseComment);
   }
 }

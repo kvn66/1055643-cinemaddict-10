@@ -6,35 +6,34 @@ const FAN_RATING_LIMIT = 10;
 const MOVIE_BUFF_RATING_LIMIT = 20;
 
 export default class ProfileRatingController {
-  constructor(parentElement) {
-    this._parentElement = parentElement;
-    this._rating = null;
-  }
-
-  createRatingStr(rating) {
-    if (rating > MOVIE_BUFF_RATING_LIMIT) {
-      return `Movie Buff`;
-    } else if (rating > FAN_RATING_LIMIT) {
-      return `Fan`;
-    } else if (rating > NOVICE_RATING_LIMIT) {
-      return `Novice`;
-    }
-    return ``;
-  }
-
-  render(moviesModel) {
-    this._rating = moviesModel.getCheckedParametersCount(`isAlreadyWatched`);
-    const profileRatingComponent = new ProfileRatingComponent();
-    profileRatingComponent.profileRating = this.createRatingStr(this._rating);
-    render(this._parentElement, profileRatingComponent.getElement());
+  constructor(moviesModel) {
+    this._moviesModel = moviesModel;
+    this._profileRating = this._moviesModel.getCheckedParametersCount(`isAlreadyWatched`);
+    this._profileRatingComponent = new ProfileRatingComponent();
+    this._profileRatingComponent.profileRating = this._createRatingStr(this._profileRating);
 
     document.addEventListener(`watchedChange`, (evt) => {
       if (evt.detail) {
-        this._rating++;
+        this._profileRating++;
       } else {
-        this._rating--;
+        this._profileRating--;
       }
-      profileRatingComponent.profileRating = this.createRatingStr(this._rating);
+      this._profileRatingComponent.profileRating = this._createRatingStr();
     });
+  }
+
+  render(parentElement) {
+    render(parentElement, this._profileRatingComponent.getElement());
+  }
+
+  _createRatingStr() {
+    if (this._profileRating > MOVIE_BUFF_RATING_LIMIT) {
+      return `Movie Buff`;
+    } else if (this._profileRating > FAN_RATING_LIMIT) {
+      return `Fan`;
+    } else if (this._profileRating > NOVICE_RATING_LIMIT) {
+      return `Novice`;
+    }
+    return ``;
   }
 }
