@@ -26,6 +26,9 @@ export default class FilmDetailsComponent extends AbstractComponent {
     this._commentEmojiListElement = this.getElement().querySelector(`.film-details__emoji-list`);
     this._emojiInputElements = this._commentEmojiListElement.querySelectorAll(`.film-details__emoji-item`);
     this._commentEmojiElement = this.getElement().querySelector(`.film-details__add-emoji-label`);
+
+    this._onCommentEmojiClick = this._onCommentEmojiClick.bind(this);
+
     this._setEmojiClickHandlers();
   }
 
@@ -65,6 +68,10 @@ export default class FilmDetailsComponent extends AbstractComponent {
     return this._controlsElement;
   }
 
+  getCommentInputElement() {
+    return this._commentInputElement;
+  }
+
   getCommentsListElement() {
     return this.getElement().querySelector(`.film-details__comments-list`);
   }
@@ -93,6 +100,32 @@ export default class FilmDetailsComponent extends AbstractComponent {
     this._favoriteLabelElement.addEventListener(`click`, handler);
   }
 
+  enableCommentInputs() {
+    this._commentInputElement.disabled = false;
+    this._emojiInputElements.forEach((item) => {
+      item.disabled = false;
+    });
+    this._commentEmojiElement.addEventListener(`click`, this._onCommentEmojiClick);
+  }
+
+  disableCommentInputs() {
+    this._commentInputElement.disabled = true;
+    this._emojiInputElements.forEach((item) => {
+      item.disabled = true;
+    });
+    this._commentEmojiElement.removeEventListener(`click`, this._onCommentEmojiClick);
+  }
+
+  remove() {
+    this.getElement().remove();
+  }
+
+  resetComment() {
+    this._commentInputElement.value = ``;
+    this._removeEmojiImageElement();
+    this._resetEmojiInputElements();
+  }
+
   _setEmojiClickHandlers() {
     this._emojiInputElements.forEach((item) => {
       item.addEventListener(`click`, (evt) => {
@@ -116,10 +149,7 @@ export default class FilmDetailsComponent extends AbstractComponent {
       });
     });
 
-    this._commentEmojiElement.addEventListener(`click`, () => {
-      this._removeEmojiImageElement();
-      this._resetEmojiInputElements();
-    });
+    this._commentEmojiElement.addEventListener(`click`, this._onCommentEmojiClick);
   }
 
   _removeEmojiImageElement() {
@@ -133,16 +163,6 @@ export default class FilmDetailsComponent extends AbstractComponent {
     this._emojiInputElements.forEach((item) => {
       item.checked = false;
     });
-  }
-
-  remove() {
-    this.getElement().remove();
-  }
-
-  resetComment() {
-    this._commentInputElement.value = ``;
-    this._removeEmojiImageElement();
-    this._resetEmojiInputElements();
   }
 
   _getTemplate() {
@@ -261,5 +281,10 @@ export default class FilmDetailsComponent extends AbstractComponent {
       </form>
     </section>`
     );
+  }
+
+  _onCommentEmojiClick() {
+    this._removeEmojiImageElement();
+    this._resetEmojiInputElements();
   }
 }

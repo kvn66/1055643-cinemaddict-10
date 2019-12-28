@@ -3,13 +3,45 @@ import AbstractComponent from './abstract-component';
 export default class UserRatingComponent extends AbstractComponent {
   constructor() {
     super();
+    this._userRatingWrap = this.getElement().querySelector(`.film-details__user-rating-wrap`);
     this._inputs = this.getElement().querySelectorAll(`.film-details__user-rating-input`);
+    this._labels = this.getElement().querySelectorAll(`.film-details__user-rating-label`);
     this._undoButton = this.getElement().querySelector(`.film-details__watched-reset`);
+  }
+
+  enableInputs() {
+    this._inputs.forEach((item) => {
+      item.disabled = false;
+    });
+  }
+
+  disableInputs() {
+    this._inputs.forEach((item) => {
+      item.disabled = true;
+    });
+  }
+
+  getUserRatingWrapElement() {
+    return this._userRatingWrap;
   }
 
   setChecked(index) {
     this._inputs.forEach((input, inputIndex) => {
       input.checked = !index ? false : index === inputIndex + 1;
+    });
+  }
+
+  setErrorStyle() {
+    this._labels.forEach((label) => {
+      label.style.backgroundColor = ``;
+    });
+    const checkedLabel = this.getElement().querySelector(`.film-details__user-rating-input:checked + .film-details__user-rating-label`);
+    checkedLabel.style.backgroundColor = `red`;
+  }
+
+  removeErrorStyle() {
+    this._labels.forEach((label) => {
+      label.style.backgroundColor = ``;
     });
   }
 

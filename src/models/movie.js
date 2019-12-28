@@ -169,4 +169,8 @@ export default class MovieModel {
       }
     };
   }
+
+  static clone(movieModel) {
+    return new MovieModel(movieModel.toRAW());
+  }
 }
