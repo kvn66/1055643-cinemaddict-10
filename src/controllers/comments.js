@@ -9,7 +9,6 @@ export default class CommentsController {
     this._movieModel = movieModel;
     this._api = api;
     this._onDeleteButtonClick = this._onDeleteButtonClick.bind(this);
-    this._init();
   }
 
   render() {
@@ -25,14 +24,6 @@ export default class CommentsController {
     const commentComponent = new CommentComponent(commentModel);
     commentComponent.setDeleteButtonClickHandler(this._onDeleteButtonClick);
     render(commentsComponent.getElement(), commentComponent.getElement());
-  }
-
-  _init() {
-    document.addEventListener(`commentAdded`, (evt) => {
-      if (evt.detail === this._movieModel.id) {
-        this.render();
-      }
-    });
   }
 
   _onDeleteButtonClick(commentId) {

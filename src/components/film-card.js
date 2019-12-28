@@ -11,6 +11,7 @@ export default class FilmCardComponent extends AbstractComponent {
     this._watchlistElement = this.getElement().querySelector(`.film-card__controls-item--add-to-watchlist`);
     this._watchedElement = this.getElement().querySelector(`.film-card__controls-item--mark-as-watched`);
     this._favoriteElement = this.getElement().querySelector(`.film-card__controls-item--favorite`);
+    this._commentsCountElement = this.getElement().querySelector(`.film-card__comments`);
   }
 
   get watchlistChecked() {
@@ -59,6 +60,10 @@ export default class FilmCardComponent extends AbstractComponent {
         this._favoriteElement.classList.remove(`film-card__controls-item--active`);
       }
     }
+  }
+
+  set commentsCount(count) {
+    this._commentsCountElement.textContent = `${count.toString()} comments`;
   }
 
   setOpenDetailsClickHandler(handler) {

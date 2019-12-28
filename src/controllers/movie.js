@@ -24,6 +24,7 @@ export default class MovieController {
     this._userRatingComponent = new UserRatingComponent();
     this._pressedKey = new Set();
     this._detailsIsOpened = false;
+    this._commentsController = new CommentsController(this._filmDetails, this._movieModel, this._api);
 
     this._onCtrlEnterKeyDown = this._onCtrlEnterKeyDown.bind(this);
     this._onCtrlEnterKeyUp = this._onCtrlEnterKeyUp.bind(this);
@@ -35,13 +36,18 @@ export default class MovieController {
   }
 
   render(parentComponent) {
-    document.addEventListener(`commentAdded`, () => {
-      this._filmDetails.updateCommentsCount();
-      this._filmDetails.resetComment();
+    document.addEventListener(`commentAdded`, (evt) => {
+      if (evt.detail === this._movieModel.id) {
+        this._filmDetails.updateCommentsCount();
+        this._filmCard.commentsCount = this._movieModel.comments.length;
+      }
     });
 
-    document.addEventListener(`commentRemoved`, () => {
-      this._filmDetails.updateCommentsCount();
+    document.addEventListener(`commentRemoved`, (evt) => {
+      if (evt.detail === this._movieModel.id) {
+        this._filmDetails.updateCommentsCount();
+        this._filmCard.commentsCount = this._movieModel.comments.length;
+      }
     });
 
     document.addEventListener(`watchlistChange`, () => {
@@ -121,6 +127,8 @@ export default class MovieController {
         .then(CommentsModel.parseComments)
         .then((comments) => {
           this._movieModel.comments.fillModel(comments);
+          this._commentsController.render();
+          this._filmDetails.resetComment();
           document.dispatchEvent(new CustomEvent(`commentAdded`, {'detail': this._movieModel.id}));
         });
     }
@@ -215,7 +223,7 @@ export default class MovieController {
         const commentsModel = new CommentsModel();
         commentsModel.fillModel(comments);
         this._movieModel.comments = commentsModel;
-        new CommentsController(this._filmDetails, this._movieModel, this._api).render();
+        this._commentsController.render();
       });
   }
 
