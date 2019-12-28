@@ -1,3 +1,6 @@
+const MIN_OK_RESPONSE_STATUS = 200;
+const MAX_OK_RESPONSE_STATUS = 299;
+
 const Method = {
   GET: `GET`,
   POST: `POST`,
@@ -6,11 +9,10 @@ const Method = {
 };
 
 const checkStatus = (response) => {
-  if (response.status >= 200 && response.status < 300 && response.ok) {
+  if (response.status >= MIN_OK_RESPONSE_STATUS && response.status <= MAX_OK_RESPONSE_STATUS && response.ok) {
     return response;
-  } else {
-    throw new Error(`${response.status}: ${response.statusText}`);
   }
+  throw new Error(`${response.status}: ${response.statusText}`);
 };
 
 export default class API {

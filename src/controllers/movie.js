@@ -215,7 +215,7 @@ export default class MovieController {
         const commentsModel = new CommentsModel();
         commentsModel.fillModel(comments);
         this._movieModel.comments = commentsModel;
-        new CommentsController(this._filmDetails, this._movieModel).render();
+        new CommentsController(this._filmDetails, this._movieModel, this._api).render();
       });
   }
 

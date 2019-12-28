@@ -21,11 +21,6 @@ export default class CommentsModel {
     this._comments = Array.from(comments);
   }
 
-  removeComment(commentId) {
-    this._comments.splice(this._comments.findIndex((item) => item.id === commentId), 1);
-    document.dispatchEvent(new CustomEvent(`commentRemoved`, {'detail': commentId}));
-  }
-
   static parseComment(comment) {
     const model = new CommentModel();
     model.fillFromObject(comment);
