@@ -50,6 +50,7 @@ export default class MainController {
       if (this._moviesModel.filterType === FilterType.STATISTIC) {
         this._siteSortComponent.hide();
         this._filmsComponent.hide();
+        this._statisticController.update();
         this._statisticController.show();
       } else {
         this._filmsListController.render(this._moviesModel.getMovies());

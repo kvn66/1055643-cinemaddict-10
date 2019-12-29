@@ -1,5 +1,5 @@
 import AbstractComponent from './abstract-component';
-import {getFullDate} from '../utils';
+import {formatDuration, getFullDate} from '../utils';
 
 const GENRES_NAME_SWITCH_LIMIT = 1;
 
@@ -211,7 +211,7 @@ export default class FilmDetailsComponent extends AbstractComponent {
                 </tr>
                 <tr class="film-details__row">
                   <td class="film-details__term">Runtime</td>
-                  <td class="film-details__cell">${this._movieModel.duration}</td>
+                  <td class="film-details__cell">${formatDuration(this._movieModel.duration)}</td>
                 </tr>
                 <tr class="film-details__row">
                   <td class="film-details__term">Country</td>

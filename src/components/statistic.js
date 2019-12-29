@@ -3,14 +3,26 @@ import AbstractComponent from './abstract-component';
 export default class StatisticComponent extends AbstractComponent {
   constructor() {
     super();
-    this._deleteButtonElement = this.getElement().querySelector(`.film-details__comment-delete`);
+    this._inputElements = this.getElement().querySelectorAll(`.statistic__filters-input`);
+    this._watchedCountElement = this.getElement().querySelector(`.statistic-watched_count`);
+    this._watchedDurationHoursElement = this.getElement().querySelector(`.statistic-watched_duration_hours`);
+    this._watchedDurationMinutesElement = this.getElement().querySelector(`.statistic-watched_duration_minutes`);
   }
 
-  setFilterClickHandler(handler) {
-    this._deleteButtonElement.addEventListener(`click`, (evt) => {
-      evt.preventDefault();
-      const commentId = evt.target.dataset.commentId;
-      handler(commentId);
+  set watchedDuration(duration) {
+    const hours = Math.floor(duration / 60);
+    const minutes = duration % 60;
+    this._watchedDurationHoursElement.textContent = hours.toString();
+    this._watchedDurationMinutesElement.textContent = minutes.toString();
+  }
+
+  getWatchedCountElement() {
+    return this._watchedCountElement;
+  }
+
+  setFilterClickHandlers(handler) {
+    this._inputElements.forEach((input) => {
+      input.addEventListener(`click`, handler);
     });
   }
 
@@ -45,11 +57,11 @@ export default class StatisticComponent extends AbstractComponent {
         <ul class="statistic__text-list">
           <li class="statistic__text-item">
             <h4 class="statistic__item-title">You watched</h4>
-            <p class="statistic__item-text">22 <span class="statistic__item-description">movies</span></p>
+            <p class="statistic__item-text"><span class="statistic-watched_count">22</span> <span class="statistic__item-description">movies</span></p>
           </li>
           <li class="statistic__text-item">
             <h4 class="statistic__item-title">Total duration</h4>
-            <p class="statistic__item-text">130 <span class="statistic__item-description">h</span> 22 <span class="statistic__item-description">m</span></p>
+            <p class="statistic__item-text"><span class="statistic-watched_duration_hours">130</span> <span class="statistic__item-description">h</span> <span class="statistic-watched_duration_minutes">22</span> <span class="statistic__item-description">m</span></p>
           </li>
           <li class="statistic__text-item">
             <h4 class="statistic__item-title">Top genre</h4>

@@ -43,3 +43,10 @@ export const render = (containerElement, element, place = RenderPosition.BEFOREE
       throw new Error(`Указана неверная цель при вызове функции render`);
   }
 };
+
+export const formatDuration = (duration) => {
+  const hours = Math.floor(duration / 60);
+  const minutes = duration % 60;
+  return `${hours ? hours + `h` : ``} ${minutes}m`;
+};
+
