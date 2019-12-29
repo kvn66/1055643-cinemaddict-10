@@ -16,7 +16,11 @@ export default class MoviesModel {
     this._movies = Array.from(movies);
   }
 
-  setFilterType(type) {
+  get filterType() {
+    return this._filterType;
+  }
+
+  set filterType(type) {
     if (type !== this._filterType) {
       this._filterType = type;
       document.dispatchEvent(new Event(`filterChange`));

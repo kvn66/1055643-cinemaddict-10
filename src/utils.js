@@ -1,33 +1,34 @@
 import moment from 'moment';
 
-const getFullDate = (date) => {
+export const getFullDate = (date) => {
   return moment(date).format(`DD MMMM YYYY`);
 };
 
-const formatDateTime = (date) => {
+export const formatDateTime = (date) => {
   return moment(date).format(`YYYY/MM/DD hh:mm`);
 };
 
-const FilterType = {
+export const FilterType = {
+  ALL: `all`,
   WATCHLIST: `watchlist`,
   HISTORY: `history`,
   FAVORITES: `favorites`,
-  ALL: `all`,
+  STATISTIC: `statistic`
 };
 
-const SortType = {
+export const SortType = {
   DATE: `date`,
   RATING: `rating`,
   DEFAULT: `default`,
 };
 
-const RenderPosition = {
+export const RenderPosition = {
   AFTERBEGIN: `afterbegin`,
   AFTEREND: `afterend`,
   BEFOREEND: `beforeend`
 };
 
-const render = (containerElement, element, place = RenderPosition.BEFOREEND) => {
+export const render = (containerElement, element, place = RenderPosition.BEFOREEND) => {
   switch (place) {
     case RenderPosition.AFTERBEGIN:
       containerElement.prepend(element);
@@ -42,5 +43,3 @@ const render = (containerElement, element, place = RenderPosition.BEFOREEND) => 
       throw new Error(`Указана неверная цель при вызове функции render`);
   }
 };
-
-export {getFullDate, formatDateTime, RenderPosition, render, FilterType, SortType};

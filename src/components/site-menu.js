@@ -33,13 +33,11 @@ export default class SiteMenuComponent extends AbstractComponent {
 
         this._currentFilterType = filterType;
         listItems.forEach((elem) => {
-          if (!elem.classList.contains(`main-navigation__item--additional`)) {
-            const attr = elem.getAttribute(`data-filter-type`);
-            if (attr.includes(this._currentFilterType)) {
-              elem.classList.add(`main-navigation__item--active`);
-            } else {
-              elem.classList.remove(`main-navigation__item--active`);
-            }
+          const attr = elem.getAttribute(`data-filter-type`);
+          if (attr.includes(this._currentFilterType)) {
+            elem.classList.add(`main-navigation__item--active`);
+          } else {
+            elem.classList.remove(`main-navigation__item--active`);
           }
         });
 
@@ -55,7 +53,7 @@ export default class SiteMenuComponent extends AbstractComponent {
       <a href="#watchlist" data-filter-type="${FilterType.WATCHLIST}" class="main-navigation__item">Watchlist <span class="main-navigation__item-count watchlist-count"></span></a>
       <a href="#history" data-filter-type="${FilterType.HISTORY}" class="main-navigation__item">History <span class="main-navigation__item-count history-count"></span></a>
       <a href="#favorites" data-filter-type="${FilterType.FAVORITES}" class="main-navigation__item">Favorites <span class="main-navigation__item-count favorites-count"></span></a>
-      <a href="#stats" class="main-navigation__item main-navigation__item--additional">Stats</a>
+      <a href="#stats" data-filter-type="${FilterType.STATISTIC}" class="main-navigation__item main-navigation__item--additional">Stats</a>
     </nav>`
     );
   }
