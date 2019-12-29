@@ -35,8 +35,39 @@ export default class StatisticController {
   }
 
   update() {
-    this._statisticComponent.getWatchedCountElement().textContent = this._filteredMovies.length;
+    const genres = this._createGenresMap();
+    this._statisticComponent.topGenre = this._getTopGenre(genres);
+
+    this._statisticComponent.watchedCount = this._filteredMovies.length;
     this._statisticComponent.watchedDuration = this._getFullDuration();
+  }
+
+  _getTopGenre(genres) {
+    let genre = `-`;
+    let maxValue = 0;
+    genres.forEach((value, key) => {
+      if (value > maxValue) {
+        maxValue = value;
+        genre = key;
+      }
+    });
+    return genre;
+  }
+
+  _createGenresMap() {
+    const genres = new Map();
+    this._filteredMovies.forEach((item) => {
+      item.genres.forEach((elem) => {
+        if (genres.has(elem)) {
+          let count = genres.get(elem);
+          count++;
+          genres.set(elem, count);
+        } else {
+          genres.set(elem, 1);
+        }
+      });
+    });
+    return genres;
   }
 
   _getFullDuration() {

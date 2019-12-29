@@ -7,6 +7,11 @@ export default class StatisticComponent extends AbstractComponent {
     this._watchedCountElement = this.getElement().querySelector(`.statistic-watched_count`);
     this._watchedDurationHoursElement = this.getElement().querySelector(`.statistic-watched_duration_hours`);
     this._watchedDurationMinutesElement = this.getElement().querySelector(`.statistic-watched_duration_minutes`);
+    this._topGenreElement = this.getElement().querySelector(`.statistic-top_genre`);
+  }
+
+  set topGenre(genre) {
+    this._topGenreElement.textContent = genre;
   }
 
   set watchedDuration(duration) {
@@ -16,8 +21,8 @@ export default class StatisticComponent extends AbstractComponent {
     this._watchedDurationMinutesElement.textContent = minutes.toString();
   }
 
-  getWatchedCountElement() {
-    return this._watchedCountElement;
+  set watchedCount(count) {
+    this._watchedCountElement.textContent = count.toString();
   }
 
   setFilterClickHandlers(handler) {
@@ -65,7 +70,7 @@ export default class StatisticComponent extends AbstractComponent {
           </li>
           <li class="statistic__text-item">
             <h4 class="statistic__item-title">Top genre</h4>
-            <p class="statistic__item-text">Sci-Fi</p>
+            <p class="statistic__item-text statistic-top_genre">Sci-Fi</p>
           </li>
         </ul>
         
