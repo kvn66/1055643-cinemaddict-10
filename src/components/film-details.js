@@ -21,12 +21,14 @@ export default class FilmDetailsComponent extends AbstractComponent {
     this._controlsElement = this.getElement().querySelector(`.film-details__controls`);
     this._closeButtonElement = this.getElement().querySelector(`.film-details__close-btn`);
     this._formElement = this.getElement().querySelector(`.film-details__inner`);
-    this._commentsListElement = this.getElement().querySelector(`.film-details__comments-list`);
     this._commentsCountElement = this.getElement().querySelector(`.film-details__comments-count`);
     this._commentInputElement = this.getElement().querySelector(`.film-details__comment-input`);
     this._commentEmojiListElement = this.getElement().querySelector(`.film-details__emoji-list`);
     this._emojiInputElements = this._commentEmojiListElement.querySelectorAll(`.film-details__emoji-item`);
     this._commentEmojiElement = this.getElement().querySelector(`.film-details__add-emoji-label`);
+
+    this._onCommentEmojiClick = this._onCommentEmojiClick.bind(this);
+
     this._setEmojiClickHandlers();
   }
 
@@ -66,8 +68,12 @@ export default class FilmDetailsComponent extends AbstractComponent {
     return this._controlsElement;
   }
 
+  getCommentInputElement() {
+    return this._commentInputElement;
+  }
+
   getCommentsListElement() {
-    return this._commentsListElement;
+    return this.getElement().querySelector(`.film-details__comments-list`);
   }
 
   getUserRatingElement() {
@@ -94,6 +100,32 @@ export default class FilmDetailsComponent extends AbstractComponent {
     this._favoriteLabelElement.addEventListener(`click`, handler);
   }
 
+  enableCommentInputs() {
+    this._commentInputElement.disabled = false;
+    this._emojiInputElements.forEach((item) => {
+      item.disabled = false;
+    });
+    this._commentEmojiElement.addEventListener(`click`, this._onCommentEmojiClick);
+  }
+
+  disableCommentInputs() {
+    this._commentInputElement.disabled = true;
+    this._emojiInputElements.forEach((item) => {
+      item.disabled = true;
+    });
+    this._commentEmojiElement.removeEventListener(`click`, this._onCommentEmojiClick);
+  }
+
+  remove() {
+    this.getElement().remove();
+  }
+
+  resetComment() {
+    this._commentInputElement.value = ``;
+    this._removeEmojiImageElement();
+    this._resetEmojiInputElements();
+  }
+
   _setEmojiClickHandlers() {
     this._emojiInputElements.forEach((item) => {
       item.addEventListener(`click`, (evt) => {
@@ -117,10 +149,7 @@ export default class FilmDetailsComponent extends AbstractComponent {
       });
     });
 
-    this._commentEmojiElement.addEventListener(`click`, () => {
-      this._removeEmojiImageElement();
-      this._resetEmojiInputElements();
-    });
+    this._commentEmojiElement.addEventListener(`click`, this._onCommentEmojiClick);
   }
 
   _removeEmojiImageElement() {
@@ -134,16 +163,6 @@ export default class FilmDetailsComponent extends AbstractComponent {
     this._emojiInputElements.forEach((item) => {
       item.checked = false;
     });
-  }
-
-  remove() {
-    this.getElement().remove();
-  }
-
-  resetComment() {
-    this._commentInputElement.value = ``;
-    this._removeEmojiImageElement();
-    this._resetEmojiInputElements();
   }
 
   _getTemplate() {
@@ -246,7 +265,7 @@ export default class FilmDetailsComponent extends AbstractComponent {
                   <img src="./images/emoji/sleeping.png" width="30" height="30" alt="emoji">
                 </label>
     
-                <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-gpuke" value="gpuke">
+                <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-gpuke" value="puke">
                 <label class="film-details__emoji-label" for="emoji-gpuke">
                   <img src="./images/emoji/puke.png" width="30" height="30" alt="emoji">
                 </label>
@@ -262,5 +281,10 @@ export default class FilmDetailsComponent extends AbstractComponent {
       </form>
     </section>`
     );
+  }
+
+  _onCommentEmojiClick() {
+    this._removeEmojiImageElement();
+    this._resetEmojiInputElements();
   }
 }

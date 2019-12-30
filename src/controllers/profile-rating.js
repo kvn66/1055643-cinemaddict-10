@@ -27,13 +27,15 @@ export default class ProfileRatingController {
   }
 
   _createRatingStr() {
-    if (this._profileRating > MOVIE_BUFF_RATING_LIMIT) {
-      return `Movie Buff`;
-    } else if (this._profileRating > FAN_RATING_LIMIT) {
-      return `Fan`;
-    } else if (this._profileRating > NOVICE_RATING_LIMIT) {
-      return `Novice`;
+    switch (true) {
+      case this._profileRating > MOVIE_BUFF_RATING_LIMIT:
+        return `Movie Buff`;
+      case this._profileRating > FAN_RATING_LIMIT:
+        return `Fan`;
+      case this._profileRating > NOVICE_RATING_LIMIT:
+        return `Novice`;
+      default:
+        return ``;
     }
-    return ``;
   }
 }

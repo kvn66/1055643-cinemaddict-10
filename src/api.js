@@ -1,3 +1,6 @@
+const MIN_OK_RESPONSE_STATUS = 200;
+const MAX_OK_RESPONSE_STATUS = 299;
+
 const Method = {
   GET: `GET`,
   POST: `POST`,
@@ -6,11 +9,10 @@ const Method = {
 };
 
 const checkStatus = (response) => {
-  if (response.status >= 200 && response.status < 300 && response.ok) {
+  if (response.status >= MIN_OK_RESPONSE_STATUS && response.status <= MAX_OK_RESPONSE_STATUS && response.ok) {
     return response;
-  } else {
-    throw new Error(`${response.status}: ${response.statusText}`);
   }
+  throw new Error(`${response.status}: ${response.statusText}`);
 };
 
 export default class API {
@@ -24,14 +26,24 @@ export default class API {
       .then((response) => response.json());
   }
 
-  getComments(id) {
-    return this._load({url: `comments/${id}`})
+  getComments(movieId) {
+    return this._load({url: `comments/${movieId}`})
       .then((response) => response.json());
   }
 
-  updateMovie(id, movie) {
+  createComment(movieId, comment) {
     return this._load({
-      url: `movies/${id}`,
+      url: `comments/${movieId}`,
+      method: Method.POST,
+      body: JSON.stringify(comment),
+      headers: new Headers({'Content-Type': `application/json`})
+    })
+      .then((response) => response.json());
+  }
+
+  updateMovie(movieId, movie) {
+    return this._load({
+      url: `movies/${movieId}`,
       method: Method.PUT,
       body: JSON.stringify(movie),
       headers: new Headers({'Content-Type': `application/json`})
@@ -39,8 +51,8 @@ export default class API {
       .then((response) => response.json());
   }
 
-  deleteMovie(id) {
-    return this._load({url: `movies/${id}`, method: Method.DELETE});
+  deleteComment(commentId) {
+    return this._load({url: `comments/${commentId}`, method: Method.DELETE});
   }
 
   _load({url, method = Method.GET, body = null, headers = new Headers()}) {
