@@ -1,6 +1,8 @@
 import StatisticComponent from "../components/statistic";
 import {render} from "../utils";
 import moment from 'moment';
+import Chart from 'chart.js';
+import ChartDataLabels from 'chartjs-plugin-datalabels';
 
 const FILTER_PERIOD = 1;
 
@@ -20,6 +22,7 @@ export default class StatisticController {
 
     this._statisticComponent = new StatisticComponent();
     this._statisticComponent.setFilterClickHandlers(this._onFilterClick);
+    this._statisticCanvasElement = this._statisticComponent.getCanvasElement();
   }
 
   render(parentElement) {
@@ -40,6 +43,73 @@ export default class StatisticController {
 
     this._statisticComponent.watchedCount = this._filteredMovies.length;
     this._statisticComponent.watchedDuration = this._getFullDuration();
+    this._renderChart(genres);
+  }
+
+  _renderChart(genres) {
+    return new Chart(this._statisticCanvasElement.getContext(`2d`), {
+      plugins: [ChartDataLabels],
+      type: `horizontalBar`,
+      data: {
+        labels: Array.from(genres.keys()),
+        datasets: [{
+          data: Array.from(genres.values()),
+          backgroundColor: `#ffe800`
+        }]
+      },
+      options: {
+        plugins: {
+          datalabels: {
+            display: true,
+            anchor: `start`,
+            align: `start`,
+            color: `white`,
+            offset: 20,
+            font: {
+              family: `'Open Sans', 'sans-serif'`,
+              size: `20`
+            }
+          }
+        },
+        tooltips: {
+          callbacks: {
+            label: (tooltipItem, data) => {
+              const allData = data.datasets[tooltipItem.datasetIndex].data;
+              const tooltipData = allData[tooltipItem.index];
+              const total = allData.reduce((acc, item) => acc + parseFloat(item));
+              const tooltipPercentage = Math.round((tooltipData / total) * 100);
+              return `${tooltipData} Films - ${tooltipPercentage}%`;
+            }
+          },
+          displayColors: false,
+          backgroundColor: `white`,
+          bodyFontColor: `black`,
+          borderColor: `black`,
+          borderWidth: 1,
+          cornerRadius: 10
+        },
+        legend: {
+          display: false
+        },
+        scales: {
+          xAxes: [{
+            position: `top`,
+            ticks: {
+              beginAtZero: true,
+              display: false
+            }
+          }],
+          yAxes: [{
+            ticks: {
+              fontFamily: `'Open Sans', 'sans-serif'`,
+              fontSize: `20`,
+              fontColor: `white`,
+              padding: 50
+            }
+          }]
+        }
+      }
+    });
   }
 
   _getTopGenre(genres) {
