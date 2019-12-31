@@ -3,12 +3,17 @@ import AbstractComponent from './abstract-component';
 export default class StatisticComponent extends AbstractComponent {
   constructor() {
     super();
+    this._rankElement = this.getElement().querySelector(`.statistic__rank-label`);
     this._inputElements = this.getElement().querySelectorAll(`.statistic__filters-input`);
     this._watchedCountElement = this.getElement().querySelector(`.statistic__watched-count`);
     this._watchedDurationHoursElement = this.getElement().querySelector(`.statistic__watched-duration-hours`);
     this._watchedDurationMinutesElement = this.getElement().querySelector(`.statistic__watched-duration-minutes`);
     this._topGenreElement = this.getElement().querySelector(`.statistic__top-genre`);
     this._canvasElement = this.getElement().querySelector(`.statistic__chart`);
+  }
+
+  set rank(rank) {
+    this._rankElement.textContent = rank;
   }
 
   set topGenre(genre) {

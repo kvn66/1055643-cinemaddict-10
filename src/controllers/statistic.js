@@ -43,7 +43,9 @@ export default class StatisticController {
 
   update() {
     const genres = this._createGenresMap();
-    this._statisticComponent.topGenre = this._getTopGenre(genres);
+    const topGenre = this._getTopGenre(genres);
+    this._statisticComponent.topGenre = topGenre;
+    this._statisticComponent.rank = topGenre;
 
     this._statisticComponent.watchedCount = this._moviesModel.getStatisticMovies().length;
     this._statisticComponent.watchedDuration = this._getFullDuration();
