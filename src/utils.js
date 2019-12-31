@@ -50,3 +50,18 @@ export const formatDuration = (duration) => {
   return `${hours ? hours + `h` : ``} ${minutes}m`;
 };
 
+export const StatisticFilterType = {
+  ALL_TIME: `all-time`,
+  TODAY: `today`,
+  WEEK: `week`,
+  MONTH: `month`,
+  YEAR: `year`
+};
+
+export const StatisticFilterPeriodName = {
+  DAYS: `days`,
+  WEEKS: `weeks`,
+  MONTHS: `months`,
+  YEARS: `years`,
+  ALL_TIME: `allTime`
+};

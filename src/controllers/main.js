@@ -25,7 +25,7 @@ export default class MainController {
     render(parentElement, siteSortElement);
 
     this._siteSortComponent.setSortTypeChangeHandler((sortType) => {
-      this._moviesModel.setSortType(sortType);
+      this._moviesModel.sortType = sortType;
     });
   }
 

@@ -1,11 +1,16 @@
-import {FilterType, SortType} from "../utils";
+import {FilterType, SortType, StatisticFilterPeriodName} from "../utils";
 import MovieModel from "./movie";
+import moment from 'moment';
+
+const FILTER_PERIOD = 1;
 
 export default class MoviesModel {
   constructor() {
+    this._movies = [];
     this._filterType = FilterType.ALL;
     this._sortType = SortType.DEFAULT;
-    this._movies = [];
+    this._statisticFilterType = StatisticFilterPeriodName.ALL_TIME;
+    this._statisticFilteredMovies = this._movies.filter((item) => item.isAlreadyWatched);
   }
 
   get length() {
@@ -27,11 +32,15 @@ export default class MoviesModel {
     }
   }
 
-  setSortType(type) {
+  set sortType(type) {
     if (type !== this._sortType) {
       this._sortType = type;
       document.dispatchEvent(new Event(`filterChange`));
     }
+  }
+
+  set statisticFilterType(type) {
+    this._statisticFilterType = type;
   }
 
   getMovies() {
@@ -40,6 +49,11 @@ export default class MoviesModel {
 
   getAllMovies() {
     return this._movies;
+  }
+
+  getStatisticMovies() {
+    this._statisticFilter();
+    return this._statisticFilteredMovies;
   }
 
   getTopRated(count) {
@@ -58,6 +72,17 @@ export default class MoviesModel {
       }
     });
     return count;
+  }
+
+  _statisticFilter() {
+    if (this._statisticFilterType === StatisticFilterPeriodName.ALL_TIME) {
+      this._statisticFilteredMovies = this._movies.filter((item) => item.isAlreadyWatched);
+    } else {
+      const targetDate = moment().subtract(FILTER_PERIOD, this._statisticFilterType);
+      this._statisticFilteredMovies = this._movies.filter((item) => {
+        return (moment(item.watchingDate) >= targetDate && item.isAlreadyWatched);
+      });
+    }
   }
 
   _filterMovies(movies) {
