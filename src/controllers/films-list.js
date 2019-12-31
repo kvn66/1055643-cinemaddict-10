@@ -38,9 +38,10 @@ export default class FilmsListController {
         new MovieController(movieModel, this._api).render(filmsListComponent);
       });
 
-      render(filmsListComponent.getContainerElement(), showMoreComponent.getElement(), RenderPosition.AFTEREND);
-
-      showMoreComponent.setClickHandler(onClick);
+      if (showingFilmsCount < moviesModel.length) {
+        showMoreComponent.setClickHandler(onClick);
+        render(filmsListComponent.getContainerElement(), showMoreComponent.getElement(), RenderPosition.AFTEREND);
+      }
     } else {
       filmsListComponent.titleText = `There are no movies in our database`;
       filmsListComponent.titleHide = false;

@@ -2,7 +2,8 @@ import FilmsComponent from "../components/films";
 import FilmsListController from "./films-list";
 import TopRatesController from "./top-rates";
 import MostCommentedController from "./most-commented";
-import {render} from "../utils";
+import StatisticController from "./statistic";
+import {FilterType, render} from "../utils";
 import SiteMenuController from "./site-menu";
 import SiteSortComponent from "../components/site-sort";
 
@@ -16,6 +17,7 @@ export default class MainController {
     this._filmsListController = new FilmsListController(this._filmsComponent, this._api);
     this._topRatesController = new TopRatesController(this._filmsComponent, this._api);
     this._mostCommentedController = new MostCommentedController(this._filmsComponent, this._api);
+    this._statisticController = new StatisticController(this._moviesModel);
   }
 
   siteSortRender(parentElement) {
@@ -23,7 +25,7 @@ export default class MainController {
     render(parentElement, siteSortElement);
 
     this._siteSortComponent.setSortTypeChangeHandler((sortType) => {
-      this._moviesModel.setSortType(sortType);
+      this._moviesModel.sortType = sortType;
     });
   }
 
@@ -41,8 +43,21 @@ export default class MainController {
 
     render(parentElement, this._filmsComponent.getElement());
 
+    this._statisticController.hide();
+    this._statisticController.render(parentElement);
+
     document.addEventListener(`filterChange`, () => {
-      this._filmsListController.render(this._moviesModel.getMovies());
+      if (this._moviesModel.filterType === FilterType.STATISTIC) {
+        this._siteSortComponent.hide();
+        this._filmsComponent.hide();
+        this._statisticController.update();
+        this._statisticController.show();
+      } else {
+        this._filmsListController.render(this._moviesModel.getMovies());
+        this._siteSortComponent.show();
+        this._filmsComponent.show();
+        this._statisticController.hide();
+      }
     });
   }
 }

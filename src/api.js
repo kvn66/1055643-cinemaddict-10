@@ -1,6 +1,3 @@
-const MIN_OK_RESPONSE_STATUS = 200;
-const MAX_OK_RESPONSE_STATUS = 299;
-
 const Method = {
   GET: `GET`,
   POST: `POST`,
@@ -8,8 +5,18 @@ const Method = {
   DELETE: `DELETE`
 };
 
+const SuccessfulResponses = {
+  OK: 200,
+  CREATED: 201,
+  ACCEPTED: 202,
+  NON_AUTHORITATIVE: 203,
+  NO_CONTENT: 204,
+  RESET_CONTENT: 205,
+  PARTIAL_CONTENT: 206
+};
+
 const checkStatus = (response) => {
-  if (response.status >= MIN_OK_RESPONSE_STATUS && response.status <= MAX_OK_RESPONSE_STATUS && response.ok) {
+  if (response.status >= SuccessfulResponses.OK && response.status <= SuccessfulResponses.PARTIAL_CONTENT && response.ok) {
     return response;
   }
   throw new Error(`${response.status}: ${response.statusText}`);

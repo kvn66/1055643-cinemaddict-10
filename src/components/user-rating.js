@@ -32,16 +32,16 @@ export default class UserRatingComponent extends AbstractComponent {
   }
 
   setErrorStyle() {
-    this._labels.forEach((label) => {
-      label.style.backgroundColor = ``;
-    });
+    this.removeErrorStyle();
     const checkedLabel = this.getElement().querySelector(`.film-details__user-rating-input:checked + .film-details__user-rating-label`);
-    checkedLabel.style.backgroundColor = `red`;
+    checkedLabel.classList.add(`film-details__user-rating-label--error`);
   }
 
   removeErrorStyle() {
     this._labels.forEach((label) => {
-      label.style.backgroundColor = ``;
+      if (label.classList.contains(`film-details__user-rating-label--error`)) {
+        label.classList.remove(`film-details__user-rating-label--error`);
+      }
     });
   }
 

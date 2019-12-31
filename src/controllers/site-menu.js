@@ -18,7 +18,7 @@ export default class SiteMenuController {
     siteMenuComponent.historyCount = this._historyCount;
     siteMenuComponent.favoritesCount = this._favoritesCount;
     siteMenuComponent.setFilterTypeChangeHandler((filterType) => {
-      moviesModel.setFilterType(filterType);
+      moviesModel.filterType = filterType;
     });
     render(this._parentElement, siteMenuComponent.getElement());
 
