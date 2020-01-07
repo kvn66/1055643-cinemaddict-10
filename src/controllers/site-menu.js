@@ -48,5 +48,14 @@ export default class SiteMenuController {
       }
       siteMenuComponent.favoritesCount = this._favoritesCount;
     });
+
+    document.addEventListener(`modelLoaded`, () => {
+      this._watchlistCount = moviesModel.getCheckedParametersCount(`isAddedToWatchlist`);
+      this._historyCount = moviesModel.getCheckedParametersCount(`isAlreadyWatched`);
+      this._favoritesCount = moviesModel.getCheckedParametersCount(`isAddedToFavorites`);
+      siteMenuComponent.watchlistCount = this._watchlistCount;
+      siteMenuComponent.historyCount = this._historyCount;
+      siteMenuComponent.favoritesCount = this._favoritesCount;
+    });
   }
 }

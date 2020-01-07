@@ -12,6 +12,11 @@ export default class ProfileRatingController {
     this._profileRatingComponent = new ProfileRatingComponent();
     this._profileRatingComponent.profileRating = this._createRatingStr(this._profileRating);
 
+    document.addEventListener(`modelLoaded`, () => {
+      this._profileRating = this._moviesModel.getCheckedParametersCount(`isAlreadyWatched`);
+      this._profileRatingComponent.profileRating = this._createRatingStr();
+    });
+
     document.addEventListener(`watchedChange`, (evt) => {
       if (evt.detail) {
         this._profileRating++;

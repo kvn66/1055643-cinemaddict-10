@@ -5,18 +5,18 @@ import MovieController from "./movie";
 const TOP_RATED_FILMS_COUNT = 2;
 
 export default class TopRatesController {
-  constructor(parentComponent, api) {
+  constructor(parentComponent, apiWithProvider) {
     this._parentComponent = parentComponent;
-    this._api = api;
+    this._apiWithProvider = apiWithProvider;
   }
 
-  render(moviesModel) {
+  render(moviesModel, commentsModel) {
     const topRates = new TopRatesComponent();
     const topRated = moviesModel.getTopRated(TOP_RATED_FILMS_COUNT);
 
     if (topRated[0].totalRating > 0) {
       topRated.forEach((movieModel) => {
-        new MovieController(movieModel, this._api).render(topRates);
+        new MovieController(movieModel, commentsModel, this._apiWithProvider).render(topRates);
       });
 
       render(this._parentComponent.getElement(), topRates.getElement());

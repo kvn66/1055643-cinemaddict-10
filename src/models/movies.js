@@ -42,6 +42,10 @@ export default class MoviesModel {
     return this._sortMovies(this._filterMovies(this._movies));
   }
 
+  getAllMovies() {
+    return this._movies;
+  }
+
   getStatisticMovies() {
     return this._statisticFilter();
   }

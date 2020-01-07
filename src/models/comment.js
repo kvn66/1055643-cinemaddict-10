@@ -51,4 +51,13 @@ export default class CommentModel {
     this._date = new Date(comment.date);
   }
 
+  toRAW() {
+    return {
+      'id': this._id,
+      'comment': this._text,
+      'emotion': this._emoji,
+      'author': this._author,
+      'date': this._date
+    };
+  }
 }

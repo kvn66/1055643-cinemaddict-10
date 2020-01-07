@@ -18,16 +18,17 @@ const localComment = {
 };
 
 export default class MovieController {
-  constructor(movieModel, api) {
+  constructor(movieModel, commentsModel, apiWithProvider) {
     this._movieModel = movieModel;
-    this._api = api;
+    this._commentsModel = commentsModel;
+    this._apiWithProvider = apiWithProvider;
     this._filmCard = new FilmCardComponent(this._movieModel);
     this._filmDetails = new FilmDetailsComponent(this._movieModel);
     this._footerElement = document.querySelector(`.footer`);
     this._userRatingComponent = new UserRatingComponent();
     this._pressedKey = new Set();
     this._detailsIsOpened = false;
-    this._commentsController = new CommentsController(this._filmDetails, this._movieModel, this._api);
+    this._commentsController = new CommentsController(this._filmDetails, this._movieModel, this._commentsModel, this._apiWithProvider);
 
     this._onCtrlEnterKeyDown = this._onCtrlEnterKeyDown.bind(this);
     this._onCtrlEnterKeyUp = this._onCtrlEnterKeyUp.bind(this);
@@ -93,7 +94,7 @@ export default class MovieController {
     this._userRatingComponent.removeErrorStyle();
     const movieModel = MovieModel.clone(this._movieModel);
     movieModel.userRating = rating;
-    this._api.updateMovie(this._movieModel.id, movieModel.toRAW())
+    this._apiWithProvider.updateMovie(this._movieModel.id, movieModel.toRAW())
       .then((movieJson) => {
         this._movieModel.update(movieJson);
         this._userRatingComponent.setChecked(this._movieModel.userRating);
@@ -139,11 +140,11 @@ export default class MovieController {
       localComment.date = new Date();
       this._filmDetails.getCommentInputElement().style.boxShadow = ``;
       this._filmDetails.disableCommentInputs();
-      this._api.createComment(this._movieModel.id, localComment)
+      this._apiWithProvider.createComment(this._movieModel.id, localComment)
         .then((out) => out.comments)
         .then(CommentsModel.parseComments)
         .then((comments) => {
-          this._movieModel.comments.fillModel(comments);
+          this._movieModel.comments.addComments(comments);
           this._commentsController.render();
           this._filmDetails.resetComment();
           this._filmDetails.enableCommentInputs();
@@ -190,7 +191,7 @@ export default class MovieController {
   _onWatchlistClick(evt) {
     evt.preventDefault();
     this._movieModel.isAddedToWatchlist = !this._movieModel.isAddedToWatchlist;
-    this._api.updateMovie(this._movieModel.id, this._movieModel.toRAW()).then((movieJson) => {
+    this._apiWithProvider.updateMovie(this._movieModel.id, this._movieModel.toRAW()).then((movieJson) => {
       this._movieModel.update(movieJson);
       document.dispatchEvent(new CustomEvent(`watchlistChange`, {'detail': this._movieModel.isAddedToWatchlist}));
     });
@@ -202,7 +203,7 @@ export default class MovieController {
     if (this._movieModel.isAlreadyWatched) {
       this._movieModel.watchingDate = new Date();
     }
-    this._api.updateMovie(this._movieModel.id, this._movieModel.toRAW()).then((movieJson) => {
+    this._apiWithProvider.updateMovie(this._movieModel.id, this._movieModel.toRAW()).then((movieJson) => {
       this._movieModel.update(movieJson);
       document.dispatchEvent(new CustomEvent(`watchedChange`, {'detail': this._movieModel.isAlreadyWatched}));
     });
@@ -211,7 +212,7 @@ export default class MovieController {
   _onFavoriteClick(evt) {
     evt.preventDefault();
     this._movieModel.isAddedToFavorites = !this._movieModel.isAddedToFavorites;
-    this._api.updateMovie(this._movieModel.id, this._movieModel.toRAW()).then((movieJson) => {
+    this._apiWithProvider.updateMovie(this._movieModel.id, this._movieModel.toRAW()).then((movieJson) => {
       this._movieModel.update(movieJson);
       document.dispatchEvent(new CustomEvent(`favoriteChange`, {'detail': this._movieModel.isAddedToFavorites}));
     });
@@ -240,14 +241,7 @@ export default class MovieController {
   _onOpenDetailsClick() {
     document.dispatchEvent(new CustomEvent(`openDetails`, {'detail': this._movieModel.id}));
     this._openDetails();
-    this._api.getComments(this._movieModel.id)
-      .then(CommentsModel.parseComments)
-      .then((comments) => {
-        const commentsModel = new CommentsModel();
-        commentsModel.fillModel(comments);
-        this._movieModel.comments = commentsModel;
-        this._commentsController.render();
-      });
+    this._commentsController.render();
   }
 
   _setFilmCardHandlers() {
