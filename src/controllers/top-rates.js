@@ -1,4 +1,4 @@
-import {render} from "../utils";
+import {render, RenderPosition} from "../utils";
 import TopRatesComponent from "../components/top-rates";
 import MovieController from "./movie";
 
@@ -8,18 +8,32 @@ export default class TopRatesController {
   constructor(parentComponent, api) {
     this._parentComponent = parentComponent;
     this._api = api;
+    this._topRatesComponent = null;
   }
 
   render(moviesModel) {
-    const topRates = new TopRatesComponent();
+    const topRatesComponent = new TopRatesComponent();
     const topRated = moviesModel.getTopRated(TOP_RATED_FILMS_COUNT);
 
     if (topRated[0].totalRating > 0) {
       topRated.forEach((movieModel) => {
-        new MovieController(movieModel, this._api).render(topRates);
+        new MovieController(movieModel, this._api).render(topRatesComponent);
       });
 
-      render(this._parentComponent.getElement(), topRates.getElement());
+      this._renderElement(this._parentComponent.getElement(), topRatesComponent.getElement());
+
+      this._topRatesComponent = topRatesComponent;
+    }
+  }
+
+  _renderElement(containerElement, element, place = RenderPosition.BEFOREEND) {
+    if (!this._topRatesComponent) {
+      render(containerElement, element, place);
+    } else {
+      const topRatesElement = this._topRatesComponent.getElement();
+      if (containerElement.contains(topRatesElement)) {
+        topRatesElement.replaceWith(element);
+      }
     }
   }
 }

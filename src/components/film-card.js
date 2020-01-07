@@ -13,6 +13,7 @@ export default class FilmCardComponent extends AbstractComponent {
     this._watchedElement = this.getElement().querySelector(`.film-card__controls-item--mark-as-watched`);
     this._favoriteElement = this.getElement().querySelector(`.film-card__controls-item--favorite`);
     this._commentsCountElement = this.getElement().querySelector(`.film-card__comments`);
+    this._totalRatingElement = this.getElement().querySelector(`.film-card__rating`);
   }
 
   get watchlistChecked() {
@@ -85,11 +86,15 @@ export default class FilmCardComponent extends AbstractComponent {
     this.getElement().querySelector(`.film-card__controls-item--favorite`).addEventListener(`click`, handler);
   }
 
+  updateRating() {
+    this._totalRatingElement.textContent = this._movieModel.totalRating.toString();
+  }
+
   _getTemplate() {
     return (
       `<article class="film-card">
       <h3 class="film-card__title">${this._movieModel.title}</h3>
-      <p class="film-card__rating">${this._movieModel.totalRating}</p>
+      <p class="film-card__rating">${this._movieModel.totalRating.toString()}</p>
       <p class="film-card__info">
         <span class="film-card__year">${this._movieModel.releaseDate.getFullYear().toString()}</span>
         <span class="film-card__duration">${formatDuration(this._movieModel.duration)}</span>

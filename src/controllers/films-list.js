@@ -67,7 +67,7 @@ export default class FilmsListController {
 
   _renderElement(containerElement, element, place = RenderPosition.BEFOREEND) {
     if (!this._filmsListComponent) {
-      render(this._parentComponent.getElement(), element, place);
+      render(containerElement, element, place);
     } else {
       const filmsListElement = this._filmsListComponent.getElement();
       if (containerElement.contains(filmsListElement)) {

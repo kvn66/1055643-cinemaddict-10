@@ -11,6 +11,8 @@ export default class CommentComponent extends AbstractComponent {
   setDeleteButtonClickHandler(handler) {
     this._deleteButtonElement.addEventListener(`click`, (evt) => {
       evt.preventDefault();
+      this._deleteButtonElement.textContent = `Deleting…`;
+      this._deleteButtonElement.disabled = true;
       const commentId = evt.target.dataset.commentId;
       handler(commentId);
     });

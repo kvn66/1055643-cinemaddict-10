@@ -26,6 +26,7 @@ export default class FilmDetailsComponent extends AbstractComponent {
     this._commentEmojiListElement = this.getElement().querySelector(`.film-details__emoji-list`);
     this._emojiInputElements = this._commentEmojiListElement.querySelectorAll(`.film-details__emoji-item`);
     this._commentEmojiElement = this.getElement().querySelector(`.film-details__add-emoji-label`);
+    this._totalRatingElement = this.getElement().querySelector(`.film-details__total-rating`);
 
     this._onCommentEmojiClick = this._onCommentEmojiClick.bind(this);
 
@@ -124,6 +125,10 @@ export default class FilmDetailsComponent extends AbstractComponent {
     this._commentInputElement.value = ``;
     this._removeEmojiImageElement();
     this._resetEmojiInputElements();
+  }
+
+  updateRating() {
+    this._totalRatingElement.textContent = this._movieModel.totalRating.toString();
   }
 
   _setEmojiClickHandlers() {

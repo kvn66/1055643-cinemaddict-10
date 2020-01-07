@@ -39,17 +39,17 @@ export default class MovieController {
   }
 
   render(parentComponent) {
-    document.addEventListener(`commentAdded`, (evt) => {
+    document.addEventListener(`commentsChanged`, (evt) => {
       if (evt.detail === this._movieModel.id) {
         this._filmDetails.updateCommentsCount();
         this._filmCard.commentsCount = this._movieModel.comments.length;
       }
     });
 
-    document.addEventListener(`commentRemoved`, (evt) => {
+    document.addEventListener(`userRatingChanged`, (evt) => {
       if (evt.detail === this._movieModel.id) {
-        this._filmDetails.updateCommentsCount();
-        this._filmCard.commentsCount = this._movieModel.comments.length;
+        this._filmDetails.updateRating();
+        this._filmCard.updateRating();
       }
     });
 
@@ -80,7 +80,7 @@ export default class MovieController {
     render(parentComponent.getContainerElement(), this._filmCard.getElement());
   }
 
-  shakeElement(element) {
+  _shakeElement(element) {
     element.style.animation = `shake ${SHAKE_ANIMATION_TIMEOUT / 1000}s`;
 
     setTimeout(() => {
@@ -98,10 +98,11 @@ export default class MovieController {
         this._movieModel.update(movieJson);
         this._userRatingComponent.setChecked(this._movieModel.userRating);
         this._userRatingComponent.enableInputs();
+        document.dispatchEvent(new CustomEvent(`userRatingChanged`, {'detail': this._movieModel.id}));
       })
       .catch(() => {
         this._userRatingComponent.setErrorStyle();
-        this.shakeElement(this._userRatingComponent.getUserRatingWrapElement());
+        this._shakeElement(this._userRatingComponent.getUserRatingWrapElement());
         this._userRatingComponent.enableInputs();
       });
   }
@@ -147,14 +148,51 @@ export default class MovieController {
           this._commentsController.render();
           this._filmDetails.resetComment();
           this._filmDetails.enableCommentInputs();
-          document.dispatchEvent(new CustomEvent(`commentAdded`, {'detail': this._movieModel.id}));
+          document.dispatchEvent(new CustomEvent(`commentsChanged`, {'detail': this._movieModel.id}));
         })
         .catch(() => {
           this._filmDetails.getCommentInputElement().style.boxShadow = SHADOW_STYLE;
-          this.shakeElement(this._filmDetails.getCommentInputElement());
+          this._shakeElement(this._filmDetails.getCommentInputElement());
           this._filmDetails.enableCommentInputs();
         });
     }
+  }
+
+  _closeDetails() {
+    this._filmDetails.resetComment();
+    this._filmDetails.remove();
+    document.removeEventListener(`keydown`, this._onEscKeyDown);
+    document.removeEventListener(`keydown`, this._onCtrlEnterKeyDown);
+    document.removeEventListener(`keyup`, this._onCtrlEnterKeyUp);
+    this._pressedKey.clear();
+    this._detailsIsOpened = false;
+  }
+
+  _setDetailHandlers() {
+    this._filmDetails.setCloseClickHandler(() => {
+      this._closeDetails();
+    });
+    this._filmDetails.setWatchlistClickHandler(this._onWatchlistClick);
+    this._filmDetails.setWatchedClickHandler(this._onWatchedClick);
+    this._filmDetails.setFavoriteClickHandler(this._onFavoriteClick);
+  }
+
+  _openDetails() {
+    if (!this._detailsIsOpened) {
+      this._detailsIsOpened = true;
+      this._setDetailHandlers();
+      render(this._footerElement, this._filmDetails.getElement(), RenderPosition.AFTEREND);
+      document.addEventListener(`keydown`, this._onEscKeyDown);
+      document.addEventListener(`keydown`, this._onCtrlEnterKeyDown);
+      document.addEventListener(`keyup`, this._onCtrlEnterKeyUp);
+    }
+  }
+
+  _setFilmCardHandlers() {
+    this._filmCard.setOpenDetailsClickHandler(this._onOpenDetailsClick);
+    this._filmCard.setWatchlistClickHandler(this._onWatchlistClick);
+    this._filmCard.setWatchedClickHandler(this._onWatchedClick);
+    this._filmCard.setFavoriteClickHandler(this._onFavoriteClick);
   }
 
   _onCtrlEnterKeyDown(evt) {
@@ -168,15 +206,6 @@ export default class MovieController {
 
   _onCtrlEnterKeyUp(evt) {
     this._pressedKey.delete(evt.key);
-  }
-
-  _closeDetails() {
-    this._filmDetails.remove();
-    document.removeEventListener(`keydown`, this._onEscKeyDown);
-    document.removeEventListener(`keydown`, this._onCtrlEnterKeyDown);
-    document.removeEventListener(`keyup`, this._onCtrlEnterKeyUp);
-    this._pressedKey.clear();
-    this._detailsIsOpened = false;
   }
 
   _onEscKeyDown(evt) {
@@ -217,26 +246,6 @@ export default class MovieController {
     });
   }
 
-  _setDetailHandlers() {
-    this._filmDetails.setCloseClickHandler(() => {
-      this._closeDetails();
-    });
-    this._filmDetails.setWatchlistClickHandler(this._onWatchlistClick);
-    this._filmDetails.setWatchedClickHandler(this._onWatchedClick);
-    this._filmDetails.setFavoriteClickHandler(this._onFavoriteClick);
-  }
-
-  _openDetails() {
-    if (!this._detailsIsOpened) {
-      this._detailsIsOpened = true;
-      this._setDetailHandlers();
-      render(this._footerElement, this._filmDetails.getElement(), RenderPosition.AFTEREND);
-      document.addEventListener(`keydown`, this._onEscKeyDown);
-      document.addEventListener(`keydown`, this._onCtrlEnterKeyDown);
-      document.addEventListener(`keyup`, this._onCtrlEnterKeyUp);
-    }
-  }
-
   _onOpenDetailsClick() {
     document.dispatchEvent(new CustomEvent(`openDetails`, {'detail': this._movieModel.id}));
     this._openDetails();
@@ -248,12 +257,5 @@ export default class MovieController {
         this._movieModel.comments = commentsModel;
         this._commentsController.render();
       });
-  }
-
-  _setFilmCardHandlers() {
-    this._filmCard.setOpenDetailsClickHandler(this._onOpenDetailsClick);
-    this._filmCard.setWatchlistClickHandler(this._onWatchlistClick);
-    this._filmCard.setWatchedClickHandler(this._onWatchedClick);
-    this._filmCard.setFavoriteClickHandler(this._onFavoriteClick);
   }
 }
