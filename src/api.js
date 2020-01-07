@@ -1,3 +1,5 @@
+import MoviesModel from "./models/movies";
+
 const Method = {
   GET: `GET`,
   POST: `POST`,
@@ -30,7 +32,8 @@ export default class API {
 
   getMovies() {
     return this._load({url: `movies`})
-      .then((response) => response.json());
+      .then((response) => response.json())
+      .then(MoviesModel.parseMovies);
   }
 
   getComments(movieId) {

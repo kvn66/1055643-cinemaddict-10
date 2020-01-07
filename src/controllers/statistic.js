@@ -1,5 +1,6 @@
 import StatisticComponent from "../components/statistic";
-import {render, StatisticFilterType, StatisticFilterPeriodName} from "../utils";
+import ProfileRatingController from "./profile-rating";
+import {render, StatisticFilterPeriodName, StatisticFilterType} from "../utils";
 import Chart from 'chart.js';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 
@@ -43,11 +44,11 @@ export default class StatisticController {
 
   update() {
     const genres = this._createGenresMap();
-    const topGenre = this._getTopGenre(genres);
-    this._statisticComponent.topGenre = topGenre;
-    this._statisticComponent.rank = topGenre;
+    const watchedCount = this._moviesModel.getStatisticMovies().length;
+    this._statisticComponent.topGenre = this._getTopGenre(genres);
+    this._statisticComponent.rank = ProfileRatingController.createRatingStr(watchedCount);
 
-    this._statisticComponent.watchedCount = this._moviesModel.getStatisticMovies().length;
+    this._statisticComponent.watchedCount = watchedCount;
     this._statisticComponent.watchedDuration = this._getFullDuration();
     this._renderChart(genres);
   }

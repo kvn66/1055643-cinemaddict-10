@@ -13,5 +13,9 @@ export default class PageController {
     new MainController(this._moviesModel, this._api).render(parentComponent.querySelector(`.main`));
 
     parentComponent.querySelector(`.footer__statistics`).replaceWith(new FooterStatisticComponent(this._moviesModel).getElement());
+
+    document.addEventListener(`modelLoaded`, () => {
+      parentComponent.querySelector(`.footer__statistics`).replaceWith(new FooterStatisticComponent(this._moviesModel).getElement());
+    });
   }
 }

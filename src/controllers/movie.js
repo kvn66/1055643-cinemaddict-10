@@ -192,7 +192,7 @@ export default class MovieController {
     this._movieModel.isAddedToWatchlist = !this._movieModel.isAddedToWatchlist;
     this._api.updateMovie(this._movieModel.id, this._movieModel.toRAW()).then((movieJson) => {
       this._movieModel.update(movieJson);
-      document.dispatchEvent(new CustomEvent(`watchlistChange`, {'detail': this._movieModel.isAddedToWatchlist}));
+      document.dispatchEvent(new Event(`watchlistChange`));
     });
   }
 
@@ -204,7 +204,7 @@ export default class MovieController {
     }
     this._api.updateMovie(this._movieModel.id, this._movieModel.toRAW()).then((movieJson) => {
       this._movieModel.update(movieJson);
-      document.dispatchEvent(new CustomEvent(`watchedChange`, {'detail': this._movieModel.isAlreadyWatched}));
+      document.dispatchEvent(new Event(`watchedChange`));
     });
   }
 
@@ -213,7 +213,7 @@ export default class MovieController {
     this._movieModel.isAddedToFavorites = !this._movieModel.isAddedToFavorites;
     this._api.updateMovie(this._movieModel.id, this._movieModel.toRAW()).then((movieJson) => {
       this._movieModel.update(movieJson);
-      document.dispatchEvent(new CustomEvent(`favoriteChange`, {'detail': this._movieModel.isAddedToFavorites}));
+      document.dispatchEvent(new Event(`favoriteChange`));
     });
   }
 

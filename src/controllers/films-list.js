@@ -11,6 +11,7 @@ export default class FilmsListController {
     this._parentComponent = parentComponent;
     this._api = api;
     this._filmsListComponent = null;
+    this._isModelLoaded = false;
   }
 
   render(moviesModel) {
@@ -22,29 +23,41 @@ export default class FilmsListController {
       const prevFilmsCount = showingFilmsCount;
       showingFilmsCount = showingFilmsCount + SHOWING_FILMS_COUNT_BY_BUTTON;
 
-      moviesModel.slice(prevFilmsCount, showingFilmsCount).forEach((movieModel) => {
+      moviesModel.getMovies().slice(prevFilmsCount, showingFilmsCount).forEach((movieModel) => {
         new MovieController(movieModel, this._api).render(filmsListComponent);
       });
 
-      if (showingFilmsCount >= moviesModel.length) {
+      if (showingFilmsCount >= moviesModel.getMovies().length) {
         showMoreComponent.remove();
       }
     };
 
-    if (moviesModel.length) {
-      filmsListComponent.titleHide = true;
-
-      moviesModel.slice(0, showingFilmsCount).forEach((movieModel) => {
-        new MovieController(movieModel, this._api).render(filmsListComponent);
-      });
-
-      if (showingFilmsCount < moviesModel.length) {
-        showMoreComponent.setClickHandler(onClick);
-        render(filmsListComponent.getContainerElement(), showMoreComponent.getElement(), RenderPosition.AFTEREND);
-      }
-    } else {
-      filmsListComponent.titleText = `There are no movies in our database`;
+    if (!this._isModelLoaded) {
+      filmsListComponent.titleText = `Loading...`;
       filmsListComponent.titleHide = false;
+      this._api.getMovies()
+        .then((movies) => {
+          moviesModel.fillModel(movies);
+          this._isModelLoaded = true;
+          document.dispatchEvent(new Event(`modelLoaded`));
+          this.render(moviesModel);
+        });
+    } else {
+      if (moviesModel.getMovies().length) {
+        filmsListComponent.titleHide = true;
+
+        moviesModel.getMovies().slice(0, showingFilmsCount).forEach((movieModel) => {
+          new MovieController(movieModel, this._api).render(filmsListComponent);
+        });
+
+        if (showingFilmsCount < moviesModel.getMovies().length) {
+          showMoreComponent.setClickHandler(onClick);
+          render(filmsListComponent.getContainerElement(), showMoreComponent.getElement(), RenderPosition.AFTEREND);
+        }
+      } else {
+        filmsListComponent.titleText = `There are no movies in our database`;
+        filmsListComponent.titleHide = false;
+      }
     }
 
     this._renderElement(this._parentComponent.getElement(), filmsListComponent.getElement(), RenderPosition.AFTERBEGIN);

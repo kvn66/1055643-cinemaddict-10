@@ -11,9 +11,4 @@ const api = new API(END_POINT, AUTHORIZATION);
 
 const moviesModel = new MoviesModel();
 
-api.getMovies()
-  .then(MoviesModel.parseMovies)
-  .then((movies) => {
-    moviesModel.fillModel(movies);
-    new PageController(moviesModel, api).render(document);
-  });
+new PageController(moviesModel, api).render(document);

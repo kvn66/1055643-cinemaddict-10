@@ -34,7 +34,7 @@ export default class MainController {
 
     this.siteSortRender(parentElement);
 
-    this._filmsListController.render(this._moviesModel.getMovies());
+    this._filmsListController.render(this._moviesModel);
 
     if (this._moviesModel.length) {
       this._topRatesController.render(this._moviesModel);
@@ -53,7 +53,7 @@ export default class MainController {
         this._statisticController.update();
         this._statisticController.show();
       } else {
-        this._filmsListController.render(this._moviesModel.getMovies());
+        this._filmsListController.render(this._moviesModel);
         this._siteSortComponent.show();
         this._filmsComponent.show();
         this._statisticController.hide();

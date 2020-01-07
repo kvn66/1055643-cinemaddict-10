@@ -55,13 +55,8 @@ export default class MoviesModel {
   }
 
   getCheckedParametersCount(parametr) {
-    let count = 0;
-    this._movies.forEach((item) => {
-      if (item[parametr]) {
-        count++;
-      }
-    });
-    return count;
+    const movies = this._movies.filter((item) => item[parametr]);
+    return movies.length;
   }
 
   fillModel(movies) {
