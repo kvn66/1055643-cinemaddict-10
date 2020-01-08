@@ -50,5 +50,4 @@ export default class CommentModel {
     this._author = comment.author;
     this._date = new Date(comment.date);
   }
-
 }

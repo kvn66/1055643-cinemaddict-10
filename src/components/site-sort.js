@@ -7,6 +7,16 @@ export default class SiteSortComponent extends AbstractComponent {
     this._currentSortType = SortType.DEFAULT;
   }
 
+  _getTemplate() {
+    return (
+      `<ul class="sort">
+        <li><a href="#" data-sort-type="${SortType.DEFAULT}" class="sort__button sort__button--active">Sort by default</a></li>
+        <li><a href="#" data-sort-type="${SortType.DATE}" class="sort__button">Sort by date</a></li>
+        <li><a href="#" data-sort-type="${SortType.RATING}" class="sort__button">Sort by rating</a></li>
+      </ul>`
+    );
+  }
+
   setSortTypeChangeHandler(handler) {
     const listItems = this.getElement().querySelectorAll(`.sort__button`);
     listItems.forEach((item) => {
@@ -32,15 +42,5 @@ export default class SiteSortComponent extends AbstractComponent {
         handler(this._currentSortType);
       });
     });
-  }
-
-  _getTemplate() {
-    return (
-      `<ul class="sort">
-        <li><a href="#" data-sort-type="${SortType.DEFAULT}" class="sort__button sort__button--active">Sort by default</a></li>
-        <li><a href="#" data-sort-type="${SortType.DATE}" class="sort__button">Sort by date</a></li>
-        <li><a href="#" data-sort-type="${SortType.RATING}" class="sort__button">Sort by rating</a></li>
-      </ul>`
-    );
   }
 }

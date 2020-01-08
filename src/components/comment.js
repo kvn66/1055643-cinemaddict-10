@@ -8,16 +8,6 @@ export default class CommentComponent extends AbstractComponent {
     this._deleteButtonElement = this.getElement().querySelector(`.film-details__comment-delete`);
   }
 
-  setDeleteButtonClickHandler(handler) {
-    this._deleteButtonElement.addEventListener(`click`, (evt) => {
-      evt.preventDefault();
-      this._deleteButtonElement.textContent = `Deleting…`;
-      this._deleteButtonElement.disabled = true;
-      const commentId = evt.target.dataset.commentId;
-      handler(commentId);
-    });
-  }
-
   _getTemplate() {
     return (
       `<li data-comment-id="${this._commentModel.id}" class="film-details__comment">
@@ -34,5 +24,15 @@ export default class CommentComponent extends AbstractComponent {
       </div>
     </li>`
     );
+  }
+
+  setDeleteButtonClickHandler(handler) {
+    this._deleteButtonElement.addEventListener(`click`, (evt) => {
+      evt.preventDefault();
+      this._deleteButtonElement.textContent = `Deleting…`;
+      this._deleteButtonElement.disabled = true;
+      const commentId = evt.target.dataset.commentId;
+      handler(commentId);
+    });
   }
 }

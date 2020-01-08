@@ -68,28 +68,6 @@ export default class FilmCardComponent extends AbstractComponent {
     this._commentsCountElement.textContent = `${count.toString()} comments`;
   }
 
-  setOpenDetailsClickHandler(handler) {
-    this.getElement().querySelector(`.film-card__title`).addEventListener(`click`, handler);
-    this.getElement().querySelector(`.film-card__poster`).addEventListener(`click`, handler);
-    this.getElement().querySelector(`.film-card__comments`).addEventListener(`click`, handler);
-  }
-
-  setWatchlistClickHandler(handler) {
-    this.getElement().querySelector(`.film-card__controls-item--add-to-watchlist`).addEventListener(`click`, handler);
-  }
-
-  setWatchedClickHandler(handler) {
-    this.getElement().querySelector(`.film-card__controls-item--mark-as-watched`).addEventListener(`click`, handler);
-  }
-
-  setFavoriteClickHandler(handler) {
-    this.getElement().querySelector(`.film-card__controls-item--favorite`).addEventListener(`click`, handler);
-  }
-
-  updateRating() {
-    this._totalRatingElement.textContent = this._movieModel.totalRating.toString();
-  }
-
   _getTemplate() {
     return (
       `<article class="film-card">
@@ -110,5 +88,27 @@ export default class FilmCardComponent extends AbstractComponent {
       </form>
     </article>`
     );
+  }
+
+  setOpenDetailsClickHandler(handler) {
+    this.getElement().querySelector(`.film-card__title`).addEventListener(`click`, handler);
+    this.getElement().querySelector(`.film-card__poster`).addEventListener(`click`, handler);
+    this.getElement().querySelector(`.film-card__comments`).addEventListener(`click`, handler);
+  }
+
+  setWatchlistClickHandler(handler) {
+    this.getElement().querySelector(`.film-card__controls-item--add-to-watchlist`).addEventListener(`click`, handler);
+  }
+
+  setWatchedClickHandler(handler) {
+    this.getElement().querySelector(`.film-card__controls-item--mark-as-watched`).addEventListener(`click`, handler);
+  }
+
+  setFavoriteClickHandler(handler) {
+    this.getElement().querySelector(`.film-card__controls-item--favorite`).addEventListener(`click`, handler);
+  }
+
+  updateRating() {
+    this._totalRatingElement.textContent = this._movieModel.totalRating.toString();
   }
 }

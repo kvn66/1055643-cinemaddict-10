@@ -76,15 +76,14 @@ export default class MoviesModel {
   _filterMovies(movies) {
     switch (this._filterType) {
       case FilterType.WATCHLIST:
-        return movies.slice().filter((movieModel) => movieModel.isAddedToWatchlist);
+        return movies.filter((movieModel) => movieModel.isAddedToWatchlist);
       case FilterType.HISTORY:
-        return movies.slice().filter((movieModel) => movieModel.isAlreadyWatched);
+        return movies.filter((movieModel) => movieModel.isAlreadyWatched);
       case FilterType.FAVORITES:
-        return movies.slice().filter((movieModel) => movieModel.isAddedToFavorites);
-      case FilterType.ALL:
+        return movies.filter((movieModel) => movieModel.isAddedToFavorites);
+      default:
         return movies;
     }
-    return movies;
   }
 
   _sortMovies(movies) {
@@ -93,10 +92,9 @@ export default class MoviesModel {
         return movies.slice().sort((a, b) => b.totalRating - a.totalRating);
       case SortType.DATE:
         return movies.slice().sort((a, b) => b.releaseDate - a.releaseDate);
-      case SortType.DEFAULT:
+      default:
         return movies;
     }
-    return movies;
   }
 
   static parseMovie(movie) {

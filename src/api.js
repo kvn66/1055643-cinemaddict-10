@@ -7,7 +7,7 @@ const Method = {
   DELETE: `DELETE`
 };
 
-const SuccessfulResponses = {
+const SuccessfulResponse = {
   OK: 200,
   CREATED: 201,
   ACCEPTED: 202,
@@ -18,7 +18,7 @@ const SuccessfulResponses = {
 };
 
 const checkStatus = (response) => {
-  if (response.status >= SuccessfulResponses.OK && response.status <= SuccessfulResponses.PARTIAL_CONTENT && response.ok) {
+  if (response.status >= SuccessfulResponse.OK && response.status <= SuccessfulResponse.PARTIAL_CONTENT && response.ok) {
     return response;
   }
   throw new Error(`${response.status}: ${response.statusText}`);

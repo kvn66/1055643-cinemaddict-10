@@ -19,6 +19,18 @@ export default class SiteMenuComponent extends AbstractComponent {
     this.getElement().querySelector(`.favorites-count`).textContent = count.toString();
   }
 
+  _getTemplate() {
+    return (
+      `<nav class="main-navigation">
+      <a href="#all" data-filter-type="${FilterType.ALL}" class="main-navigation__item main-navigation__item--active">All movies</a>
+      <a href="#watchlist" data-filter-type="${FilterType.WATCHLIST}" class="main-navigation__item">Watchlist <span class="main-navigation__item-count watchlist-count"></span></a>
+      <a href="#history" data-filter-type="${FilterType.HISTORY}" class="main-navigation__item">History <span class="main-navigation__item-count history-count"></span></a>
+      <a href="#favorites" data-filter-type="${FilterType.FAVORITES}" class="main-navigation__item">Favorites <span class="main-navigation__item-count favorites-count"></span></a>
+      <a href="#stats" data-filter-type="${FilterType.STATISTIC}" class="main-navigation__item main-navigation__item--additional">Stats</a>
+    </nav>`
+    );
+  }
+
   setFilterTypeChangeHandler(handler) {
     const listItems = this.getElement().querySelectorAll(`.main-navigation__item`);
     listItems.forEach((item) => {
@@ -44,17 +56,5 @@ export default class SiteMenuComponent extends AbstractComponent {
         handler(this._currentFilterType);
       });
     });
-  }
-
-  _getTemplate() {
-    return (
-      `<nav class="main-navigation">
-      <a href="#all" data-filter-type="${FilterType.ALL}" class="main-navigation__item main-navigation__item--active">All movies</a>
-      <a href="#watchlist" data-filter-type="${FilterType.WATCHLIST}" class="main-navigation__item">Watchlist <span class="main-navigation__item-count watchlist-count"></span></a>
-      <a href="#history" data-filter-type="${FilterType.HISTORY}" class="main-navigation__item">History <span class="main-navigation__item-count history-count"></span></a>
-      <a href="#favorites" data-filter-type="${FilterType.FAVORITES}" class="main-navigation__item">Favorites <span class="main-navigation__item-count favorites-count"></span></a>
-      <a href="#stats" data-filter-type="${FilterType.STATISTIC}" class="main-navigation__item main-navigation__item--additional">Stats</a>
-    </nav>`
-    );
   }
 }
