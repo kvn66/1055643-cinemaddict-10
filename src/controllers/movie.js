@@ -10,6 +10,7 @@ import MovieModel from "../models/movie";
 const RADIX = 10;
 const SHAKE_ANIMATION_TIMEOUT = 600;
 const SHADOW_STYLE = `inset 0 0 5px 2px red`;
+const DEBOUNCE_TIMEOUT = 500;
 
 const localComment = {
   'comment': ``,
@@ -36,6 +37,7 @@ export default class MovieController {
     this._onWatchedClick = this._onWatchedClick.bind(this);
     this._onFavoriteClick = this._onFavoriteClick.bind(this);
     this._onOpenDetailsClick = this._onOpenDetailsClick.bind(this);
+    this._debounce = this._debounce.bind(this);
   }
 
   render(parentComponent) {
@@ -195,6 +197,16 @@ export default class MovieController {
     this._filmCard.setFavoriteClickHandler(this._onFavoriteClick);
   }
 
+  _debounce(callback, wait) {
+    let timerId;
+    const timefn = (...args) => {
+      const context = this;
+      clearTimeout(timerId);
+      timerId = setTimeout(() => callback.apply(context, args), wait);
+    };
+    return timefn();
+  }
+
   _onCtrlEnterKeyDown(evt) {
     this._pressedKey.add(evt.key);
     if (!((this._pressedKey.has(`Control`) || this._pressedKey.has(`Meta`)) && this._pressedKey.has(`Enter`))) {
@@ -218,32 +230,47 @@ export default class MovieController {
 
   _onWatchlistClick(evt) {
     evt.preventDefault();
-    this._movieModel.isAddedToWatchlist = !this._movieModel.isAddedToWatchlist;
-    this._api.updateMovie(this._movieModel.id, this._movieModel.toRAW()).then((movieJson) => {
-      this._movieModel.update(movieJson);
-      document.dispatchEvent(new Event(`watchlistChange`));
-    });
+
+    const _watchlistClick = () => {
+      this._movieModel.isAddedToWatchlist = !this._movieModel.isAddedToWatchlist;
+      this._api.updateMovie(this._movieModel.id, this._movieModel.toRAW()).then((movieJson) => {
+        this._movieModel.update(movieJson);
+        document.dispatchEvent(new Event(`watchlistChange`));
+      });
+    };
+
+    this._debounce(_watchlistClick, DEBOUNCE_TIMEOUT);
   }
 
   _onWatchedClick(evt) {
     evt.preventDefault();
-    this._movieModel.isAlreadyWatched = !this._movieModel.isAlreadyWatched;
-    if (this._movieModel.isAlreadyWatched) {
-      this._movieModel.watchingDate = new Date();
-    }
-    this._api.updateMovie(this._movieModel.id, this._movieModel.toRAW()).then((movieJson) => {
-      this._movieModel.update(movieJson);
-      document.dispatchEvent(new Event(`watchedChange`));
-    });
+
+    const _watchedClick = () => {
+      this._movieModel.isAlreadyWatched = !this._movieModel.isAlreadyWatched;
+      if (this._movieModel.isAlreadyWatched) {
+        this._movieModel.watchingDate = new Date();
+      }
+      this._api.updateMovie(this._movieModel.id, this._movieModel.toRAW()).then((movieJson) => {
+        this._movieModel.update(movieJson);
+        document.dispatchEvent(new Event(`watchedChange`));
+      });
+    };
+
+    this._debounce(_watchedClick, DEBOUNCE_TIMEOUT);
   }
 
   _onFavoriteClick(evt) {
     evt.preventDefault();
-    this._movieModel.isAddedToFavorites = !this._movieModel.isAddedToFavorites;
-    this._api.updateMovie(this._movieModel.id, this._movieModel.toRAW()).then((movieJson) => {
-      this._movieModel.update(movieJson);
-      document.dispatchEvent(new Event(`favoriteChange`));
-    });
+
+    const _favoriteClick = () => {
+      this._movieModel.isAddedToFavorites = !this._movieModel.isAddedToFavorites;
+      this._api.updateMovie(this._movieModel.id, this._movieModel.toRAW()).then((movieJson) => {
+        this._movieModel.update(movieJson);
+        document.dispatchEvent(new Event(`favoriteChange`));
+      });
+    };
+
+    this._debounce(_favoriteClick, DEBOUNCE_TIMEOUT);
   }
 
   _onOpenDetailsClick() {
