@@ -60,5 +60,24 @@ export default class MainController {
         this._statisticController.hide();
       }
     });
+
+    document.addEventListener(`userRatingChanged`, () => {
+      if (this._moviesModel.length) {
+        this._topRatesController.render(this._moviesModel);
+      }
+    });
+
+    document.addEventListener(`commentsChanged`, () => {
+      if (this._moviesModel.length) {
+        this._mostCommentedController.render(this._moviesModel);
+      }
+    });
+
+    document.addEventListener(`modelLoaded`, () => {
+      if (this._moviesModel.length) {
+        this._topRatesController.render(this._moviesModel);
+        this._mostCommentedController.render(this._moviesModel);
+      }
+    });
   }
 }

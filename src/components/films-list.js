@@ -19,10 +19,6 @@ export default class FilmsListComponent extends AbstractComponent {
     this.title.textContent = text;
   }
 
-  getContainerElement() {
-    return this.containerElement;
-  }
-
   _getTemplate() {
     return (
       `<section class="films-list">
@@ -31,5 +27,9 @@ export default class FilmsListComponent extends AbstractComponent {
       <div class="films-list__container"></div>
       </section>`
     );
+  }
+
+  getContainerElement() {
+    return this.containerElement;
   }
 }

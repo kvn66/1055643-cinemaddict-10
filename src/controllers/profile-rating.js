@@ -10,20 +10,16 @@ export default class ProfileRatingController {
     this._moviesModel = moviesModel;
     this._profileRating = this._moviesModel.getCheckedParametersCount(`isAlreadyWatched`);
     this._profileRatingComponent = new ProfileRatingComponent();
-    this._profileRatingComponent.profileRating = this._createRatingStr(this._profileRating);
+    this._profileRatingComponent.profileRating = ProfileRatingController.createRatingStr(this._profileRating);
 
     document.addEventListener(`modelLoaded`, () => {
       this._profileRating = this._moviesModel.getCheckedParametersCount(`isAlreadyWatched`);
-      this._profileRatingComponent.profileRating = this._createRatingStr();
+      this._profileRatingComponent.profileRating = ProfileRatingController.createRatingStr(this._profileRating);
     });
 
-    document.addEventListener(`watchedChange`, (evt) => {
-      if (evt.detail) {
-        this._profileRating++;
-      } else {
-        this._profileRating--;
-      }
-      this._profileRatingComponent.profileRating = this._createRatingStr();
+    document.addEventListener(`watchedChange`, () => {
+      this._profileRating = this._moviesModel.getCheckedParametersCount(`isAlreadyWatched`);
+      this._profileRatingComponent.profileRating = ProfileRatingController.createRatingStr(this._profileRating);
     });
   }
 
@@ -31,13 +27,13 @@ export default class ProfileRatingController {
     render(parentElement, this._profileRatingComponent.getElement());
   }
 
-  _createRatingStr() {
+  static createRatingStr(profileRating) {
     switch (true) {
-      case this._profileRating > MOVIE_BUFF_RATING_LIMIT:
+      case profileRating > MOVIE_BUFF_RATING_LIMIT:
         return `Movie Buff`;
-      case this._profileRating > FAN_RATING_LIMIT:
+      case profileRating > FAN_RATING_LIMIT:
         return `Fan`;
-      case this._profileRating > NOVICE_RATING_LIMIT:
+      case profileRating > NOVICE_RATING_LIMIT:
         return `Novice`;
       default:
         return ``;

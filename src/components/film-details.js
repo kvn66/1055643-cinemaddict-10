@@ -26,6 +26,7 @@ export default class FilmDetailsComponent extends AbstractComponent {
     this._commentEmojiListElement = this.getElement().querySelector(`.film-details__emoji-list`);
     this._emojiInputElements = this._commentEmojiListElement.querySelectorAll(`.film-details__emoji-item`);
     this._commentEmojiElement = this.getElement().querySelector(`.film-details__add-emoji-label`);
+    this._totalRatingElement = this.getElement().querySelector(`.film-details__total-rating`);
 
     this._onCommentEmojiClick = this._onCommentEmojiClick.bind(this);
 
@@ -56,113 +57,8 @@ export default class FilmDetailsComponent extends AbstractComponent {
     this._favoriteElement.checked = checked;
   }
 
-  updateCommentsCount() {
-    this._commentsCountElement.textContent = this._movieModel.comments.length.toString();
-  }
-
-  getFormElement() {
-    return this._formElement;
-  }
-
-  getControlsElement() {
-    return this._controlsElement;
-  }
-
-  getCommentInputElement() {
-    return this._commentInputElement;
-  }
-
-  getCommentsListElement() {
-    return this.getElement().querySelector(`.film-details__comments-list`);
-  }
-
-  getUserRatingElement() {
-    return this.getElement().querySelector(`.form-details__middle-container`);
-  }
-
-  setChecked(isChecked) {
-    return isChecked ? `checked` : ``;
-  }
-
-  setCloseClickHandler(handler) {
-    this._closeButtonElement.addEventListener(`click`, handler);
-  }
-
-  setWatchlistClickHandler(handler) {
-    this._watchlistLabelElement.addEventListener(`click`, handler);
-  }
-
-  setWatchedClickHandler(handler) {
-    this._watchedLabelElement.addEventListener(`click`, handler);
-  }
-
-  setFavoriteClickHandler(handler) {
-    this._favoriteLabelElement.addEventListener(`click`, handler);
-  }
-
-  enableCommentInputs() {
-    this._commentInputElement.disabled = false;
-    this._emojiInputElements.forEach((item) => {
-      item.disabled = false;
-    });
-    this._commentEmojiElement.addEventListener(`click`, this._onCommentEmojiClick);
-  }
-
-  disableCommentInputs() {
-    this._commentInputElement.disabled = true;
-    this._emojiInputElements.forEach((item) => {
-      item.disabled = true;
-    });
-    this._commentEmojiElement.removeEventListener(`click`, this._onCommentEmojiClick);
-  }
-
   remove() {
     this.getElement().remove();
-  }
-
-  resetComment() {
-    this._commentInputElement.value = ``;
-    this._removeEmojiImageElement();
-    this._resetEmojiInputElements();
-  }
-
-  _setEmojiClickHandlers() {
-    this._emojiInputElements.forEach((item) => {
-      item.addEventListener(`click`, (evt) => {
-        this._removeEmojiImageElement();
-        switch (evt.target.id) {
-          case `emoji-smile`:
-            this._commentEmojiElement.insertAdjacentHTML(`beforeend`, `<img src="./images/emoji/smile.png" width="55" height="55" alt="emoji">`);
-            break;
-          case `emoji-sleeping`:
-            this._commentEmojiElement.insertAdjacentHTML(`beforeend`, `<img src="./images/emoji/sleeping.png" width="55" height="55" alt="emoji">`);
-            break;
-          case `emoji-gpuke`:
-            this._commentEmojiElement.insertAdjacentHTML(`beforeend`, `<img src="./images/emoji/puke.png" width="55" height="55" alt="emoji">`);
-            break;
-          case `emoji-angry`:
-            this._commentEmojiElement.insertAdjacentHTML(`beforeend`, `<img src="./images/emoji/angry.png" width="55" height="55" alt="emoji">`);
-            break;
-          default:
-            break;
-        }
-      });
-    });
-
-    this._commentEmojiElement.addEventListener(`click`, this._onCommentEmojiClick);
-  }
-
-  _removeEmojiImageElement() {
-    const emojiImageElement = this._commentEmojiElement.querySelector(`img`);
-    if (emojiImageElement) {
-      emojiImageElement.remove();
-    }
-  }
-
-  _resetEmojiInputElements() {
-    this._emojiInputElements.forEach((item) => {
-      item.checked = false;
-    });
   }
 
   _getTemplate() {
@@ -281,6 +177,115 @@ export default class FilmDetailsComponent extends AbstractComponent {
       </form>
     </section>`
     );
+  }
+
+  updateCommentsCount() {
+    this._commentsCountElement.textContent = this._movieModel.comments.length.toString();
+  }
+
+  getFormElement() {
+    return this._formElement;
+  }
+
+  getControlsElement() {
+    return this._controlsElement;
+  }
+
+  getCommentInputElement() {
+    return this._commentInputElement;
+  }
+
+  getCommentsListElement() {
+    return this.getElement().querySelector(`.film-details__comments-list`);
+  }
+
+  getUserRatingElement() {
+    return this.getElement().querySelector(`.form-details__middle-container`);
+  }
+
+  setChecked(isChecked) {
+    return isChecked ? `checked` : ``;
+  }
+
+  setCloseClickHandler(handler) {
+    this._closeButtonElement.addEventListener(`click`, handler);
+  }
+
+  setWatchlistClickHandler(handler) {
+    this._watchlistLabelElement.addEventListener(`click`, handler);
+  }
+
+  setWatchedClickHandler(handler) {
+    this._watchedLabelElement.addEventListener(`click`, handler);
+  }
+
+  setFavoriteClickHandler(handler) {
+    this._favoriteLabelElement.addEventListener(`click`, handler);
+  }
+
+  enableCommentInputs() {
+    this._commentInputElement.disabled = false;
+    this._emojiInputElements.forEach((item) => {
+      item.disabled = false;
+    });
+    this._commentEmojiElement.addEventListener(`click`, this._onCommentEmojiClick);
+  }
+
+  disableCommentInputs() {
+    this._commentInputElement.disabled = true;
+    this._emojiInputElements.forEach((item) => {
+      item.disabled = true;
+    });
+    this._commentEmojiElement.removeEventListener(`click`, this._onCommentEmojiClick);
+  }
+
+  resetComment() {
+    this._commentInputElement.value = ``;
+    this._removeEmojiImageElement();
+    this._resetEmojiInputElements();
+  }
+
+  updateRating() {
+    this._totalRatingElement.textContent = this._movieModel.totalRating.toString();
+  }
+
+  _setEmojiClickHandlers() {
+    this._emojiInputElements.forEach((item) => {
+      item.addEventListener(`click`, (evt) => {
+        this._removeEmojiImageElement();
+        switch (evt.target.id) {
+          case `emoji-smile`:
+            this._commentEmojiElement.insertAdjacentHTML(`beforeend`, `<img src="./images/emoji/smile.png" width="55" height="55" alt="emoji">`);
+            break;
+          case `emoji-sleeping`:
+            this._commentEmojiElement.insertAdjacentHTML(`beforeend`, `<img src="./images/emoji/sleeping.png" width="55" height="55" alt="emoji">`);
+            break;
+          case `emoji-gpuke`:
+            this._commentEmojiElement.insertAdjacentHTML(`beforeend`, `<img src="./images/emoji/puke.png" width="55" height="55" alt="emoji">`);
+            break;
+          case `emoji-angry`:
+            this._commentEmojiElement.insertAdjacentHTML(`beforeend`, `<img src="./images/emoji/angry.png" width="55" height="55" alt="emoji">`);
+            break;
+          default:
+            break;
+        }
+      });
+    });
+
+    this._commentEmojiElement.addEventListener(`click`, this._onCommentEmojiClick);
+  }
+
+  _removeEmojiImageElement() {
+    const emojiImageElement = this._commentEmojiElement.querySelector(`img`);
+    if (emojiImageElement) {
+      emojiImageElement.remove();
+    }
+  }
+
+  _resetEmojiInputElements() {
+    this._emojiInputElements.forEach((item) => {
+      item.checked = false;
+    });
   }
 
   _onCommentEmojiClick() {

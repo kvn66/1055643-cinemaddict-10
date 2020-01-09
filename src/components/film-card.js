@@ -13,6 +13,7 @@ export default class FilmCardComponent extends AbstractComponent {
     this._watchedElement = this.getElement().querySelector(`.film-card__controls-item--mark-as-watched`);
     this._favoriteElement = this.getElement().querySelector(`.film-card__controls-item--favorite`);
     this._commentsCountElement = this.getElement().querySelector(`.film-card__comments`);
+    this._totalRatingElement = this.getElement().querySelector(`.film-card__rating`);
   }
 
   get watchlistChecked() {
@@ -67,6 +68,28 @@ export default class FilmCardComponent extends AbstractComponent {
     this._commentsCountElement.textContent = `${count.toString()} comments`;
   }
 
+  _getTemplate() {
+    return (
+      `<article class="film-card">
+      <h3 class="film-card__title">${this._movieModel.title}</h3>
+      <p class="film-card__rating">${this._movieModel.totalRating.toString()}</p>
+      <p class="film-card__info">
+        <span class="film-card__year">${this._movieModel.releaseDate.getFullYear().toString()}</span>
+        <span class="film-card__duration">${formatDuration(this._movieModel.duration)}</span>
+        <span class="film-card__genre">${this._movieModel.genres[0]}</span>
+      </p>
+      <img src="${this._movieModel.poster}" alt="" class="film-card__poster">
+      <p class="film-card__description">${this._description}</p>
+      <a class="film-card__comments">${this._movieModel.comments.length.toString()} comments</a>
+      <form class="film-card__controls">
+        <button class="film-card__controls-item button film-card__controls-item--add-to-watchlist${this._movieModel.isAddedToWatchlist ? ` film-card__controls-item--active` : ``}">Add to watchlist</button>
+        <button class="film-card__controls-item button film-card__controls-item--mark-as-watched${this._movieModel.isAlreadyWatched ? ` film-card__controls-item--active` : ``}">Mark as watched</button>
+        <button class="film-card__controls-item button film-card__controls-item--favorite${this._movieModel.isAddedToFavorites ? ` film-card__controls-item--active` : ``}">Mark as favorite</button>
+      </form>
+    </article>`
+    );
+  }
+
   setOpenDetailsClickHandler(handler) {
     this.getElement().querySelector(`.film-card__title`).addEventListener(`click`, handler);
     this.getElement().querySelector(`.film-card__poster`).addEventListener(`click`, handler);
@@ -85,25 +108,7 @@ export default class FilmCardComponent extends AbstractComponent {
     this.getElement().querySelector(`.film-card__controls-item--favorite`).addEventListener(`click`, handler);
   }
 
-  _getTemplate() {
-    return (
-      `<article class="film-card">
-      <h3 class="film-card__title">${this._movieModel.title}</h3>
-      <p class="film-card__rating">${this._movieModel.totalRating}</p>
-      <p class="film-card__info">
-        <span class="film-card__year">${this._movieModel.releaseDate.getFullYear().toString()}</span>
-        <span class="film-card__duration">${formatDuration(this._movieModel.duration)}</span>
-        <span class="film-card__genre">${this._movieModel.genres[0]}</span>
-      </p>
-      <img src="${this._movieModel.poster}" alt="" class="film-card__poster">
-      <p class="film-card__description">${this._description}</p>
-      <a class="film-card__comments">${this._movieModel.comments.length.toString()} comments</a>
-      <form class="film-card__controls">
-        <button class="film-card__controls-item button film-card__controls-item--add-to-watchlist${this._movieModel.isAddedToWatchlist ? ` film-card__controls-item--active` : ``}">Add to watchlist</button>
-        <button class="film-card__controls-item button film-card__controls-item--mark-as-watched${this._movieModel.isAlreadyWatched ? ` film-card__controls-item--active` : ``}">Mark as watched</button>
-        <button class="film-card__controls-item button film-card__controls-item--favorite${this._movieModel.isAddedToFavorites ? ` film-card__controls-item--active` : ``}">Mark as favorite</button>
-      </form>
-    </article>`
-    );
+  updateRating() {
+    this._totalRatingElement.textContent = this._movieModel.totalRating.toString();
   }
 }

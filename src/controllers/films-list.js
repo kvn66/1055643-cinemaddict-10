@@ -2,7 +2,6 @@ import {render, RenderPosition} from "../utils";
 import MovieController from "./movie";
 import ShowMoreComponent from "../components/show-more";
 import FilmsListComponent from "../components/films-list";
-import PageController from "./page";
 
 const SHOWING_FILMS_COUNT_ON_START = 5;
 const SHOWING_FILMS_COUNT_BY_BUTTON = 5;
@@ -74,7 +73,7 @@ export default class FilmsListController {
 
   _renderElement(containerElement, element, place = RenderPosition.BEFOREEND) {
     if (!this._filmsListComponent) {
-      render(this._parentComponent.getElement(), element, place);
+      render(containerElement, element, place);
     } else {
       const filmsListElement = this._filmsListComponent.getElement();
       if (containerElement.contains(filmsListElement)) {

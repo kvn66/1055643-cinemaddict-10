@@ -9,52 +9,6 @@ export default class UserRatingComponent extends AbstractComponent {
     this._undoButton = this.getElement().querySelector(`.film-details__watched-reset`);
   }
 
-  enableInputs() {
-    this._inputs.forEach((item) => {
-      item.disabled = false;
-    });
-  }
-
-  disableInputs() {
-    this._inputs.forEach((item) => {
-      item.disabled = true;
-    });
-  }
-
-  getUserRatingWrapElement() {
-    return this._userRatingWrap;
-  }
-
-  setChecked(index) {
-    this._inputs.forEach((input, inputIndex) => {
-      input.checked = !index ? false : index === inputIndex + 1;
-    });
-  }
-
-  setErrorStyle() {
-    this.removeErrorStyle();
-    const checkedLabel = this.getElement().querySelector(`.film-details__user-rating-input:checked + .film-details__user-rating-label`);
-    checkedLabel.classList.add(`film-details__user-rating-label--error`);
-  }
-
-  removeErrorStyle() {
-    this._labels.forEach((label) => {
-      if (label.classList.contains(`film-details__user-rating-label--error`)) {
-        label.classList.remove(`film-details__user-rating-label--error`);
-      }
-    });
-  }
-
-  setUserRatingClickHandler(handler) {
-    this._inputs.forEach((input) => {
-      input.addEventListener(`click`, handler);
-    });
-  }
-
-  setUndoUserRatingClickHandler(handler) {
-    this._undoButton.addEventListener(`click`, handler);
-  }
-
   _getTemplate() {
     return (
       `<div class="form-details__middle-container">
@@ -107,5 +61,51 @@ export default class UserRatingComponent extends AbstractComponent {
         </section>
       </div>`
     );
+  }
+
+  enableInputs() {
+    this._inputs.forEach((item) => {
+      item.disabled = false;
+    });
+  }
+
+  disableInputs() {
+    this._inputs.forEach((item) => {
+      item.disabled = true;
+    });
+  }
+
+  getUserRatingWrapElement() {
+    return this._userRatingWrap;
+  }
+
+  setChecked(index) {
+    this._inputs.forEach((input, inputIndex) => {
+      input.checked = !index ? false : index === inputIndex + 1;
+    });
+  }
+
+  setErrorStyle() {
+    this.removeErrorStyle();
+    const checkedLabel = this.getElement().querySelector(`.film-details__user-rating-input:checked + .film-details__user-rating-label`);
+    checkedLabel.classList.add(`film-details__user-rating-label--error`);
+  }
+
+  removeErrorStyle() {
+    this._labels.forEach((label) => {
+      if (label.classList.contains(`film-details__user-rating-label--error`)) {
+        label.classList.remove(`film-details__user-rating-label--error`);
+      }
+    });
+  }
+
+  setUserRatingClickHandler(handler) {
+    this._inputs.forEach((input) => {
+      input.addEventListener(`click`, handler);
+    });
+  }
+
+  setUndoUserRatingClickHandler(handler) {
+    this._undoButton.addEventListener(`click`, handler);
   }
 }
