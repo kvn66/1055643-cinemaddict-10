@@ -13,10 +13,8 @@ export default class CommentsController {
 
   render() {
     const commentsComponent = new CommentsComponent();
-    console.log(this._movieModel.comments);
-    console.log(this._commentsModel);
     this._movieModel.comments.forEach((commentId) => {
-      const  comment = this._commentsModel.getComment(commentId);
+      const comment = this._commentsModel.getComment(commentId);
       if (comment !== undefined) {
         this._renderComment(comment, commentsComponent);
       }
@@ -37,7 +35,7 @@ export default class CommentsController {
         this._commentsModel.deleteComment(commentId);
         this._movieModel.comments.splice(this._movieModel.comments.indexOf(commentId), 1);
         this.render();
-        document.dispatchEvent(new CustomEvent(`commentRemoved`, {'detail': this._movieModel.id}));
+        document.dispatchEvent(new CustomEvent(`commentsChanged`, {'detail': this._movieModel.id}));
       });
   }
 }

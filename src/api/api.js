@@ -60,7 +60,7 @@ export default class API {
       body: JSON.stringify(movie),
       headers: new Headers({'Content-Type': `application/json`})
     })
-      .then((response) => response.json());
+      .then((response) => response.json())
   }
 
   deleteComment(commentId) {

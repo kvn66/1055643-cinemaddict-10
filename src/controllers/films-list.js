@@ -41,7 +41,6 @@ export default class FilmsListController {
           document.dispatchEvent(new Event(`modelLoaded`));
           this._apiWithProvider.getComments(movies)
             .then((comments) => {
-              console.log(comments);
               commentsModel.addComments(comments);
               this._isModelLoaded = true;
               this.render(moviesModel, commentsModel);

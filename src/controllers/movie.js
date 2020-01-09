@@ -45,7 +45,7 @@ export default class MovieController {
     document.addEventListener(`commentsChanged`, (evt) => {
       if (evt.detail === this._movieModel.id) {
         this._filmDetails.updateCommentsCount();
-        this._filmCard.commentsCount = this._movieModel.comments.length;
+        this._filmCard.updateCommentsCount();
       }
     });
 
@@ -234,7 +234,7 @@ export default class MovieController {
 
     const _watchlistClick = () => {
       this._movieModel.isAddedToWatchlist = !this._movieModel.isAddedToWatchlist;
-      this._api.updateMovie(this._movieModel.id, this._movieModel.toRAW()).then((movieJson) => {
+      this._apiWithProvider.updateMovie(this._movieModel.id, this._movieModel.toRAW()).then((movieJson) => {
         this._movieModel.update(movieJson);
         document.dispatchEvent(new Event(`watchlistChange`));
       });
@@ -251,7 +251,7 @@ export default class MovieController {
       if (this._movieModel.isAlreadyWatched) {
         this._movieModel.watchingDate = new Date();
       }
-      this._api.updateMovie(this._movieModel.id, this._movieModel.toRAW()).then((movieJson) => {
+      this._apiWithProvider.updateMovie(this._movieModel.id, this._movieModel.toRAW()).then((movieJson) => {
         this._movieModel.update(movieJson);
         document.dispatchEvent(new Event(`watchedChange`));
       });
@@ -265,7 +265,7 @@ export default class MovieController {
 
     const _favoriteClick = () => {
       this._movieModel.isAddedToFavorites = !this._movieModel.isAddedToFavorites;
-      this._api.updateMovie(this._movieModel.id, this._movieModel.toRAW()).then((movieJson) => {
+      this._apiWithProvider.updateMovie(this._movieModel.id, this._movieModel.toRAW()).then((movieJson) => {
         this._movieModel.update(movieJson);
         document.dispatchEvent(new Event(`favoriteChange`));
       });

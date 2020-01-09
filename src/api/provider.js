@@ -3,7 +3,7 @@ import MoviesModel from "../models/movies";
 import CommentsModel from "../models/comments";
 
 const getSyncedMovies =
-  (items) => items.filter(({success}) => success).map(({payload}) => payload.task);
+  (items) => items.filter(({success}) => success).map(({payload}) => payload.movie);
 
 export default class Provider {
   constructor(api, moviesStore, commentsStore) {
@@ -11,33 +11,21 @@ export default class Provider {
     this._moviesStore = moviesStore;
     this._commentsStore = commentsStore;
     this._isSynchronized = true;
-    this.movieIndex = 0;
-    this.movieMaxIndex = 0;
-  }
-
-  loadComments(movies) {
-    if (this.movieIndex < this.movieMaxIndex && this._isOnLine()) {
-      return this._api.getComments(movies[this.movieIndex].id)
-        .then((comments) => {
-          const commentsModel = new CommentsModel();
-          commentsModel.addComments(comments);
-          comments.forEach((comment) => this._commentsStore.setItem(comment.id, comment.toRAW()));
-          this.movieIndex++;
-          return this.loadComments(movies)
-            .then((comments2) => {
-              comments2.forEach((comment) => this._commentsStore.setItem(comment.id, comment.toRAW()));
-              commentsModel.addComments(comments2);
-              return commentsModel.getComments();
-            });
-        });
-    }
-    return Promise.resolve(CommentsModel.parseComments(new CommentsModel().getComments()));
   }
 
   getComments(movies) {
     if (this._isOnLine()) {
-      this.movieMaxIndex = movies.length;
-      return this.loadComments(movies);
+      const commentsModel = new CommentsModel();
+      let promises = [];
+      promises = movies.map((item) => this._api.getComments(item.id));
+      return Promise.all(promises).then((results) => {
+        this._commentsStore.clear();
+        results.forEach((result) => {
+          commentsModel.addComments(result);
+          result.forEach((comment) => this._commentsStore.setItem(comment.id, comment.toRAW()));
+        });
+        return commentsModel.getComments();
+      });
     }
     const storeComments = Object.values(this._commentsStore.getAll());
     return Promise.resolve(CommentsModel.parseComments(storeComments));
@@ -61,6 +49,7 @@ export default class Provider {
     if (this._isOnLine()) {
       return this._api.getMovies()
         .then((movies) => {
+          this._moviesStore.clear();
           movies.forEach((movie) => this._moviesStore.setItem(movie.id, movie.toRAW()));
           return movies;
         });
@@ -74,14 +63,12 @@ export default class Provider {
   }
 
   createComment(movieId, comment) {
-    if (this._isOnLine()) {
+    if (false) {
       return this._api.createComment(movieId, comment).then(
           (movieAndComments) => {
             console.log(movieAndComments);
-            const movieModel = MoviesModel.parseMovie(movieAndComments.movie);
-            const comments = CommentsModel.parseComments(movieAndComments.comments);
-            this._moviesStore.setItem(movieModel.id, movieModel.toRAW());
-            comments.forEach((item) => this._commentsStore.setItem(item.id, item.toRAW()));
+            this._moviesStore.setItem(movieAndComments.movie.id, movieAndComments.movie);
+            movieAndComments.comments.forEach((item) => this._commentsStore.setItem(item.id, item));
             return movieAndComments;
           }
       );
@@ -89,31 +76,35 @@ export default class Provider {
 
     // Нюанс в том, что при создании мы не указываем id задачи, нам его в ответе присылает сервер.
     // Но на случай временного хранения мы должны позаботиться и о временном id
-    const fakeNewMovieId = nanoid();
-    const fakeNewMovie = MoviesModel.parseMovies(Object.assign({}, movieModel.toRAW(), {id: fakeNewMovieId}));
+    const fakeNewCommentId = nanoid();
+    const fakeNewComment = CommentsModel.parseComment(Object.assign({}, comment, {id: fakeNewCommentId}));
+    console.log(fakeNewComment);
 
     this._isSynchronized = false;
-    this._moviesStore.setItem(fakeNewMovie.id, Object.assign({}, fakeNewMovie.toRAW(), {offline: true}));
+    this._commentsStore.setItem(fakeNewComment.id, Object.assign({}, fakeNewComment.toRAW(), {offline: true}));
 
-    return Promise.resolve(fakeNewMovie);
+    console.log(this._moviesStore.getAll());
+    const fakeMovie = this._moviesStore.getItem(movieId);
+    console.log(fakeMovie);
+
+
+    return Promise.resolve(fakeNewComment);
   }
 
-  updateMovie(id, task) {
+  updateMovie(id, movie) {
     if (this._isOnLine()) {
-      return this._api.updateMovie(id, task).then(
-          (newMovie) => {
-            this._moviesStore.setItem(newMovie.id, newMovie.toRAW());
-            return newMovie;
+      return this._api.updateMovie(id, movie).then(
+          (updatedMovie) => {
+            this._moviesStore.setItem(updatedMovie.id, updatedMovie);
+            return updatedMovie;
           }
       );
     }
 
-    const fakeUpdatedMovie = MoviesModel.parseMovie(Object.assign({}, task.toRAW(), {id}));
-
     this._isSynchronized = false;
-    this._moviesStore.setItem(id, Object.assign({}, fakeUpdatedMovie.toRAW(), {offline: true}));
+    this._moviesStore.setItem(id, Object.assign({}, movie, {offline: true}));
 
-    return Promise.resolve(fakeUpdatedMovie);
+    return Promise.resolve(movie);
   }
 
   deleteComment(id) {

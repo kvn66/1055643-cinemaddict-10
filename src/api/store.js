@@ -4,6 +4,13 @@ export default class Store {
     this._storeName = storeName;
   }
 
+  clear() {
+    this._storage.setItem(
+        this._storeName,
+        JSON.stringify({})
+    );
+  }
+
   getAll() {
     try {
       return JSON.parse(this._storage.getItem(this._storeName));
