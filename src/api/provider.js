@@ -16,8 +16,7 @@ export default class Provider {
   getComments(movies) {
     if (this._isOnLine()) {
       const commentsModel = new CommentsModel();
-      let promises = [];
-      promises = movies.map((item) => this._api.getComments(item.id));
+      const promises = movies.map((item) => this._api.getComments(item.id));
       return Promise.all(promises).then((results) => {
         this._commentsStore.clear();
         results.forEach((result) => {
@@ -81,8 +80,13 @@ export default class Provider {
 
     this._isSynchronized = false;
 
-    const comment = Object.assign({}, this._commentsStore.getItem(id), {delited: true});
-    this._commentsStore.setItem(id, comment);
+    const storeComment = this._commentsStore.getItem(id);
+    if (storeComment.offline) {
+      this._commentsStore.removeItem(id);
+    } else {
+      const comment = Object.assign({}, storeComment, {delited: true});
+      this._commentsStore.setItem(id, comment);
+    }
 
     this._deleteCommentFromMovie(id);
 
@@ -123,37 +127,56 @@ export default class Provider {
     return Promise.resolve(movie);
   }
 
+  _syncDelitedComments() {
+    const storeComments = Object.values(this._commentsStore.getAll());
+    const delitedComments = storeComments.filter((item) => item.delited);
+    const delitedCommentsModel = CommentsModel.parseComments(delitedComments);
+    const promises = delitedCommentsModel.map((item) => this.deleteComment(item.id));
+    return Promise.all(promises).then(() => {
+      delitedCommentsModel.forEach((item) => {
+        this._commentsStore.removeItem(item.id);
+      });
+    });
+  }
+
   sync() {
     if (this._isOnLine()) {
-      const storeMovies = Object.values(this._moviesStore.getAll());
 
-      return this._api.sync(storeMovies)
-        .then((response) => {
-          // Удаляем из хранилища задачи, что были созданы
-          // или изменены в оффлайне. Они нам больше не нужны
-          storeMovies.filter((task) => task.offline).forEach((task) => {
-            this._moviesStore.removeItem(task.id);
-          });
-
-          // Забираем из ответа синхронизированные задачи
-          const createdMovies = getSyncedMovies(response.created);
-          const updatedMovies = getSyncedMovies(response.updated);
-
-          // Добавляем синхронизированные задачи в хранилище.
-          // Хранилище должно быть актуальным в любой момент,
-          // вдруг сеть пропадёт
-          [...createdMovies, ...updatedMovies].forEach((task) => {
-            this._moviesStore.setItem(task.id, task);
-          });
-
-          // Помечаем, что всё синхронизировано
-          this._isSynchronized = true;
-
-          return Promise.resolve();
-        });
+      this._syncDelitedComments();
+      return Promise.resolve();
     }
-
     return Promise.reject(new Error(`Sync data failed`));
+
+    //   const storeComments = Object.values(this._commentsStore.getAll());
+    //   const storeMovies = Object.values(this._moviesStore.getAll());
+    //
+    //   return this._api.sync(storeMovies)
+    //     .then((response) => {
+    //       // Удаляем из хранилища задачи, что были созданы
+    //       // или изменены в оффлайне. Они нам больше не нужны
+    //       storeMovies.filter((task) => task.offline).forEach((task) => {
+    //         this._moviesStore.removeItem(task.id);
+    //       });
+    //
+    //       // Забираем из ответа синхронизированные задачи
+    //       const createdMovies = getSyncedMovies(response.created);
+    //       const updatedMovies = getSyncedMovies(response.updated);
+    //
+    //       // Добавляем синхронизированные задачи в хранилище.
+    //       // Хранилище должно быть актуальным в любой момент,
+    //       // вдруг сеть пропадёт
+    //       [...createdMovies, ...updatedMovies].forEach((task) => {
+    //         this._moviesStore.setItem(task.id, task);
+    //       });
+    //
+    //       // Помечаем, что всё синхронизировано
+    //       this._isSynchronized = true;
+    //
+    //       return Promise.resolve();
+    //     });
+    // }
+    //
+    // return Promise.reject(new Error(`Sync data failed`));
   }
 
   getSynchronize() {
@@ -165,17 +188,11 @@ export default class Provider {
   }
 
   _deleteCommentFromMovie(commentId) {
-    const movies = this._moviesStore.getAll();
-    let i = 0;
-    while (movies[i] !== undefined) {
-      let movie = movies[i];
-      let index = movie.comments.indexOf(commentId);
-      if (index !== -1) {
-        movie.comments.splice(index, 1);
-        this._moviesStore.setItem(i, movie);
-        break;
-      }
-      i++;
+    const movies = Object.values(this._moviesStore.getAll());
+    const movie = movies.filter((item) => item.comments.indexOf(commentId) !== -1)[0];
+    if (movie !== undefined) {
+      movie.comments.splice(movie.comments.indexOf(commentId), 1);
+      this._moviesStore.setItem(movie.id, movie);
     }
   }
 }

@@ -6,17 +6,12 @@ import UserRatingComponent from "../components/user-rating";
 import CommentsController from "./comments";
 import CommentsModel from "../models/comments";
 import MovieModel from "../models/movie";
+import CommentModel from "../models/comment";
 
 const RADIX = 10;
 const SHAKE_ANIMATION_TIMEOUT = 600;
 const SHADOW_STYLE = `inset 0 0 5px 2px red`;
 const DEBOUNCE_TIMEOUT = 500;
-
-const localComment = {
-  'comment': ``,
-  'date': null,
-  'emotion': ``
-};
 
 export default class MovieController {
   constructor(movieModel, commentsModel, apiWithProvider) {
@@ -138,17 +133,16 @@ export default class MovieController {
     const emoji = formData.get(`comment-emoji`);
 
     if (commentText !== `` && emoji) {
-      localComment.comment = commentText;
-      localComment.emotion = emoji;
-      localComment.date = new Date();
+      const newComment = new CommentModel();
+      newComment.text = commentText;
+      newComment.emoji = emoji;
+      newComment.date = new Date();
       this._filmDetails.getCommentInputElement().style.boxShadow = ``;
       this._filmDetails.disableCommentInputs();
-      this._apiWithProvider.createComment(this._movieModel.id, localComment)
+      this._apiWithProvider.createComment(this._movieModel.id, newComment.toLocalComment())
         .then((movieAndComments) => {
           this._movieModel.update(movieAndComments.movie);
           this._commentsModel.addComments(CommentsModel.parseComments(movieAndComments.comments));
-          console.log(this._movieModel);
-          console.log(this._commentsModel);
           this._commentsController.render();
           this._filmDetails.resetComment();
           this._filmDetails.enableCommentInputs();

@@ -60,4 +60,12 @@ export default class CommentModel {
       'date': this._date
     };
   }
+
+  toLocalComment() {
+    return {
+      'comment': this._text,
+      'emotion': this._emoji,
+      'date': this._date
+    };
+  }
 }
