@@ -36,8 +36,9 @@ export default class CommentsController {
             commentsModel.fillModel(comments);
             this._movieModel.comments = commentsModel;
             this.render();
-            document.dispatchEvent(new CustomEvent(`commentRemoved`, {'detail': this._movieModel.id}));
+            document.dispatchEvent(new CustomEvent(`commentsChanged`, {'detail': this._movieModel.id}));
           });
-      });
+      })
+      .catch(() => this.render());
   }
 }

@@ -31,16 +31,6 @@ export default class StatisticComponent extends AbstractComponent {
     this._watchedCountElement.textContent = count.toString();
   }
 
-  getCanvasElement() {
-    return this._canvasElement;
-  }
-
-  setFilterClickHandlers(handler) {
-    this._inputElements.forEach((input) => {
-      input.addEventListener(`click`, handler);
-    });
-  }
-
   _getTemplate() {
     return (
       `<section class="statistic">
@@ -90,5 +80,15 @@ export default class StatisticComponent extends AbstractComponent {
         
       </section>`
     );
+  }
+
+  getCanvasElement() {
+    return this._canvasElement;
+  }
+
+  setFilterClickHandlers(handler) {
+    this._inputElements.forEach((input) => {
+      input.addEventListener(`click`, handler);
+    });
   }
 }
