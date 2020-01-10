@@ -144,10 +144,11 @@ export default class MovieController {
       this._filmDetails.getCommentInputElement().style.boxShadow = ``;
       this._filmDetails.disableCommentInputs();
       this._apiWithProvider.createComment(this._movieModel.id, localComment)
-        .then((out) => out.comments)
-        .then(CommentsModel.parseComments)
-        .then((comments) => {
-          this._movieModel.comments.addComments(comments);
+        .then((movieAndComments) => {
+          this._movieModel.update(movieAndComments.movie);
+          this._commentsModel.addComments(CommentsModel.parseComments(movieAndComments.comments));
+          console.log(this._movieModel);
+          console.log(this._commentsModel);
           this._commentsController.render();
           this._filmDetails.resetComment();
           this._filmDetails.enableCommentInputs();

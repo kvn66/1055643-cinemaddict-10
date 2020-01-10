@@ -27,22 +27,66 @@ export default class Provider {
         return commentsModel.getComments();
       });
     }
+
+    this._isSynchronized = false;
+
     const storeComments = Object.values(this._commentsStore.getAll());
+
     return Promise.resolve(CommentsModel.parseComments(storeComments));
   }
 
-  getCommentsForMovie(id) {
+  createComment(movieId, comment) {
     if (this._isOnLine()) {
-      return this._api.getComments(id)
-        .then((comments) => {
-          comments.forEach((comment) => this._commentsStore.setItem(comment.id, comment.toRAW()));
-          return comments;
-        });
+      return this._api.createComment(movieId, comment).then(
+          (movieAndComments) => {
+            this._moviesStore.setItem(movieAndComments.movie.id, movieAndComments.movie);
+            movieAndComments.comments.forEach((item) => this._commentsStore.setItem(item.id, item));
+            return movieAndComments;
+          }
+      );
     }
 
-    const storeMovies = Object.values(this._moviesStore.getAll());
-    const movies = MoviesModel.parseMovies(storeMovies);
-    return Promise.resolve(movies[id].comments);
+    this._isSynchronized = false;
+
+    const fakeNewCommentId = nanoid();
+    const fakeNewCommentModel = CommentsModel.parseComment(Object.assign({}, comment, {id: fakeNewCommentId}, {author: `My comment`}));
+
+    this._commentsStore.setItem(fakeNewCommentModel.id, Object.assign({}, fakeNewCommentModel.toRAW(), {offline: true}));
+
+    const fakeMovie = this._moviesStore.getItem(movieId);
+    const movieCommentsSet = new Set(fakeMovie.comments);
+    movieCommentsSet.add(fakeNewCommentId);
+    fakeMovie.comments = Array.from(movieCommentsSet);
+
+    const commentsSet = new Set();
+    fakeMovie.comments.forEach((id) => {
+      commentsSet.add(this._commentsStore.getItem(id));
+    });
+
+    const fakeMovieAndComments = Object.assign({}, {movie: fakeMovie}, {comments: Array.from(commentsSet)});
+
+
+    return Promise.resolve(fakeMovieAndComments);
+  }
+
+  deleteComment(id) {
+    if (this._isOnLine()) {
+      return this._api.deleteComment(id).then(
+          () => {
+            this._commentsStore.removeItem(id);
+            this._deleteCommentFromMovie(id);
+          }
+      );
+    }
+
+    this._isSynchronized = false;
+
+    const comment = Object.assign({}, this._commentsStore.getItem(id), {delited: true});
+    this._commentsStore.setItem(id, comment);
+
+    this._deleteCommentFromMovie(id);
+
+    return Promise.resolve();
   }
 
   getMovies() {
@@ -55,40 +99,11 @@ export default class Provider {
         });
     }
 
+    this._isSynchronized = false;
+
     const storeMovies = Object.values(this._moviesStore.getAll());
 
-    this._isSynchronized = false;
-
     return Promise.resolve(MoviesModel.parseMovies(storeMovies));
-  }
-
-  createComment(movieId, comment) {
-    if (false) {
-      return this._api.createComment(movieId, comment).then(
-          (movieAndComments) => {
-            console.log(movieAndComments);
-            this._moviesStore.setItem(movieAndComments.movie.id, movieAndComments.movie);
-            movieAndComments.comments.forEach((item) => this._commentsStore.setItem(item.id, item));
-            return movieAndComments;
-          }
-      );
-    }
-
-    // Нюанс в том, что при создании мы не указываем id задачи, нам его в ответе присылает сервер.
-    // Но на случай временного хранения мы должны позаботиться и о временном id
-    const fakeNewCommentId = nanoid();
-    const fakeNewComment = CommentsModel.parseComment(Object.assign({}, comment, {id: fakeNewCommentId}));
-    console.log(fakeNewComment);
-
-    this._isSynchronized = false;
-    this._commentsStore.setItem(fakeNewComment.id, Object.assign({}, fakeNewComment.toRAW(), {offline: true}));
-
-    console.log(this._moviesStore.getAll());
-    const fakeMovie = this._moviesStore.getItem(movieId);
-    console.log(fakeMovie);
-
-
-    return Promise.resolve(fakeNewComment);
   }
 
   updateMovie(id, movie) {
@@ -102,24 +117,10 @@ export default class Provider {
     }
 
     this._isSynchronized = false;
+
     this._moviesStore.setItem(id, Object.assign({}, movie, {offline: true}));
 
     return Promise.resolve(movie);
-  }
-
-  deleteComment(id) {
-    if (this._isOnLine()) {
-      return this._api.deleteComment(id).then(
-          () => {
-            this._commentsStore.removeItem(id);
-          }
-      );
-    }
-
-    this._isSynchronized = false;
-    this._commentsStore.removeItem(id);
-
-    return Promise.resolve();
   }
 
   sync() {
@@ -161,5 +162,20 @@ export default class Provider {
 
   _isOnLine() {
     return window.navigator.onLine;
+  }
+
+  _deleteCommentFromMovie(commentId) {
+    const movies = this._moviesStore.getAll();
+    let i = 0;
+    while (movies[i] !== undefined) {
+      let movie = movies[i];
+      let index = movie.comments.indexOf(commentId);
+      if (index !== -1) {
+        movie.comments.splice(index, 1);
+        this._moviesStore.setItem(i, movie);
+        break;
+      }
+      i++;
+    }
   }
 }
