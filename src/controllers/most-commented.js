@@ -5,19 +5,19 @@ import MostCommentedComponent from "../components/most-commented";
 const MOST_COMMENTED_FILMS_COUNT = 2;
 
 export default class MostCommentedController {
-  constructor(parentComponent, api) {
+  constructor(parentComponent, apiWithProvider) {
     this._parentComponent = parentComponent;
-    this._api = api;
+    this._apiWithProvider = apiWithProvider;
     this._mostCommentedComponent = null;
   }
 
-  render(moviesModel) {
+  render(moviesModel, commentsModel) {
     const mostCommentedComponent = new MostCommentedComponent();
     const mostCommented = moviesModel.getMostCommented(MOST_COMMENTED_FILMS_COUNT);
 
     if (mostCommented[0].comments.length > 0) {
       mostCommented.forEach((movieModel) => {
-        new MovieController(movieModel, this._api).render(mostCommentedComponent);
+        new MovieController(movieModel, commentsModel, this._apiWithProvider).render(mostCommentedComponent);
       });
 
       this._renderElement(this._parentComponent.getElement(), mostCommentedComponent.getElement());

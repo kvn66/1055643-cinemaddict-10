@@ -1,4 +1,4 @@
-import {render, RenderPosition} from "../utils";
+import {render, RenderPosition, load} from "../utils";
 import MovieController from "./movie";
 import ShowMoreComponent from "../components/show-more";
 import FilmsListComponent from "../components/films-list";
@@ -7,14 +7,16 @@ const SHOWING_FILMS_COUNT_ON_START = 5;
 const SHOWING_FILMS_COUNT_BY_BUTTON = 5;
 
 export default class FilmsListController {
-  constructor(parentComponent, api) {
+  constructor(moviesModel, commentsModel, parentComponent, apiWithProvider) {
+    this._moviesModel = moviesModel;
+    this._commentsModel = commentsModel;
     this._parentComponent = parentComponent;
-    this._api = api;
+    this._apiWithProvider = apiWithProvider;
     this._filmsListComponent = null;
     this._isModelLoaded = false;
   }
 
-  render(moviesModel) {
+  render() {
     let showingFilmsCount = SHOWING_FILMS_COUNT_ON_START;
     const filmsListComponent = new FilmsListComponent();
     const showMoreComponent = new ShowMoreComponent();
@@ -23,11 +25,11 @@ export default class FilmsListController {
       const prevFilmsCount = showingFilmsCount;
       showingFilmsCount = showingFilmsCount + SHOWING_FILMS_COUNT_BY_BUTTON;
 
-      moviesModel.getMovies().slice(prevFilmsCount, showingFilmsCount).forEach((movieModel) => {
-        new MovieController(movieModel, this._api).render(filmsListComponent);
+      this._moviesModel.getMovies().slice(prevFilmsCount, showingFilmsCount).forEach((movieModel) => {
+        new MovieController(movieModel, this._commentsModel, this._apiWithProvider).render(filmsListComponent);
       });
 
-      if (showingFilmsCount >= moviesModel.getMovies().length) {
+      if (showingFilmsCount >= this._moviesModel.getMovies().length) {
         showMoreComponent.remove();
       }
     };
@@ -35,22 +37,20 @@ export default class FilmsListController {
     if (!this._isModelLoaded) {
       filmsListComponent.titleText = `Loading...`;
       filmsListComponent.titleHide = false;
-      this._api.getMovies()
-        .then((movies) => {
-          moviesModel.fillModel(movies);
-          this._isModelLoaded = true;
-          document.dispatchEvent(new Event(`modelLoaded`));
-          this.render(moviesModel);
-        });
+      load(this._apiWithProvider, this._moviesModel, this._commentsModel).then(() => {
+        document.dispatchEvent(new Event(`modelLoaded`));
+        this._isModelLoaded = true;
+        this.render();
+      });
     } else {
-      if (moviesModel.getMovies().length) {
+      if (this._moviesModel.getMovies().length) {
         filmsListComponent.titleHide = true;
 
-        moviesModel.getMovies().slice(0, showingFilmsCount).forEach((movieModel) => {
-          new MovieController(movieModel, this._api).render(filmsListComponent);
+        this._moviesModel.getMovies().slice(0, showingFilmsCount).forEach((movieModel) => {
+          new MovieController(movieModel, this._commentsModel, this._apiWithProvider).render(filmsListComponent);
         });
 
-        if (showingFilmsCount < moviesModel.getMovies().length) {
+        if (showingFilmsCount < this._moviesModel.getMovies().length) {
           showMoreComponent.setClickHandler(onClick);
           render(filmsListComponent.getContainerElement(), showMoreComponent.getElement(), RenderPosition.AFTEREND);
         }
@@ -59,6 +59,7 @@ export default class FilmsListController {
         filmsListComponent.titleHide = false;
       }
     }
+
 
     this._renderElement(this._parentComponent.getElement(), filmsListComponent.getElement(), RenderPosition.AFTERBEGIN);
 

@@ -50,4 +50,22 @@ export default class CommentModel {
     this._author = comment.author;
     this._date = new Date(comment.date);
   }
+
+  toRAW() {
+    return {
+      'id': this._id,
+      'comment': this._text,
+      'emotion': this._emoji,
+      'author': this._author,
+      'date': this._date
+    };
+  }
+
+  toLocalComment() {
+    return {
+      'comment': this._text,
+      'emotion': this._emoji,
+      'date': this._date
+    };
+  }
 }

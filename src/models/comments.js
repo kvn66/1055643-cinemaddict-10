@@ -9,6 +9,10 @@ export default class CommentsModel {
     return this._comments.length;
   }
 
+  getComment(id) {
+    return this._comments.find((item) => item.id === id);
+  }
+
   getComments() {
     return this._comments;
   }
@@ -17,8 +21,22 @@ export default class CommentsModel {
     return this._comments.map((commentModel) => commentModel.id);
   }
 
-  fillModel(comments) {
-    this._comments = Array.from(comments);
+  addComment(comment) {
+    const commentsSet = new Set(this._comments);
+    commentsSet.add(comment);
+    this._comments = Array.from(commentsSet);
+  }
+
+  addComments(comments) {
+    const commentsSet = new Set(this._comments);
+    comments.forEach((item) => {
+      commentsSet.add(item);
+    });
+    this._comments = Array.from(commentsSet);
+  }
+
+  deleteComment(id) {
+    this._comments.splice(this._comments.indexOf(this.getComment(id)), 1);
   }
 
   static parseComment(comment) {

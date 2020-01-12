@@ -64,10 +64,6 @@ export default class FilmCardComponent extends AbstractComponent {
     }
   }
 
-  set commentsCount(count) {
-    this._commentsCountElement.textContent = `${count.toString()} comments`;
-  }
-
   _getTemplate() {
     return (
       `<article class="film-card">
@@ -106,6 +102,10 @@ export default class FilmCardComponent extends AbstractComponent {
 
   setFavoriteClickHandler(handler) {
     this.getElement().querySelector(`.film-card__controls-item--favorite`).addEventListener(`click`, handler);
+  }
+
+  updateCommentsCount() {
+    this._commentsCountElement.textContent = `${this._movieModel.comments.length.toString()} comments`;
   }
 
   updateRating() {

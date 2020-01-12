@@ -33,5 +33,14 @@ export default class SiteMenuController {
       siteMenuComponent.historyCount = moviesModel.getCheckedParametersCount(`isAlreadyWatched`);
       siteMenuComponent.favoritesCount = moviesModel.getCheckedParametersCount(`isAddedToFavorites`);
     });
+
+    document.addEventListener(`modelLoaded`, () => {
+      this._watchlistCount = moviesModel.getCheckedParametersCount(`isAddedToWatchlist`);
+      this._historyCount = moviesModel.getCheckedParametersCount(`isAlreadyWatched`);
+      this._favoritesCount = moviesModel.getCheckedParametersCount(`isAddedToFavorites`);
+      siteMenuComponent.watchlistCount = this._watchlistCount;
+      siteMenuComponent.historyCount = this._historyCount;
+      siteMenuComponent.favoritesCount = this._favoritesCount;
+    });
   }
 }

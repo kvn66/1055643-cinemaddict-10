@@ -92,3 +92,14 @@ export const formatDuration = (duration) => {
   const minutes = duration % 60;
   return `${hours ? hours + `h` : ``} ${minutes}m`;
 };
+
+export const load = (apiWithProvider, moviesModel, commentsModel) => {
+  return apiWithProvider.getMovies()
+    .then((movies) => {
+      moviesModel.fillModel(movies);
+      return apiWithProvider.getComments(movies)
+        .then((comments) => {
+          commentsModel.addComments(comments);
+        });
+    });
+};

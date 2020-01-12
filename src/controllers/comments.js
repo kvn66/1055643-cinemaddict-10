@@ -1,20 +1,23 @@
 import {render} from "../utils";
 import CommentsComponent from "../components/comments";
 import CommentComponent from "../components/comment";
-import CommentsModel from "../models/comments";
 
 export default class CommentsController {
-  constructor(parentComponent, movieModel, api) {
+  constructor(parentComponent, movieModel, commentsModel, apiWithProvider) {
     this._parentComponent = parentComponent;
     this._movieModel = movieModel;
-    this._api = api;
+    this._commentsModel = commentsModel;
+    this._apiWithProvider = apiWithProvider;
     this._onDeleteButtonClick = this._onDeleteButtonClick.bind(this);
   }
 
   render() {
     const commentsComponent = new CommentsComponent();
-    this._movieModel.comments.getComments().forEach((commentModel) => {
-      this._renderComment(commentModel, commentsComponent);
+    this._movieModel.comments.forEach((commentId) => {
+      const comment = this._commentsModel.getComment(commentId);
+      if (comment !== undefined) {
+        this._renderComment(comment, commentsComponent);
+      }
     });
     const commentsListElement = this._parentComponent.getCommentsListElement();
     commentsListElement.replaceWith(commentsComponent.getElement());
@@ -27,18 +30,12 @@ export default class CommentsController {
   }
 
   _onDeleteButtonClick(commentId) {
-    this._api.deleteComment(commentId)
+    this._apiWithProvider.deleteComment(commentId)
       .then(() => {
-        this._api.getComments(this._movieModel.id)
-          .then(CommentsModel.parseComments)
-          .then((comments) => {
-            const commentsModel = new CommentsModel();
-            commentsModel.fillModel(comments);
-            this._movieModel.comments = commentsModel;
-            this.render();
-            document.dispatchEvent(new CustomEvent(`commentsChanged`, {'detail': this._movieModel.id}));
-          });
-      })
-      .catch(() => this.render());
+        this._commentsModel.deleteComment(commentId);
+        this._movieModel.comments.splice(this._movieModel.comments.indexOf(commentId), 1);
+        this.render();
+        document.dispatchEvent(new CustomEvent(`commentsChanged`, {'detail': this._movieModel.id}));
+      });
   }
 }
