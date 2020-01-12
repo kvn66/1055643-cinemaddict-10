@@ -21,12 +21,6 @@ export default class CommentsModel {
     return this._comments.map((commentModel) => commentModel.id);
   }
 
-  addComment(comment) {
-    const commentsSet = new Set(this._comments);
-    commentsSet.add(comment);
-    this._comments = Array.from(commentsSet);
-  }
-
   addComments(comments) {
     const commentsSet = new Set(this._comments);
     comments.forEach((item) => {

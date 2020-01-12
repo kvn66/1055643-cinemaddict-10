@@ -22,6 +22,8 @@ const apiWithProvider = new Provider(api, moviesStore, commentsStore);
 const moviesModel = new MoviesModel();
 const commentsModel = new CommentsModel();
 
+new PageController(moviesModel, commentsModel, document, apiWithProvider).render();
+
 window.addEventListener(`load`, () => {
   navigator.serviceWorker.register(`/sw.js`);
 });
@@ -41,5 +43,3 @@ window.addEventListener(`online`, () => {
 window.addEventListener(`offline`, () => {
   document.title += ` [offline]`;
 });
-
-new PageController(moviesModel, commentsModel, apiWithProvider).render(document);

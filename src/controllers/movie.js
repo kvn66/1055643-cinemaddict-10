@@ -34,9 +34,7 @@ export default class MovieController {
     this._onFavoriteClick = this._onFavoriteClick.bind(this);
     this._onOpenDetailsClick = this._onOpenDetailsClick.bind(this);
     this._debounce = this._debounce.bind(this);
-  }
 
-  render(parentComponent) {
     document.addEventListener(`commentsChanged`, (evt) => {
       if (evt.detail === this._movieModel.id) {
         this._filmDetails.updateCommentsCount();
@@ -72,7 +70,9 @@ export default class MovieController {
         this._closeDetails();
       }
     });
+  }
 
+  render(parentComponent) {
     this._setFilmCardHandlers();
     this._renderUserRating(this._movieModel.isAlreadyWatched);
     render(parentComponent.getContainerElement(), this._filmCard.getElement());

@@ -2,39 +2,47 @@ const CACHE_PREFIX = `sinemaddict-cache`;
 const CACHE_VER = `v2`;
 const CACHE_NAME = `${CACHE_PREFIX}-${CACHE_VER}`;
 
-self.addEventListener('install', (evt) => {
+self.addEventListener(`install`, (evt) => {
   evt.waitUntil(precache());
 });
 
-self.addEventListener('fetch', (event) => {
-  event.respondWith(
-    caches.open(CACHE_NAME).then((cache) => {
-      return cache.match(event.request).then((response) => {
-        return response || fetch(event.request).then((response) => {
-          if (!response || response.status !== 200 || response.type !== `basic`) {
-            return response;
-          }
-          cache.put(event.request, response.clone());
-          return response;
-        });
-      });
-    })
+self.addEventListener(`fetch`, (evt) => {
+  evt.respondWith(
+      caches.open(CACHE_NAME)
+        .then((cache) => {
+          return fetch(evt.request)
+            .then((response) => {
+              if (!response || response.status !== 200 || response.type !== `basic`) {
+                return response;
+              }
+              cache.put(evt.request, response.clone());
+              return response;
+            })
+            .catch(() => {
+              return cache.match(evt.request)
+                .then((response) => {
+                  return response;
+                });
+            });
+        })
   );
 });
 
-self.addEventListener('activate', (event) => {
-  event.waitUntil(
-    caches.keys().then((cacheNames) => {
-      return Promise.all(
-        cacheNames.filter((cacheName) => {
-          // Return true if you want to remove this cache,
-          // but remember that caches are shared across
-          // the whole origin
-        }).map((cacheName) => {
-          return caches.delete(cacheName);
-        })
-      );
-    })
+self.addEventListener(`activate`, (evt) => {
+
+  const cacheWhitelist = [CACHE_NAME];
+
+  evt.waitUntil(
+      caches.keys().then((cacheNames) => {
+        return Promise.all(
+            cacheNames.map((cacheName) => {
+              if (cacheWhitelist.indexOf(cacheName) === -1) {
+                return caches.delete(cacheName);
+              }
+              return false;
+            })
+        );
+      })
   );
 });
 
@@ -70,4 +78,4 @@ const precache = () => {
       `/images/posters/the-man-with-the-golden-arm.jpg`
     ]);
   });
-}
+};

@@ -2,45 +2,46 @@ import {render} from "../utils";
 import SiteMenuComponent from "../components/site-menu";
 
 export default class SiteMenuController {
-  constructor(parentElement) {
+  constructor(moviesModel, parentElement) {
+    this._moviesModel = moviesModel;
     this._parentElement = parentElement;
-  }
-
-  render(moviesModel) {
-    const siteMenuComponent = new SiteMenuComponent();
-    siteMenuComponent.watchlistCount = moviesModel.getCheckedParametersCount(`isAddedToWatchlist`);
-    siteMenuComponent.historyCount = moviesModel.getCheckedParametersCount(`isAlreadyWatched`);
-    siteMenuComponent.favoritesCount = moviesModel.getCheckedParametersCount(`isAddedToFavorites`);
-    siteMenuComponent.setFilterTypeChangeHandler((filterType) => {
-      moviesModel.filterType = filterType;
-    });
-    render(this._parentElement, siteMenuComponent.getElement());
+    this._siteMenuComponent = new SiteMenuComponent();
 
     document.addEventListener(`watchlistChange`, () => {
-      siteMenuComponent.watchlistCount = moviesModel.getCheckedParametersCount(`isAddedToWatchlist`);
+      this._siteMenuComponent.watchlistCount = moviesModel.getCheckedParametersCount(`isAddedToWatchlist`);
     });
 
     document.addEventListener(`watchedChange`, () => {
-      siteMenuComponent.historyCount = moviesModel.getCheckedParametersCount(`isAlreadyWatched`);
+      this._siteMenuComponent.historyCount = moviesModel.getCheckedParametersCount(`isAlreadyWatched`);
     });
 
     document.addEventListener(`favoriteChange`, () => {
-      siteMenuComponent.favoritesCount = moviesModel.getCheckedParametersCount(`isAddedToFavorites`);
+      this._siteMenuComponent.favoritesCount = moviesModel.getCheckedParametersCount(`isAddedToFavorites`);
     });
 
     document.addEventListener(`modelLoaded`, () => {
-      siteMenuComponent.watchlistCount = moviesModel.getCheckedParametersCount(`isAddedToWatchlist`);
-      siteMenuComponent.historyCount = moviesModel.getCheckedParametersCount(`isAlreadyWatched`);
-      siteMenuComponent.favoritesCount = moviesModel.getCheckedParametersCount(`isAddedToFavorites`);
+      this._siteMenuComponent.watchlistCount = moviesModel.getCheckedParametersCount(`isAddedToWatchlist`);
+      this._siteMenuComponent.historyCount = moviesModel.getCheckedParametersCount(`isAlreadyWatched`);
+      this._siteMenuComponent.favoritesCount = moviesModel.getCheckedParametersCount(`isAddedToFavorites`);
     });
 
     document.addEventListener(`modelLoaded`, () => {
       this._watchlistCount = moviesModel.getCheckedParametersCount(`isAddedToWatchlist`);
       this._historyCount = moviesModel.getCheckedParametersCount(`isAlreadyWatched`);
       this._favoritesCount = moviesModel.getCheckedParametersCount(`isAddedToFavorites`);
-      siteMenuComponent.watchlistCount = this._watchlistCount;
-      siteMenuComponent.historyCount = this._historyCount;
-      siteMenuComponent.favoritesCount = this._favoritesCount;
+      this._siteMenuComponent.watchlistCount = this._watchlistCount;
+      this._siteMenuComponent.historyCount = this._historyCount;
+      this._siteMenuComponent.favoritesCount = this._favoritesCount;
     });
+  }
+
+  render() {
+    this._siteMenuComponent.watchlistCount = this._moviesModel.getCheckedParametersCount(`isAddedToWatchlist`);
+    this._siteMenuComponent.historyCount = this._moviesModel.getCheckedParametersCount(`isAlreadyWatched`);
+    this._siteMenuComponent.favoritesCount = this._moviesModel.getCheckedParametersCount(`isAddedToFavorites`);
+    this._siteMenuComponent.setFilterTypeChangeHandler((filterType) => {
+      this._moviesModel.filterType = filterType;
+    });
+    render(this._parentElement, this._siteMenuComponent.getElement());
   }
 }
