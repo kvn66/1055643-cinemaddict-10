@@ -19,33 +19,6 @@ export default class MainController {
     this._topRatesController = new TopRatesController(this._filmsComponent, this._apiWithProvider);
     this._mostCommentedController = new MostCommentedController(this._filmsComponent, this._apiWithProvider);
     this._statisticController = new StatisticController(this._moviesModel);
-  }
-
-  siteSortRender(parentElement) {
-    const siteSortElement = this._siteSortComponent.getElement();
-    render(parentElement, siteSortElement);
-
-    this._siteSortComponent.setSortTypeChangeHandler((sortType) => {
-      this._moviesModel.sortType = sortType;
-    });
-  }
-
-  render(parentElement) {
-    new SiteMenuController(parentElement).render(this._moviesModel);
-
-    this.siteSortRender(parentElement);
-
-    this._filmsListController.render();
-
-    if (this._moviesModel.length) {
-      this._topRatesController.render(this._moviesModel, this._commentsModel);
-      this._mostCommentedController.render(this._moviesModel, this._commentsModel);
-    }
-
-    render(parentElement, this._filmsComponent.getElement());
-
-    this._statisticController.hide();
-    this._statisticController.render(parentElement);
 
     document.addEventListener(`synchronized`, () => {
       load(this._apiWithProvider, this._moviesModel, this._commentsModel).then(() => {
@@ -90,5 +63,32 @@ export default class MainController {
         this._mostCommentedController.render(this._moviesModel);
       }
     });
+  }
+
+  siteSortRender(parentElement) {
+    const siteSortElement = this._siteSortComponent.getElement();
+    render(parentElement, siteSortElement);
+
+    this._siteSortComponent.setSortTypeChangeHandler((sortType) => {
+      this._moviesModel.sortType = sortType;
+    });
+  }
+
+  render(parentElement) {
+    new SiteMenuController(this._moviesModel, parentElement).render();
+
+    this.siteSortRender(parentElement);
+
+    this._filmsListController.render();
+
+    if (this._moviesModel.length) {
+      this._topRatesController.render(this._moviesModel, this._commentsModel);
+      this._mostCommentedController.render(this._moviesModel, this._commentsModel);
+    }
+
+    render(parentElement, this._filmsComponent.getElement());
+
+    this._statisticController.hide();
+    this._statisticController.render(parentElement);
   }
 }
