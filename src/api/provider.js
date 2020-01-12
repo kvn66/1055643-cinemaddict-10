@@ -2,9 +2,6 @@ import nanoid from "nanoid";
 import MoviesModel from "../models/movies";
 import CommentsModel from "../models/comments";
 
-const getSyncedMovies =
-  (items) => items.filter(({success}) => success).map(({payload}) => payload.movie);
-
 export default class Provider {
   constructor(api, moviesStore, commentsStore) {
     this._api = api;
@@ -56,12 +53,13 @@ export default class Provider {
     const movieCommentsSet = new Set(fakeMovie.comments);
     movieCommentsSet.add(fakeNewCommentId);
     fakeMovie.comments = Array.from(movieCommentsSet);
+    this._moviesStore.setItem(movieId, fakeMovie);
+
 
     const commentsSet = new Set();
     fakeMovie.comments.forEach((id) => {
       commentsSet.add(this._commentsStore.getItem(id));
     });
-
     const fakeMovieAndComments = Object.assign({}, {movie: fakeMovie}, {comments: Array.from(commentsSet)});
 
 
@@ -127,56 +125,17 @@ export default class Provider {
     return Promise.resolve(movie);
   }
 
-  _syncDelitedComments() {
-    const storeComments = Object.values(this._commentsStore.getAll());
-    const delitedComments = storeComments.filter((item) => item.delited);
-    const delitedCommentsModel = CommentsModel.parseComments(delitedComments);
-    const promises = delitedCommentsModel.map((item) => this.deleteComment(item.id));
-    return Promise.all(promises).then(() => {
-      delitedCommentsModel.forEach((item) => {
-        this._commentsStore.removeItem(item.id);
-      });
-    });
-  }
-
   sync() {
     if (this._isOnLine()) {
 
-      this._syncDelitedComments();
-      return Promise.resolve();
+      return this._syncComments().then(() => {
+        return this._syncUpdatedMovies().then(() => {
+          this._isSynchronized = true;
+        }).catch(() => new Error(`Sync data failed`));
+      }).catch(() => new Error(`Sync data failed`));
+
     }
     return Promise.reject(new Error(`Sync data failed`));
-
-    //   const storeComments = Object.values(this._commentsStore.getAll());
-    //   const storeMovies = Object.values(this._moviesStore.getAll());
-    //
-    //   return this._api.sync(storeMovies)
-    //     .then((response) => {
-    //       // Удаляем из хранилища задачи, что были созданы
-    //       // или изменены в оффлайне. Они нам больше не нужны
-    //       storeMovies.filter((task) => task.offline).forEach((task) => {
-    //         this._moviesStore.removeItem(task.id);
-    //       });
-    //
-    //       // Забираем из ответа синхронизированные задачи
-    //       const createdMovies = getSyncedMovies(response.created);
-    //       const updatedMovies = getSyncedMovies(response.updated);
-    //
-    //       // Добавляем синхронизированные задачи в хранилище.
-    //       // Хранилище должно быть актуальным в любой момент,
-    //       // вдруг сеть пропадёт
-    //       [...createdMovies, ...updatedMovies].forEach((task) => {
-    //         this._moviesStore.setItem(task.id, task);
-    //       });
-    //
-    //       // Помечаем, что всё синхронизировано
-    //       this._isSynchronized = true;
-    //
-    //       return Promise.resolve();
-    //     });
-    // }
-    //
-    // return Promise.reject(new Error(`Sync data failed`));
   }
 
   getSynchronize() {
@@ -187,9 +146,45 @@ export default class Provider {
     return window.navigator.onLine;
   }
 
-  _deleteCommentFromMovie(commentId) {
+  _syncDelitedComments() {
+    const storeComments = Object.values(this._commentsStore.getAll());
+    const delitedComments = storeComments.filter((item) => item.delited);
+    const delitedCommentsModel = CommentsModel.parseComments(delitedComments);
+    const promises = delitedCommentsModel.map((item) => this.deleteComment(item.id));
+    return Promise.all(promises);
+  }
+
+  _syncCreatedComments() {
+    const storeComments = Object.values(this._commentsStore.getAll());
+    const storeCreatedComments = storeComments.filter((item) => item.offline);
+    const createdCommentsModel = CommentsModel.parseComments(storeCreatedComments);
+    const createdComments = createdCommentsModel.map((item) => Object.assign({}, {movieId: this._findMovieForComment(item.id).id}, {localComment: item.toLocalComment()}));
+    const promises = createdComments.map((item) => this.createComment(item.movieId, item.localComment));
+    return Promise.all(promises).then(() => {
+      createdCommentsModel.forEach((item) => this._commentsStore.removeItem(item.id));
+    });
+  }
+
+  _syncComments() {
+    const promises = [this._syncDelitedComments(), this._syncCreatedComments()];
+    return Promise.all(promises);
+  }
+
+  _syncUpdatedMovies() {
+    const storeMovies = Object.values(this._moviesStore.getAll());
+    const storeUpdatedMovies = storeMovies.filter((item) => item.offline);
+    const updatedMoviesModel = MoviesModel.parseMovies(storeUpdatedMovies);
+    const promises = updatedMoviesModel.map((item) => this.updateMovie(item.id, item.toRAW()));
+    return Promise.all(promises);
+  }
+
+  _findMovieForComment(commentId) {
     const movies = Object.values(this._moviesStore.getAll());
-    const movie = movies.filter((item) => item.comments.indexOf(commentId) !== -1)[0];
+    return movies.find((item) => item.comments.indexOf(commentId) !== -1);
+  }
+
+  _deleteCommentFromMovie(commentId) {
+    const movie = this._findMovieForComment(commentId);
     if (movie !== undefined) {
       movie.comments.splice(movie.comments.indexOf(commentId), 1);
       this._moviesStore.setItem(movie.id, movie);

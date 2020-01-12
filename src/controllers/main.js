@@ -3,7 +3,7 @@ import FilmsListController from "./films-list";
 import TopRatesController from "./top-rates";
 import MostCommentedController from "./most-commented";
 import StatisticController from "./statistic";
-import {FilterType, render} from "../utils";
+import {FilterType, load, render} from "../utils";
 import SiteMenuController from "./site-menu";
 import SiteSortComponent from "../components/site-sort";
 
@@ -15,7 +15,7 @@ export default class MainController {
 
     this._siteSortComponent = new SiteSortComponent();
     this._filmsComponent = new FilmsComponent();
-    this._filmsListController = new FilmsListController(this._filmsComponent, this._apiWithProvider);
+    this._filmsListController = new FilmsListController(this._moviesModel, this._commentsModel, this._filmsComponent, this._apiWithProvider);
     this._topRatesController = new TopRatesController(this._filmsComponent, this._apiWithProvider);
     this._mostCommentedController = new MostCommentedController(this._filmsComponent, this._apiWithProvider);
     this._statisticController = new StatisticController(this._moviesModel);
@@ -35,7 +35,7 @@ export default class MainController {
 
     this.siteSortRender(parentElement);
 
-    this._filmsListController.render(this._moviesModel, this._commentsModel);
+    this._filmsListController.render();
 
     if (this._moviesModel.length) {
       this._topRatesController.render(this._moviesModel, this._commentsModel);
@@ -47,6 +47,16 @@ export default class MainController {
     this._statisticController.hide();
     this._statisticController.render(parentElement);
 
+    document.addEventListener(`synchronized`, () => {
+      load(this._apiWithProvider, this._moviesModel, this._commentsModel).then(() => {
+        if (this._moviesModel.filterType === FilterType.STATISTIC) {
+          this._statisticController.update();
+        } else {
+          this._filmsListController.render();
+        }
+      });
+    });
+
     document.addEventListener(`filterChange`, () => {
       if (this._moviesModel.filterType === FilterType.STATISTIC) {
         this._siteSortComponent.hide();
@@ -54,7 +64,7 @@ export default class MainController {
         this._statisticController.update();
         this._statisticController.show();
       } else {
-        this._filmsListController.render(this._moviesModel, this._commentsModel);
+        this._filmsListController.render();
         this._siteSortComponent.show();
         this._filmsComponent.show();
         this._statisticController.hide();
