@@ -49,6 +49,7 @@ export default class MainController {
 
     document.addEventListener(`synchronized`, () => {
       load(this._apiWithProvider, this._moviesModel, this._commentsModel).then(() => {
+        document.dispatchEvent(new Event(`modelLoaded`));
         if (this._moviesModel.filterType === FilterType.STATISTIC) {
           this._statisticController.update();
         } else {
