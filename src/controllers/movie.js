@@ -131,13 +131,14 @@ export default class MovieController {
     const formData = new FormData(this._filmDetails.getFormElement());
     const commentText = he.encode(formData.get(`comment`));
     const emoji = formData.get(`comment-emoji`);
+    this._filmDetails.getCommentEmojiElement().style.boxShadow = ``;
+    this._filmDetails.getCommentInputElement().style.boxShadow = ``;
 
     if (commentText !== `` && emoji) {
       const newComment = new CommentModel();
       newComment.text = commentText;
       newComment.emoji = emoji;
       newComment.date = new Date();
-      this._filmDetails.getCommentInputElement().style.boxShadow = ``;
       this._filmDetails.disableCommentInputs();
       this._apiWithProvider.createComment(this._movieModel.id, newComment.toLocalComment())
         .then((movieAndComments) => {
@@ -153,6 +154,10 @@ export default class MovieController {
           this._shakeElement(this._filmDetails.getCommentInputElement());
           this._filmDetails.enableCommentInputs();
         });
+    } else if (commentText !== `` && !emoji) {
+      this._filmDetails.getCommentEmojiElement().style.boxShadow = SHADOW_STYLE;
+    } else if (commentText === `` && emoji) {
+      this._filmDetails.getCommentInputElement().style.boxShadow = SHADOW_STYLE;
     }
   }
 

@@ -36,6 +36,9 @@ export default class CommentsController {
         this._movieModel.comments.splice(this._movieModel.comments.indexOf(commentId), 1);
         this.render();
         document.dispatchEvent(new CustomEvent(`commentsChanged`, {'detail': this._movieModel.id}));
+      })
+      .catch(() => {
+        this.render();
       });
   }
 }
