@@ -195,6 +195,10 @@ export default class FilmDetailsComponent extends AbstractComponent {
     return this._commentInputElement;
   }
 
+  getCommentEmojiElement() {
+    return this._commentEmojiElement;
+  }
+
   getCommentsListElement() {
     return this.getElement().querySelector(`.film-details__comments-list`);
   }
