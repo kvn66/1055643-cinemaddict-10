@@ -1,5 +1,5 @@
 import AbstractComponent from './abstract-component';
-import {formatDuration} from "../utils";
+import {formatDuration} from '../utils';
 
 
 const MAX_DESCRIPTION_LENGTH = 140;

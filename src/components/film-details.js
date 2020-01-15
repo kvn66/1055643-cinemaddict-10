@@ -9,7 +9,7 @@ export default class FilmDetailsComponent extends AbstractComponent {
     this._movieModel = movieModel;
     this._genreTitle = this._movieModel.genres.length > GENRES_NAME_SWITCH_LIMIT ? `Genres` : `Genre`;
     this._genres = this._movieModel.genres.map((item) => {
-      return (`<span class="film-details__genre">` + item + `</span>`);
+      return (`<span class="film-details__genre"> ${item} </span>`);
     }).join(``);
     this._releaseDate = getFullDate(this._movieModel.releaseDate);
     this._watchlistElement = this.getElement().querySelector(`#watchlist`);
