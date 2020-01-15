@@ -103,10 +103,12 @@ export default class UserRatingComponent extends AbstractComponent {
       label.style.backgroundColor = RatingColor.UNCHECKED;
     });
     const checkedLabel = this.getElement().querySelector(`.film-details__user-rating-input:checked + .film-details__user-rating-label`);
-    if (this.isError) {
-      checkedLabel.style.backgroundColor = RatingColor.ERROR;
-    } else {
-      checkedLabel.style.backgroundColor = RatingColor.CHECKED;
+    if (checkedLabel) {
+      if (this.isError) {
+        checkedLabel.style.backgroundColor = RatingColor.ERROR;
+      } else {
+        checkedLabel.style.backgroundColor = RatingColor.CHECKED;
+      }
     }
   }
 

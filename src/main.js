@@ -1,10 +1,10 @@
-import CodeRain from 'coderain';
 import API from './api/api';
 import Store from './api/store';
 import Provider from './api/provider';
 import PageController from './controllers/page';
 import MoviesModel from './models/movies';
-import CommentsModel from "./models/comments";
+import CommentsModel from './models/comments';
+import nanoid from 'nanoid';
 
 const MOVIES_STORE_PREFIX = `sinemaddict-movies-localstorage`;
 const MOVIES_STORE_VER = `v1`;
@@ -12,7 +12,7 @@ const MOVIES_STORE_NAME = `${MOVIES_STORE_PREFIX}-${MOVIES_STORE_VER}`;
 const COMMENTS_STORE_PREFIX = `sinemaddict-comments-localstorage`;
 const COMMENTS_STORE_VER = `v1`;
 const COMMENTS_STORE_NAME = `${COMMENTS_STORE_PREFIX}-${COMMENTS_STORE_VER}`;
-const AUTHORIZATION = `Basic ` + new CodeRain(`###################`).next();
+const AUTHORIZATION = `Basic ${nanoid()}`;
 const END_POINT = `https://htmlacademy-es-10.appspot.com/cinemaddict`;
 
 const api = new API(END_POINT, AUTHORIZATION);
