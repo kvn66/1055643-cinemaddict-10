@@ -51,11 +51,11 @@ export default class MoviesModel {
   }
 
   getTopRated(count) {
-    return this._movies.slice().sort((a, b) => b.totalRating - a.totalRating).slice(0, count);
+    return this.getMovies().slice().sort((a, b) => b.totalRating - a.totalRating).slice(0, count);
   }
 
   getMostCommented(count) {
-    return this._movies.slice().sort((a, b) => b.comments.length - a.comments.length).slice(0, count);
+    return this.getMovies().slice().sort((a, b) => b.comments.length - a.comments.length).slice(0, count);
   }
 
   getCheckedParametersCount(parametr) {

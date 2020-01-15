@@ -22,15 +22,31 @@ export default class CommentsModel {
   }
 
   addComments(comments) {
-    const commentsSet = new Set(this._comments);
-    comments.forEach((item) => {
-      commentsSet.add(item);
+    comments.forEach((comment) => {
+      if (!this._updateComment(comment)) {
+        this._addComment(comment);
+      }
     });
-    this._comments = Array.from(commentsSet);
   }
 
   deleteComment(id) {
     this._comments.splice(this._comments.indexOf(this.getComment(id)), 1);
+  }
+
+  _addComment(comment) {
+    this._comments = [].concat(this._comments, comment);
+  }
+
+  _updateComment(comment) {
+    const index = this._comments.findIndex((it) => it.id === comment.id);
+
+    if (index === -1) {
+      return false;
+    }
+
+    this._comments = [].concat(this._comments.slice(0, index), comment, this._comments.slice(index + 1));
+
+    return true;
   }
 
   static parseComment(comment) {

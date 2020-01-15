@@ -16,8 +16,8 @@ export default class MainController {
     this._siteSortComponent = new SiteSortComponent();
     this._filmsComponent = new FilmsComponent();
     this._filmsListController = new FilmsListController(this._moviesModel, this._commentsModel, this._filmsComponent, this._apiWithProvider);
-    this._topRatesController = new TopRatesController(this._filmsComponent, this._apiWithProvider);
-    this._mostCommentedController = new MostCommentedController(this._filmsComponent, this._apiWithProvider);
+    this._topRatesController = new TopRatesController(this._moviesModel, this._commentsModel, this._filmsComponent, this._apiWithProvider);
+    this._mostCommentedController = new MostCommentedController(this._moviesModel, this._commentsModel, this._filmsComponent, this._apiWithProvider);
     this._statisticController = new StatisticController(this._moviesModel);
 
     document.addEventListener(`synchronized`, () => {
@@ -39,6 +39,8 @@ export default class MainController {
         this._statisticController.show();
       } else {
         this._filmsListController.render();
+        this._topRatesController.render();
+        this._mostCommentedController.render();
         this._siteSortComponent.show();
         this._filmsComponent.show();
         this._statisticController.hide();
@@ -46,22 +48,16 @@ export default class MainController {
     });
 
     document.addEventListener(`userRatingChanged`, () => {
-      if (this._moviesModel.length) {
-        this._topRatesController.render(this._moviesModel);
-      }
+      this._topRatesController.render();
     });
 
     document.addEventListener(`commentsChanged`, () => {
-      if (this._moviesModel.length) {
-        this._mostCommentedController.render(this._moviesModel);
-      }
+      this._mostCommentedController.render();
     });
 
     document.addEventListener(`modelLoaded`, () => {
-      if (this._moviesModel.length) {
-        this._topRatesController.render(this._moviesModel);
-        this._mostCommentedController.render(this._moviesModel);
-      }
+      this._topRatesController.render();
+      this._mostCommentedController.render();
     });
   }
 
@@ -81,10 +77,8 @@ export default class MainController {
 
     this._filmsListController.render();
 
-    if (this._moviesModel.length) {
-      this._topRatesController.render(this._moviesModel, this._commentsModel);
-      this._mostCommentedController.render(this._moviesModel, this._commentsModel);
-    }
+    this._topRatesController.render();
+    this._mostCommentedController.render();
 
     render(parentElement, this._filmsComponent.getElement());
 
