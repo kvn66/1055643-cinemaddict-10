@@ -29,6 +29,10 @@ export default class MovieModel {
     return this._totalRating;
   }
 
+  set totalRating(rating) {
+    this._totalRating = rating;
+  }
+
   get userRating() {
     return this._userRating;
   }

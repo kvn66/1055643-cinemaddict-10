@@ -120,9 +120,13 @@ export default class Provider {
 
     this._isSynchronized = false;
 
-    this._moviesStore.setItem(id, Object.assign({}, movie, {offline: true}));
+    const movieModel = MoviesModel.parseMovie(movie);
+    const storeMovie = this._moviesStore.getItem(id);
+    const fakeRating = (storeMovie.film_info.total_rating + movieModel.userRating) / 2.0;
+    movieModel.totalRating = parseFloat(fakeRating.toFixed(1));
+    this._moviesStore.setItem(id, Object.assign({}, movieModel.toRAW(), {offline: true}));
 
-    return Promise.resolve(movie);
+    return Promise.resolve(movieModel.toRAW());
   }
 
   sync() {
@@ -131,8 +135,8 @@ export default class Provider {
       return this._syncComments().then(() => {
         return this._syncUpdatedMovies().then(() => {
           this._isSynchronized = true;
-        }).catch(() => new Error(`Sync data failed`));
-      }).catch(() => new Error(`Sync data failed`));
+        });
+      });
 
     }
     return Promise.reject(new Error(`Sync data failed`));

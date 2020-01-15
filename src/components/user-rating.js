@@ -1,5 +1,11 @@
 import AbstractComponent from './abstract-component';
 
+const RatingColor = {
+  CHECKED: `#ffe800`,
+  UNCHECKED: `#d8d8d8`,
+  ERROR: `#ff0000`
+};
+
 export default class UserRatingComponent extends AbstractComponent {
   constructor() {
     super();
@@ -7,6 +13,7 @@ export default class UserRatingComponent extends AbstractComponent {
     this._inputs = this.getElement().querySelectorAll(`.film-details__user-rating-input`);
     this._labels = this.getElement().querySelectorAll(`.film-details__user-rating-label`);
     this._undoButton = this.getElement().querySelector(`.film-details__watched-reset`);
+    this.isError = false;
   }
 
   _getTemplate() {
@@ -83,12 +90,37 @@ export default class UserRatingComponent extends AbstractComponent {
     this._inputs.forEach((input, inputIndex) => {
       input.checked = !index ? false : index === inputIndex + 1;
     });
+
+    if (window.navigator.onLine) {
+      this.removeRatingStyle();
+    } else {
+      this.setCheckedRatingStyle();
+    }
+  }
+
+  setCheckedRatingStyle() {
+    this._labels.forEach((label) => {
+      label.style.backgroundColor = RatingColor.UNCHECKED;
+    });
+    const checkedLabel = this.getElement().querySelector(`.film-details__user-rating-input:checked + .film-details__user-rating-label`);
+    if (this.isError) {
+      checkedLabel.style.backgroundColor = RatingColor.ERROR;
+    } else {
+      checkedLabel.style.backgroundColor = RatingColor.CHECKED;
+    }
+  }
+
+  removeRatingStyle() {
+    this._labels.forEach((label) => {
+      label.style.backgroundColor = ``;
+    });
   }
 
   setErrorStyle() {
     this.removeErrorStyle();
     const checkedLabel = this.getElement().querySelector(`.film-details__user-rating-input:checked + .film-details__user-rating-label`);
     checkedLabel.classList.add(`film-details__user-rating-label--error`);
+    this.isError = true;
   }
 
   removeErrorStyle() {
@@ -97,6 +129,7 @@ export default class UserRatingComponent extends AbstractComponent {
         label.classList.remove(`film-details__user-rating-label--error`);
       }
     });
+    this.isError = false;
   }
 
   setUserRatingClickHandler(handler) {

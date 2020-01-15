@@ -5,23 +5,39 @@ import MovieController from "./movie";
 const TOP_RATED_FILMS_COUNT = 2;
 
 export default class TopRatesController {
-  constructor(parentComponent, apiWithProvider) {
+  constructor(moviesModel, commentsModel, parentComponent, apiWithProvider) {
+    this._moviesModel = moviesModel;
+    this._commentsModel = commentsModel;
     this._parentComponent = parentComponent;
     this._apiWithProvider = apiWithProvider;
+    this._topRatesComponent = null;
   }
 
-  render(moviesModel, commentsModel) {
-    const topRatesComponent = new TopRatesComponent();
-    const topRated = moviesModel.getTopRated(TOP_RATED_FILMS_COUNT);
+  render() {
+    const topRated = this._moviesModel.getTopRated(TOP_RATED_FILMS_COUNT);
 
-    if (topRated[0].totalRating > 0) {
-      topRated.forEach((movieModel) => {
-        new MovieController(movieModel, commentsModel, this._apiWithProvider).render(topRatesComponent);
-      });
+    if (this._moviesModel.getMovies().length) {
+      if (topRated[0].totalRating > 0) {
+        const topRatesComponent = new TopRatesComponent();
+        topRated.forEach((movieModel) => {
+          new MovieController(movieModel, this._commentsModel, this._apiWithProvider).render(topRatesComponent);
+        });
 
-      this._renderElement(this._parentComponent.getElement(), topRatesComponent.getElement());
+        this._renderElement(this._parentComponent.getElement(), topRatesComponent.getElement());
 
-      this._topRatesComponent = topRatesComponent;
+        this._topRatesComponent = topRatesComponent;
+      } else {
+        this._removeElement();
+      }
+    } else {
+      this._removeElement();
+    }
+  }
+
+  _removeElement() {
+    if (this._topRatesComponent) {
+      this._topRatesComponent.remove();
+      this._topRatesComponent = null;
     }
   }
 

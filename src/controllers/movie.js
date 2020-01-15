@@ -24,7 +24,7 @@ export default class MovieController {
     this._userRatingComponent = new UserRatingComponent();
     this._pressedKey = new Set();
     this._detailsIsOpened = false;
-    this._commentsController = new CommentsController(this._filmDetails, this._movieModel, this._commentsModel, this._apiWithProvider);
+    this._commentsController = new CommentsController(this._filmDetails, movieModel, commentsModel, this._apiWithProvider);
 
     this._onCtrlEnterKeyDown = this._onCtrlEnterKeyDown.bind(this);
     this._onCtrlEnterKeyUp = this._onCtrlEnterKeyUp.bind(this);
@@ -106,24 +106,24 @@ export default class MovieController {
   }
 
   _renderUserRating(datafield) {
-    if (datafield) {
-      if (!this._filmDetails.getUserRatingElement()) {
-        this._userRatingComponent.setChecked(this._movieModel.userRating);
-        this._userRatingComponent.setUserRatingClickHandler((evt) => {
-          evt.preventDefault();
-          this._setUserRating(parseInt(evt.target.value, RADIX));
-        });
-        this._userRatingComponent.setUndoUserRatingClickHandler(() => {
-          this._setUserRating(0);
-        });
-        render(this._filmDetails.getControlsElement(), this._userRatingComponent.getElement(), RenderPosition.AFTEREND);
-      }
-    } else {
-      if (this._filmDetails.getUserRatingElement()) {
-        this._userRatingComponent.getElement().remove();
+    if (datafield && !this._filmDetails.getUserRatingElement()) {
+
+      this._userRatingComponent.setChecked(this._movieModel.userRating);
+      this._userRatingComponent.setUserRatingClickHandler((evt) => {
+        evt.preventDefault();
+        this._setUserRating(parseInt(evt.target.value, RADIX));
+      });
+      this._userRatingComponent.setUndoUserRatingClickHandler(() => {
         this._setUserRating(0);
-        this._userRatingComponent.setChecked(this._movieModel.userRating);
-      }
+      });
+      render(this._filmDetails.getControlsElement(), this._userRatingComponent.getElement(), RenderPosition.AFTEREND);
+
+    } else if (!datafield && this._filmDetails.getUserRatingElement()) {
+
+      this._userRatingComponent.getElement().remove();
+      this._setUserRating(0);
+      this._userRatingComponent.setChecked(this._movieModel.userRating);
+
     }
   }
 
