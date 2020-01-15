@@ -33,6 +33,10 @@ export default class CommentsModel {
     this._comments.splice(this._comments.indexOf(this.getComment(id)), 1);
   }
 
+  clearAll() {
+    this._comments = [];
+  }
+
   _addComment(comment) {
     this._comments = [].concat(this._comments, comment);
   }

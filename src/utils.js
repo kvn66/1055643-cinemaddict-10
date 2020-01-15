@@ -99,6 +99,7 @@ export const load = (apiWithProvider, moviesModel, commentsModel) => {
       moviesModel.fillModel(movies);
       return apiWithProvider.getComments(movies)
         .then((comments) => {
+          commentsModel.clearAll();
           commentsModel.addComments(comments);
         });
     });
