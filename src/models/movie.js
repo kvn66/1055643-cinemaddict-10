@@ -1,4 +1,4 @@
-import CommentsModel from "./comments";
+import CommentsModel from './comments';
 
 export default class MovieModel {
   constructor(movieJson) {

@@ -1,6 +1,6 @@
-import {render, RenderPosition} from "../utils";
-import TopRatesComponent from "../components/top-rates";
-import MovieController from "./movie";
+import {render, RenderPosition} from '../utils';
+import TopRatesComponent from '../components/top-rates';
+import MovieController from './movie';
 
 const TOP_RATED_FILMS_COUNT = 2;
 

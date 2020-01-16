@@ -1,11 +1,11 @@
-import FilmsComponent from "../components/films";
-import FilmsListController from "./films-list";
-import TopRatesController from "./top-rates";
-import MostCommentedController from "./most-commented";
-import StatisticController from "./statistic";
-import {FilterType, load, render} from "../utils";
-import SiteMenuController from "./site-menu";
-import SiteSortComponent from "../components/site-sort";
+import FilmsComponent from '../components/films';
+import FilmsListController from './films-list';
+import TopRatesController from './top-rates';
+import MostCommentedController from './most-commented';
+import StatisticController from './statistic';
+import {FilterType, load, render} from '../utils';
+import SiteMenuController from './site-menu';
+import SiteSortComponent from '../components/site-sort';
 
 export default class MainController {
   constructor(moviesModel, commentsModel, apiWithProvider) {

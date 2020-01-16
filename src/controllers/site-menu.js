@@ -1,5 +1,5 @@
-import {render} from "../utils";
-import SiteMenuComponent from "../components/site-menu";
+import {render} from '../utils';
+import SiteMenuComponent from '../components/site-menu';
 
 export default class SiteMenuController {
   constructor(moviesModel, parentElement) {

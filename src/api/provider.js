@@ -1,6 +1,6 @@
-import nanoid from "nanoid";
-import MoviesModel from "../models/movies";
-import CommentsModel from "../models/comments";
+import nanoid from 'nanoid';
+import MoviesModel from '../models/movies';
+import CommentsModel from '../models/comments';
 
 export default class Provider {
   constructor(api, moviesStore, commentsStore) {
@@ -13,7 +13,7 @@ export default class Provider {
   getComments(movies) {
     if (this._isOnLine()) {
       const commentsModel = new CommentsModel();
-      const promises = movies.map((item) => this._api.getComments(item.id));
+      const promises = movies.map((movie) => this._api.getComments(movie.id));
       return Promise.all(promises).then((results) => {
         this._commentsStore.clear();
         results.forEach((result) => {
@@ -31,12 +31,12 @@ export default class Provider {
     return Promise.resolve(CommentsModel.parseComments(storeComments));
   }
 
-  createComment(movieId, comment) {
+  createComment(movieId, newComment) {
     if (this._isOnLine()) {
-      return this._api.createComment(movieId, comment).then(
+      return this._api.createComment(movieId, newComment).then(
           (movieAndComments) => {
             this._moviesStore.setItem(movieAndComments.movie.id, movieAndComments.movie);
-            movieAndComments.comments.forEach((item) => this._commentsStore.setItem(item.id, item));
+            movieAndComments.comments.forEach((comment) => this._commentsStore.setItem(comment.id, comment));
             return movieAndComments;
           }
       );
@@ -45,7 +45,7 @@ export default class Provider {
     this._isSynchronized = false;
 
     const fakeNewCommentId = nanoid();
-    const fakeNewCommentModel = CommentsModel.parseComment(Object.assign({}, comment, {id: fakeNewCommentId}, {author: `My comment`}));
+    const fakeNewCommentModel = CommentsModel.parseComment(Object.assign({}, newComment, {id: fakeNewCommentId}, {author: `My comment`}));
 
     this._commentsStore.setItem(fakeNewCommentModel.id, Object.assign({}, fakeNewCommentModel.toRAW(), {offline: true}));
 
@@ -152,20 +152,20 @@ export default class Provider {
 
   _syncDelitedComments() {
     const storeComments = Object.values(this._commentsStore.getAll());
-    const delitedComments = storeComments.filter((item) => item.delited);
+    const delitedComments = storeComments.filter((storeComment) => storeComment.delited);
     const delitedCommentsModel = CommentsModel.parseComments(delitedComments);
-    const promises = delitedCommentsModel.map((item) => this.deleteComment(item.id));
+    const promises = delitedCommentsModel.map((comment) => this.deleteComment(comment.id));
     return Promise.all(promises);
   }
 
   _syncCreatedComments() {
     const storeComments = Object.values(this._commentsStore.getAll());
-    const storeCreatedComments = storeComments.filter((item) => item.offline);
+    const storeCreatedComments = storeComments.filter((storeComment) => storeComment.offline);
     const createdCommentsModel = CommentsModel.parseComments(storeCreatedComments);
-    const createdComments = createdCommentsModel.map((item) => Object.assign({}, {movieId: this._findMovieForComment(item.id).id}, {localComment: item.toLocalComment()}));
-    const promises = createdComments.map((item) => this.createComment(item.movieId, item.localComment));
+    const createdComments = createdCommentsModel.map((commentModel) => Object.assign({}, {movieId: this._findMovieForComment(commentModel.id).id}, {localComment: commentModel.toLocalComment()}));
+    const promises = createdComments.map((comment) => this.createComment(comment.movieId, comment.localComment));
     return Promise.all(promises).then(() => {
-      createdCommentsModel.forEach((item) => this._commentsStore.removeItem(item.id));
+      createdCommentsModel.forEach((commentModel) => this._commentsStore.removeItem(commentModel.id));
     });
   }
 
@@ -176,15 +176,15 @@ export default class Provider {
 
   _syncUpdatedMovies() {
     const storeMovies = Object.values(this._moviesStore.getAll());
-    const storeUpdatedMovies = storeMovies.filter((item) => item.offline);
+    const storeUpdatedMovies = storeMovies.filter((storeMovie) => storeMovie.offline);
     const updatedMoviesModel = MoviesModel.parseMovies(storeUpdatedMovies);
-    const promises = updatedMoviesModel.map((item) => this.updateMovie(item.id, item.toRAW()));
+    const promises = updatedMoviesModel.map((movieModel) => this.updateMovie(movieModel.id, movieModel.toRAW()));
     return Promise.all(promises);
   }
 
   _findMovieForComment(commentId) {
     const movies = Object.values(this._moviesStore.getAll());
-    return movies.find((item) => item.comments.indexOf(commentId) !== -1);
+    return movies.find((movie) => movie.comments.indexOf(commentId) !== -1);
   }
 
   _deleteCommentFromMovie(commentId) {

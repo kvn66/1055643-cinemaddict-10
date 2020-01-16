@@ -1,5 +1,5 @@
-import {render} from "../utils";
-import ProfileRatingComponent from "../components/profile-rating";
+import {render} from '../utils';
+import ProfileRatingComponent from '../components/profile-rating';
 
 const NOVICE_RATING_LIMIT = 0;
 const FAN_RATING_LIMIT = 10;

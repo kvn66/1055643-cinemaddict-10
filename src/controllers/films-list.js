@@ -1,7 +1,7 @@
-import {render, RenderPosition, load} from "../utils";
-import MovieController from "./movie";
-import ShowMoreComponent from "../components/show-more";
-import FilmsListComponent from "../components/films-list";
+import {render, RenderPosition, load} from '../utils';
+import MovieController from './movie';
+import ShowMoreComponent from '../components/show-more';
+import FilmsListComponent from '../components/films-list';
 
 const SHOWING_FILMS_COUNT_ON_START = 5;
 const SHOWING_FILMS_COUNT_BY_BUTTON = 5;
