@@ -71,14 +71,14 @@ export default class UserRatingComponent extends AbstractComponent {
   }
 
   enableInputs() {
-    this._inputs.forEach((item) => {
-      item.disabled = false;
+    this._inputs.forEach((input) => {
+      input.disabled = false;
     });
   }
 
   disableInputs() {
-    this._inputs.forEach((item) => {
-      item.disabled = true;
+    this._inputs.forEach((input) => {
+      input.disabled = true;
     });
   }
 

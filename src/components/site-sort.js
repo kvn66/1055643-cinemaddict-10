@@ -19,8 +19,8 @@ export default class SiteSortComponent extends AbstractComponent {
 
   setSortTypeChangeHandler(handler) {
     const listItems = this.getElement().querySelectorAll(`.sort__button`);
-    listItems.forEach((item) => {
-      item.addEventListener(`click`, (evt) => {
+    listItems.forEach((listItem) => {
+      listItem.addEventListener(`click`, (evt) => {
         evt.preventDefault();
 
         const sortType = evt.target.dataset.sortType;
@@ -30,12 +30,12 @@ export default class SiteSortComponent extends AbstractComponent {
         }
 
         this._currentSortType = sortType;
-        listItems.forEach((elem) => {
-          const attr = elem.getAttribute(`data-sort-type`);
+        listItems.forEach((listElement) => {
+          const attr = listElement.getAttribute(`data-sort-type`);
           if (attr.includes(this._currentSortType)) {
-            elem.classList.add(`sort__button--active`);
+            listElement.classList.add(`sort__button--active`);
           } else {
-            elem.classList.remove(`sort__button--active`);
+            listElement.classList.remove(`sort__button--active`);
           }
         });
 

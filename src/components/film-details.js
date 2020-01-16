@@ -8,8 +8,8 @@ export default class FilmDetailsComponent extends AbstractComponent {
     super();
     this._movieModel = movieModel;
     this._genreTitle = this._movieModel.genres.length > GENRES_NAME_SWITCH_LIMIT ? `Genres` : `Genre`;
-    this._genres = this._movieModel.genres.map((item) => {
-      return (`<span class="film-details__genre"> ${item} </span>`);
+    this._genres = this._movieModel.genres.map((genre) => {
+      return (`<span class="film-details__genre"> ${genre} </span>`);
     }).join(``);
     this._releaseDate = getFullDate(this._movieModel.releaseDate);
     this._watchlistElement = this.getElement().querySelector(`#watchlist`);
@@ -229,16 +229,16 @@ export default class FilmDetailsComponent extends AbstractComponent {
 
   enableCommentInputs() {
     this._commentInputElement.disabled = false;
-    this._emojiInputElements.forEach((item) => {
-      item.disabled = false;
+    this._emojiInputElements.forEach((inputElement) => {
+      inputElement.disabled = false;
     });
     this._commentEmojiElement.addEventListener(`click`, this._onCommentEmojiClick);
   }
 
   disableCommentInputs() {
     this._commentInputElement.disabled = true;
-    this._emojiInputElements.forEach((item) => {
-      item.disabled = true;
+    this._emojiInputElements.forEach((inputElement) => {
+      inputElement.disabled = true;
     });
     this._commentEmojiElement.removeEventListener(`click`, this._onCommentEmojiClick);
   }
@@ -254,8 +254,8 @@ export default class FilmDetailsComponent extends AbstractComponent {
   }
 
   _setEmojiClickHandlers() {
-    this._emojiInputElements.forEach((item) => {
-      item.addEventListener(`click`, (evt) => {
+    this._emojiInputElements.forEach((inputElement) => {
+      inputElement.addEventListener(`click`, (evt) => {
         this._removeEmojiImageElement();
         switch (evt.target.id) {
           case `emoji-smile`:
@@ -287,8 +287,8 @@ export default class FilmDetailsComponent extends AbstractComponent {
   }
 
   _resetEmojiInputElements() {
-    this._emojiInputElements.forEach((item) => {
-      item.checked = false;
+    this._emojiInputElements.forEach((inputElement) => {
+      inputElement.checked = false;
     });
   }
 

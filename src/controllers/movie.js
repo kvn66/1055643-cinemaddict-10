@@ -1,12 +1,12 @@
 import he from 'he';
-import {render, RenderPosition} from "../utils";
-import FilmCardComponent from "../components/film-card";
-import FilmDetailsComponent from "../components/film-details";
-import UserRatingComponent from "../components/user-rating";
-import CommentsController from "./comments";
-import CommentsModel from "../models/comments";
-import MovieModel from "../models/movie";
-import CommentModel from "../models/comment";
+import {render, RenderPosition} from '../utils';
+import FilmCardComponent from '../components/film-card';
+import FilmDetailsComponent from '../components/film-details';
+import UserRatingComponent from '../components/user-rating';
+import CommentsController from './comments';
+import CommentsModel from '../models/comments';
+import MovieModel from '../models/movie';
+import CommentModel from '../models/comment';
 
 const RADIX = 10;
 const SHAKE_ANIMATION_TIMEOUT = 600;
@@ -202,8 +202,8 @@ export default class MovieController {
     let timerId;
     const timefn = (...args) => {
       const context = this;
-      clearTimeout(timerId);
-      timerId = setTimeout(() => callback.apply(context, args), wait);
+      window.clearTimeout(timerId);
+      timerId = window.setTimeout(() => callback.apply(context, args), wait);
     };
     return timefn();
   }

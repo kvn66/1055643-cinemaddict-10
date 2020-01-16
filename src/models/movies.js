@@ -1,5 +1,5 @@
-import {FilterType, SortType, StatisticFilterPeriodName} from "../utils";
-import MovieModel from "./movie";
+import {FilterType, SortType, StatisticFilterPeriodName} from '../utils';
+import MovieModel from './movie';
 import moment from 'moment';
 
 const FILTER_PERIOD = 1;
@@ -42,10 +42,6 @@ export default class MoviesModel {
     return this._sortMovies(this._filterMovies(this._movies));
   }
 
-  getAllMovies() {
-    return this._movies;
-  }
-
   getStatisticMovies() {
     return this._statisticFilter();
   }
@@ -59,7 +55,7 @@ export default class MoviesModel {
   }
 
   getCheckedParametersCount(parametr) {
-    const movies = this._movies.filter((item) => item[parametr]);
+    const movies = this._movies.filter((movie) => movie[parametr]);
     return movies.length;
   }
 
@@ -69,11 +65,11 @@ export default class MoviesModel {
 
   _statisticFilter() {
     if (this._statisticFilterType === StatisticFilterPeriodName.ALL_TIME) {
-      return this._movies.filter((item) => item.isAlreadyWatched);
+      return this._movies.filter((movie) => movie.isAlreadyWatched);
     }
     const targetDate = moment().subtract(FILTER_PERIOD, this._statisticFilterType);
-    return this._movies.filter((item) => {
-      return (moment(item.watchingDate) >= targetDate && item.isAlreadyWatched);
+    return this._movies.filter((movie) => {
+      return (moment(movie.watchingDate) >= targetDate && movie.isAlreadyWatched);
     });
   }
 

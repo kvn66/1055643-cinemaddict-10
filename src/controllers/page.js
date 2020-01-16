@@ -1,6 +1,6 @@
-import ProfileRatingController from "./profile-rating";
-import MainController from "./main";
-import FooterStatisticComponent from "../components/footer-statistic";
+import ProfileRatingController from './profile-rating';
+import MainController from './main';
+import FooterStatisticComponent from '../components/footer-statistic';
 
 export default class PageController {
   constructor(moviesModel, commentsModel, parentComponent, apiWithProvider) {

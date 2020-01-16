@@ -33,8 +33,8 @@ export default class SiteMenuComponent extends AbstractComponent {
 
   setFilterTypeChangeHandler(handler) {
     const listItems = this.getElement().querySelectorAll(`.main-navigation__item`);
-    listItems.forEach((item) => {
-      item.addEventListener(`click`, (evt) => {
+    listItems.forEach((listItem) => {
+      listItem.addEventListener(`click`, (evt) => {
         evt.preventDefault();
 
         const filterType = evt.target.dataset.filterType;

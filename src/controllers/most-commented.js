@@ -1,6 +1,6 @@
-import {render, RenderPosition} from "../utils";
-import MovieController from "./movie";
-import MostCommentedComponent from "../components/most-commented";
+import {render, RenderPosition} from '../utils';
+import MovieController from './movie';
+import MostCommentedComponent from '../components/most-commented';
 
 const MOST_COMMENTED_FILMS_COUNT = 2;
 

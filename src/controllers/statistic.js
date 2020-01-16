@@ -1,10 +1,10 @@
-import StatisticComponent from "../components/statistic";
-import ProfileRatingController from "./profile-rating";
-import {render, StatisticFilterPeriodName, StatisticFilterType} from "../utils";
+import StatisticComponent from '../components/statistic';
+import ProfileRatingController from './profile-rating';
+import {render, StatisticFilterPeriodName, StatisticFilterType} from '../utils';
 import Chart from 'chart.js';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 
-const ChartSettings = {
+const ChartSetting = {
   FONT_SIZE: 20,
   FONT_FAMILY: `'Open Sans', 'sans-serif'`,
   BAR_COLOR: `#ffe800`,
@@ -66,7 +66,7 @@ export default class StatisticController {
           labels: Array.from(genres.keys()),
           datasets: [{
             data: Array.from(genres.values()),
-            backgroundColor: ChartSettings.BAR_COLOR
+            backgroundColor: ChartSetting.BAR_COLOR
           }]
         },
         options: {
@@ -76,11 +76,11 @@ export default class StatisticController {
               display: true,
               anchor: `start`,
               align: `start`,
-              color: ChartSettings.LABEL_COLOR,
-              offset: ChartSettings.LABEL_OFFSET,
+              color: ChartSetting.LABEL_COLOR,
+              offset: ChartSetting.LABEL_OFFSET,
               font: {
-                family: ChartSettings.FONT_FAMILY,
-                size: ChartSettings.FONT_SIZE
+                family: ChartSetting.FONT_FAMILY,
+                size: ChartSetting.FONT_SIZE
               }
             }
           },
@@ -89,17 +89,17 @@ export default class StatisticController {
               label: (tooltipItem, data) => {
                 const allData = data.datasets[tooltipItem.datasetIndex].data;
                 const tooltipData = allData[tooltipItem.index];
-                const total = allData.reduce((acc, item) => acc + parseFloat(item));
+                const total = allData.reduce((accumulator, allDataItem) => accumulator + parseFloat(allDataItem));
                 const tooltipPercentage = Math.round((tooltipData / total) * 100);
                 return `${tooltipData} Films - ${tooltipPercentage}%`;
               }
             },
             displayColors: false,
-            backgroundColor: ChartSettings.TOOLTIPS_BACKGROUND_COLOR,
-            bodyFontColor: ChartSettings.TOOLTIPS_BODY_FONT_COLOR,
-            borderColor: ChartSettings.TOOLTIPS_BORDER_COLOR,
-            borderWidth: ChartSettings.TOOLTIPS_BORDER_WIDTH,
-            cornerRadius: ChartSettings.TOOLTIPS_CORNER_RADIUS
+            backgroundColor: ChartSetting.TOOLTIPS_BACKGROUND_COLOR,
+            bodyFontColor: ChartSetting.TOOLTIPS_BODY_FONT_COLOR,
+            borderColor: ChartSetting.TOOLTIPS_BORDER_COLOR,
+            borderWidth: ChartSetting.TOOLTIPS_BORDER_WIDTH,
+            cornerRadius: ChartSetting.TOOLTIPS_CORNER_RADIUS
           },
           legend: {
             display: false
@@ -114,10 +114,10 @@ export default class StatisticController {
             }],
             yAxes: [{
               ticks: {
-                fontFamily: ChartSettings.FONT_FAMILY,
-                fontSize: ChartSettings.FONT_SIZE,
-                fontColor: ChartSettings.Y_TICKS_FONT_COLOR,
-                padding: ChartSettings.Y_TICKS_PADDING
+                fontFamily: ChartSetting.FONT_FAMILY,
+                fontSize: ChartSetting.FONT_SIZE,
+                fontColor: ChartSetting.Y_TICKS_FONT_COLOR,
+                padding: ChartSetting.Y_TICKS_PADDING
               }
             }]
           }
@@ -140,14 +140,14 @@ export default class StatisticController {
 
   _createGenresMap() {
     const genres = new Map();
-    this._moviesModel.getStatisticMovies().forEach((item) => {
-      item.genres.forEach((elem) => {
-        if (genres.has(elem)) {
-          let count = genres.get(elem);
+    this._moviesModel.getStatisticMovies().forEach((movieModel) => {
+      movieModel.genres.forEach((genre) => {
+        if (genres.has(genre)) {
+          let count = genres.get(genre);
           count++;
-          genres.set(elem, count);
+          genres.set(genre, count);
         } else {
-          genres.set(elem, 1);
+          genres.set(genre, 1);
         }
       });
     });
@@ -156,8 +156,8 @@ export default class StatisticController {
 
   _getFullDuration() {
     let duration = 0;
-    this._moviesModel.getStatisticMovies().forEach((item) => {
-      duration = duration + item.duration;
+    this._moviesModel.getStatisticMovies().forEach((movieModel) => {
+      duration = duration + movieModel.duration;
     });
     return duration;
   }
