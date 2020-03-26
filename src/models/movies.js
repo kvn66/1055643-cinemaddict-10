@@ -29,6 +29,7 @@ export default class MoviesModel {
 
   set sortType(type) {
     if (type !== this._sortType) {
+
       this._sortType = type;
       document.dispatchEvent(new Event(`filterChange`));
     }
