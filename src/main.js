@@ -25,7 +25,7 @@ const commentsModel = new CommentsModel();
 new PageController(moviesModel, commentsModel, document, apiWithProvider).render();
 
 window.addEventListener(`load`, () => {
-  navigator.serviceWorker.register(`/sw.js`);
+  // navigator.serviceWorker.register(`/sw.js`);
 });
 
 window.addEventListener(`online`, () => {
